@@ -14,7 +14,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginHorizontal="4dp"
         android:background="#a57865"
-        android:textColor=" #ffffff">
+        android:textColor="#fff000">
 
     </Button>
 
