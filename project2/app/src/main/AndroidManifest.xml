@@ -34,7 +34,7 @@
 
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
-            android:value="2q1wp1mclt" />
+            android:value="2q1wp1mclt"/>
     </application>
 
 </manifest>
