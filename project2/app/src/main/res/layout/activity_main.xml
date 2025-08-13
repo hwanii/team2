@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main"
+    android:background="#a57865">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_detail"
+        android:text="상세 페이지 "
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="4dp"
+        android:background="#a57865"
+        android:textColor=" #ffffff"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_list"
+        android:text="목록 페이지 "
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="4dp"
+        android:background="#a57865"
+        android:textColor=" #ffffff"/>
+
+</LinearLayout>
