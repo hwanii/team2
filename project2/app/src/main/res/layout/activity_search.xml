@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:id="@+id/main"
+  android:padding="16dp">
+  
+  <ImageView
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:src="@drawable/ic_logo" />
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+    
+    <TextView
+      android:text="부산에 숨어있는\n수많은 맛집들,\n이제부터 함께 찾아볼까요?"
+      android:textSize="24sp"
+      android:lineSpacingExtra="-2dp"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:layout_height="wrap_content"/>
+  </LinearLayout>
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:background="#efefef"
+    android:gravity="center_vertical">
+    
+    <ImageView
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:src="@drawable/ic_search"
+      android:contentDescription="검색 아이콘"
+      android:padding="6dp" />
+    
+    <EditText
+      android:layout_width="0dp"
+      android:layout_height="30dp"
+      android:layout_weight="1"
+      android:hint="검색어를 입력하세요"
+      android:background="@android:color/transparent"
+      android:paddingRight="10dp"
+      android:paddingLeft="10dp"
+      android:inputType="text"
+      android:textSize="14sp" />
+  
+  </LinearLayout>
+
+</LinearLayout>
