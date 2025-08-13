@@ -1,9 +1,6 @@
 package bitc.fullstack502.project2
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-import java.io.Serial
 
 data class FoodResponse(
     @SerializedName("getFoodKr")
@@ -16,12 +13,10 @@ data class  FoodResult(
     val numOfRows: Int,
     val item: List<FoodItem>
 )
-@Parcelize
+
 data class  FoodItem(
     @SerializedName("MAIN_IMG_NORMAL")
     val image: String?,
-    @SerializedName("UC_SEQ")
-    val UcSeq: Int,
 
    val TITLE: String,
    @SerializedName("ADDR1")
@@ -34,12 +29,8 @@ data class  FoodItem(
    @SerializedName("USAGE_DAY_WEEK_AND_TIME")
     val Time: String?,
     @SerializedName("ITEMCNTNTS")
-    val Item : String?,
-    @SerializedName("LAT")
-    val Lat : Float?,
-    @SerializedName("LNG")
-    val Lng : Float?
-): Parcelable
+    val Item : String?
+)
 
 
 

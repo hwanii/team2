@@ -42,7 +42,16 @@
             android:layout_marginEnd="10dp"
             android:text="주소"/>
 
+<<<<<<< HEAD
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
+            android:text="지도보기"/>
+=======
 
+>>>>>>> d7b5a21cfb144365afc215996f152d88e34b0555
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"

@@ -33,9 +33,9 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         fetchFoodData()
     }
-    private var foodList:List<FoodItem>? = null
     private fun fetchFoodData() {
         RetrofitClient.api.getFoodList(serviceKey = servicekey)
             .enqueue(object : Callback<FoodResponse> {
@@ -81,19 +81,12 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("subaddr",it.SubAddr)
                 intent.putExtra("tel", it.TEL)
                 intent.putExtra("time", it.Time)
-                intent.putExtra("item", it.Item )
+                intent.putExtra("item", it.Item)
                 intent.putExtra("imageurl",it.image)
-                intent.putExtra("lat",it.Lat ?: 0.0f)
-                intent.putExtra("lng",it.Lng ?: 0.0f)
                 startActivity(intent)
             } ?: run {
                 Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
             }
-        }
-        binding.btnList.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            startActivity(intent)
-
         }
     }
 }
