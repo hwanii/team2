@@ -1,4 +1,4 @@
-package com.example.project2
+package bitc.fullstack502.project2
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.project2", appContext.packageName)
+        assertEquals("bitc.fullstack502.project2", appContext.packageName)
     }
 }

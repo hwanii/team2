@@ -1,4 +1,4 @@
-package com.example.project2
+package bitc.fullstack502.project2
 
 import org.junit.Test
 

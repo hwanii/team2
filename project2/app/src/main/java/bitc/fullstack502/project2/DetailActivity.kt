@@ -1,5 +1,6 @@
 package bitc.fullstack502.project2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import bitc.fullstack502.project2.databinding.ActivityDetailBinding
+import bitc.fullstack502.project2.databinding.ActivityMapBinding
 
 class DetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
@@ -22,6 +24,9 @@ class DetailActivity : AppCompatActivity() {
         val time = intent.getStringExtra("time")
         val item = intent.getStringExtra("item")
         val imageurl = intent.getStringExtra("imageurl")
+        val lat = intent.getFloatExtra("lat",0.0f).toDouble()
+        val lng = intent.getFloatExtra("lng", 0.0f).toDouble()
+
 
 
         binding.txtTitle.text = title
@@ -39,6 +44,17 @@ class DetailActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        binding.btnMap.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java).apply {
+                putExtra("lat", lat)
+                putExtra("lng", lng)
+                putExtra("title", title)
+                putExtra("addr",addr)
+
+            }
+            startActivity(intent)
         }
     }
 }
