@@ -17,7 +17,7 @@ import retrofit2.Response
 
 class ListActivity : AppCompatActivity() {
     private val binding by lazy { ActivityListBinding.inflate(layoutInflater) }
-//    공공데이터 포탈 부산맛집 정보 서비스 api key값
+    //    공공데이터 포탈 부산맛집 정보 서비스 api key값
     private val servicekey = "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +46,14 @@ class ListActivity : AppCompatActivity() {
                         }
                     }
                 }
-//                 데이터 받기 실패시 호출
+                //                 데이터 받기 실패시 호출
                 override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
                     Log.e("ListActivity", "API 호출 실패", t)
                 }
             })
     }
 
-//    버튼 생성
+    //    버튼 생성
     private fun createButtonsDynamically(items: List<FoodItem>) {
         val container = binding.buttonContainer
 //        container.orientation = LinearLayout.VERTICAL  EX) Linearlayout.orientation 값 추가 방법
@@ -87,7 +87,7 @@ class ListActivity : AppCompatActivity() {
             container.addView(button)
         }
     }
-//    현재 가지고 있는 값 (title,addr,subadder 등등 ) 을 DetailActivity 에 전달하는 역할,
+    //    현재 가지고 있는 값 (title,addr,subadder 등등 ) 을 DetailActivity 에 전달하는 역할,
 //    각각의 UcSeq(가게식별코드)에 맞는 값을 부여하는 소스
     private fun navigateToDatail(item: FoodItem) {
         val intent = Intent(this, DetailActivity::class.java).apply {

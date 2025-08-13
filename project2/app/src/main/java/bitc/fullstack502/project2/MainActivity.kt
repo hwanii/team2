@@ -1,5 +1,6 @@
 package bitc.fullstack502.project2
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -139,5 +140,28 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
+//        binding.btnDetail.setOnClickListener {
+//            item?.let {
+//                val intent = Intent(this, DetailActivity::class.java)
+////                api로 가져온 값을 변수에 넣어줌
+//                intent.putExtra("title", it.TITLE)
+//                intent.putExtra("addr", it.ADDR)
+//                intent.putExtra("subaddr",it.SubAddr)
+//                intent.putExtra("tel", it.TEL)
+//                intent.putExtra("time", it.Time)
+//                intent.putExtra("item", it.Item )
+//                intent.putExtra("imageurl",it.image)
+//                intent.putExtra("lat",it.Lat ?: 0.0f)
+//                intent.putExtra("lng",it.Lng ?: 0.0f)
+//                startActivity(intent)
+//            } ?: run {
+//                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//        binding.btnList.setOnClickListener {
+//            val intent = Intent(this, ListActivity::class.java)
+//            startActivity(intent)
+//
+//        }
     }
 }
