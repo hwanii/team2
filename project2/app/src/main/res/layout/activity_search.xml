@@ -34,13 +34,13 @@
     android:background="#efefef"
     android:gravity="center_vertical">
     
-    <ImageView
-      android:layout_width="36dp"
-      android:layout_height="36dp"
-      android:src="@drawable/ic_search"
-      android:contentDescription="검색 아이콘"
-      android:padding="6dp" />
-    
+<!--    <ImageView-->
+<!--      android:layout_width="36dp"-->
+<!--      android:layout_height="36dp"-->
+<!--      android:src="@drawable/ic_search"-->
+<!--      android:contentDescription="검색 아이콘"-->
+<!--      android:padding="6dp" />-->
+<!--    -->
     <EditText
       android:layout_width="0dp"
       android:layout_height="30dp"
@@ -51,22 +51,6 @@
       android:paddingLeft="10dp"
       android:inputType="text"
       android:textSize="14sp" />
-    
-    <EditText
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-    <EditText
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-    <EditText
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-    <EditText
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-    <EditText
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
   
   </LinearLayout>
 

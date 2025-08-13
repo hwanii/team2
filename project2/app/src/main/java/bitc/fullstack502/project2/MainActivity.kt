@@ -1,46 +1,117 @@
 package bitc.fullstack502.project2
 
-import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import bitc.fullstack502.project2.Adapter.HorizontalAdapter
+import bitc.fullstack502.project2.Adapter.SliderAdapter
+import bitc.fullstack502.project2.Adapter.VerticalAdapter
 import bitc.fullstack502.project2.databinding.ActivityMainBinding
+import bitc.fullstack502.project2.model.Item
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-//    api 키값
+    // API 키값
     private val servicekey =
         "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
 
     var item: FoodItem? = null
 
-
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
+    // 자동 슬라이드용 핸들러와 인덱스 변수
+    private val sliderHandler = Handler(Looper.getMainLooper())
+    private var sliderPosition = 0
+
+    // 자동 슬라이드 실행 함수
+    private val sliderRunnable = object : Runnable {
+        override fun run() {
+            val adapter = binding.viewPager.adapter
+            if (adapter != null) {
+                val itemCount = adapter.itemCount
+                sliderPosition = (sliderPosition + 1) % itemCount
+                binding.viewPager.currentItem = sliderPosition
+                sliderHandler.postDelayed(this, 3000) // 3초마다 슬라이드
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // 1. 슬라이더 데이터 세팅
+        val sliderImages = listOf(
+            R.drawable.sample1,
+            R.drawable.sample2,
+            R.drawable.sample3
+        )
+        binding.viewPager.adapter = SliderAdapter(sliderImages)
+
+        // 자동 슬라이드 시작
+        sliderHandler.postDelayed(sliderRunnable, 3000)
+
+        // 2. 가로 리스트 데이터 세팅
+        val horizontalItems = listOf(
+            Item("Title 1", 4.5, "Category", "Addr"),
+            Item("Title 2", 4.5, "Category", "Addr"),
+            Item("Title 3", 4.5, "Category", "Addr")
+        )
+        binding.horizontalRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.horizontalRecyclerView.adapter = HorizontalAdapter(horizontalItems)
+
+        // 3. 세로 리스트 데이터 세팅
+        val verticalItems = List(5) {
+            Item("Title $it", 4.5, "Category", "Addr")
+        }
+        binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.verticalRecyclerView.adapter = VerticalAdapter(verticalItems)
+
+        // 4. 하단 네비게이션 클릭 이벤트 처리
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_home -> Log.d("MainActivity", "home selected")
+                R.id.menu_search -> Log.d("MainActivity", "search selected")
+                R.id.menu_favorite -> Log.d("MainActivity", "favorite selected")
+                R.id.menu_profile -> Log.d("MainActivity", "profile selected")
+            }
+            true
+        }
+
         fetchFoodData()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 액티비티 종료 시 핸들러 콜백 제거
+        sliderHandler.removeCallbacks(sliderRunnable)
+    }
+
     private fun fetchFoodData() {
         RetrofitClient.api.getFoodList(serviceKey = servicekey)
             .enqueue(object : Callback<FoodResponse> {
 
-//               api 응답 성공
                 override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
                     if (response.isSuccessful) {
                         Log.d("MainActivity", "데이터 로딩 성공: ${response.body()}")
@@ -48,45 +119,25 @@ class MainActivity : AppCompatActivity() {
                         val foodList = response.body()?.getFoodkr?.item
 
                         if (!foodList.isNullOrEmpty()) {
-//                            데이터를 가져오고 값을 넣음
                             this@MainActivity.item = foodList[0]
 
                             Toast.makeText(this@MainActivity, "${item?.TITLE} 데이터 로딩 완료!", Toast.LENGTH_SHORT).show()
 
                         } else {
-//                            api는 가져왔지만 데이터가 없음
                             Log.d("MainActivity", "데이터가 없습니다.")
                             Toast.makeText(this@MainActivity, "표시할 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
                         }
 
                     } else {
-                        //응답 오류
                         Log.e("MainActivity", "서버 응답 오류: ${response.code()}")
                         Toast.makeText(this@MainActivity, "서버에서 응답을 받지 못했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
-                // api 못가져옴
+
                 override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
                     Log.e("MainActivity", "API 호출 실패", t)
                     Toast.makeText(this@MainActivity, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
-        // 버튼 이벤트
-        binding.btnDetail.setOnClickListener {
-            item?.let {
-                val intent = Intent(this, DetailActivity::class.java)
-//                api로 가져온 값을 변수에 넣어줌
-                intent.putExtra("title", it.TITLE)
-                intent.putExtra("addr", it.ADDR)
-                intent.putExtra("subaddr",it.SubAddr)
-                intent.putExtra("tel", it.TEL)
-                intent.putExtra("time", it.Time)
-                intent.putExtra("item", it.Item)
-                intent.putExtra("imageurl",it.image)
-                startActivity(intent)
-            } ?: run {
-                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 }

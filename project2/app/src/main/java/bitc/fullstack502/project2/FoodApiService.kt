@@ -15,5 +15,4 @@ interface FoodApiService {
         @Query("TITLE") title: String? = null,
         @Query("GUGUN_NM") gugun: String? = null
     ) : Call<FoodResponse>
-
 }
