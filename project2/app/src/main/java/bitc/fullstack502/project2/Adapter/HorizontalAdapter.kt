@@ -3,7 +3,6 @@ package bitc.fullstack502.project2.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +24,7 @@ class HorizontalAdapter(private val itemList: List<Item>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_horizontal, parent, false)
+            .inflate(R.layout.item_horizontal_card, parent, false)
         return HorizontalViewHolder(view)
     }
 

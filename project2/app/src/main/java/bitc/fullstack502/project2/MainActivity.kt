@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -22,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        // 시스템 바 패딩 적용
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         // 자동 슬라이드 시작
         sliderHandler.postDelayed(sliderRunnable, 3000)
 
-        // 2. 가로 리스트 데이터 세팅
+        // 2. 첫 번째 가로 리스트 데이터 세팅
         val horizontalItems = listOf(
             Item("Title 1", 4.5, "Category", "Addr"),
             Item("Title 2", 4.5, "Category", "Addr"),
@@ -82,25 +83,64 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.horizontalRecyclerView.adapter = HorizontalAdapter(horizontalItems)
 
-        // 3. 세로 리스트 데이터 세팅
-        val verticalItems = List(5) {
-            Item("Title $it", 4.5, "Category", "Addr")
-        }
+        // 3. 두 번째 가로 리스트 데이터 세팅
+        val horizontalItems2 = listOf(
+            Item("Title A", 3.5, "Category", "Addr"),
+            Item("Title B", 4.0, "Category", "Addr"),
+            Item("Title C", 5.0, "Category", "Addr")
+        )
+        binding.horizontalRecyclerView2.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.horizontalRecyclerView2.adapter = HorizontalAdapter(horizontalItems2)
+
+        // 4. 세로 리스트 데이터 세팅
+        val verticalItems = List(5) { Item("Title $it", 4.5, "Category", "Addr") }
         binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.verticalRecyclerView.adapter = VerticalAdapter(verticalItems)
 
-        // 4. 하단 네비게이션 클릭 이벤트 처리
+        // 5. 하단 네비게이션 클릭 이벤트 처리 (로그인 체크 통합)
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> Log.d("MainActivity", "home selected")
                 R.id.menu_search -> Log.d("MainActivity", "search selected")
                 R.id.menu_favorite -> Log.d("MainActivity", "favorite selected")
-                R.id.menu_profile -> Log.d("MainActivity", "profile selected")
+                R.id.menu_profile -> {
+                    if (isLoggedIn()) {
+                        // 로그인 되어 있으면 MyPageActivity로 이동
+                        val intent = Intent(this, MyPageActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        // 로그인 안 되어 있으면 LoginActivity로 이동
+                        val intent = Intent(this, LoginPageActivity::class.java)
+                        startActivity(intent)
+                        Toast.makeText(this, "로그인 후 이용 가능합니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
             true
         }
 
         fetchFoodData()
+
+        // 6. 디테일 버튼 클릭 이벤트
+        binding.btnDetail.setOnClickListener {
+            item?.let {
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra("title", it.TITLE)
+                intent.putExtra("addr", it.ADDR)
+                intent.putExtra("subaddr", it.SubAddr)
+                intent.putExtra("tel", it.TEL)
+                intent.putExtra("time", it.Time)
+                intent.putExtra("item", it.Item)
+                intent.putExtra("imageurl", it.image)
+                intent.putExtra("lat", it.Lat ?: 0.0f)
+                intent.putExtra("lng", it.Lng ?: 0.0f)
+                intent.putExtra("gugun", it.GUGUN_NM)
+                startActivity(intent)
+            } ?: run {
+                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -112,56 +152,30 @@ class MainActivity : AppCompatActivity() {
     private fun fetchFoodData() {
         RetrofitClient.api.getFoodList(serviceKey = servicekey)
             .enqueue(object : Callback<FoodResponse> {
-
                 override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
                     if (response.isSuccessful) {
-                        Log.d("MainActivity", "데이터 로딩 성공: ${response.body()}")
-
                         val foodList = response.body()?.getFoodkr?.item
-
                         if (!foodList.isNullOrEmpty()) {
                             this@MainActivity.item = foodList[0]
-
                             Toast.makeText(this@MainActivity, "${item?.TITLE} 데이터 로딩 완료!", Toast.LENGTH_SHORT).show()
-
                         } else {
                             Log.d("MainActivity", "데이터가 없습니다.")
-                            Toast.makeText(this@MainActivity, "표시할 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
                         }
-
                     } else {
                         Log.e("MainActivity", "서버 응답 오류: ${response.code()}")
-                        Toast.makeText(this@MainActivity, "서버에서 응답을 받지 못했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
                     Log.e("MainActivity", "API 호출 실패", t)
-                    Toast.makeText(this@MainActivity, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
-//        binding.btnDetail.setOnClickListener {
-//            item?.let {
-//                val intent = Intent(this, DetailActivity::class.java)
-////                api로 가져온 값을 변수에 넣어줌
-//                intent.putExtra("title", it.TITLE)
-//                intent.putExtra("addr", it.ADDR)
-//                intent.putExtra("subaddr",it.SubAddr)
-//                intent.putExtra("tel", it.TEL)
-//                intent.putExtra("time", it.Time)
-//                intent.putExtra("item", it.Item )
-//                intent.putExtra("imageurl",it.image)
-//                intent.putExtra("lat",it.Lat ?: 0.0f)
-//                intent.putExtra("lng",it.Lng ?: 0.0f)
-//                startActivity(intent)
-//            } ?: run {
-//                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//        binding.btnList.setOnClickListener {
-//            val intent = Intent(this, ListActivity::class.java)
-//            startActivity(intent)
-//
-//        }
+    }
+
+    // 로그인 상태 확인 함수 (SharedPreferences 사용)
+    private fun isLoggedIn(): Boolean {
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        // "logged_in" key 값이 true이면 로그인 상태, 없거나 false면 미로그인
+        return prefs.getBoolean("logged_in", false)
     }
 }
