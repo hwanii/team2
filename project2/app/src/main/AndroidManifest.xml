@@ -14,10 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project2">
         <activity
-            android:name=".ListActivity"
+            android:name=".MyPageActivity"
             android:exported="false" />
         <activity
-            android:name=".MapActivity"
+            android:name=".LoginPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JoinPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditPageActivity"
             android:exported="false" />
         <activity
             android:name=".DetailActivity"
@@ -31,10 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.naver.maps.map.NCP_KEY_ID"
-            android:value="2q1wp1mclt" />
     </application>
 
 </manifest>

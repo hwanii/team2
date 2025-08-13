@@ -4,14 +4,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-//     기본 시작 url 지정
-    private const val BASE_URL = "https://apis.data.go.kr/6260000/"
-
-    val api: FoodApiService by lazy {
+    private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl("https://your.api.base.url/")  // 실제 API 서버 주소로 바꾸세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(FoodApiService::class.java)
+    }
+
+    val joinApiService: JoinApiService by lazy {
+        retrofit.create(JoinApiService::class.java)
     }
 }
