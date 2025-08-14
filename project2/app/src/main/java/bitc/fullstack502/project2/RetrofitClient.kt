@@ -23,7 +23,7 @@ object RetrofitClient {
             .build()
     }
 
-    private const val SPRING_BASE_URL = "http://localhost:8080/"
+    private const val SPRING_BASE_URL = "http://10.0.2.2:8080/"
 
     // 회원가입 & 로그인 API
     val joinApi: JoinApiService by lazy {

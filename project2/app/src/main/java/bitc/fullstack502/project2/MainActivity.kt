@@ -105,12 +105,25 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_search -> Log.d("MainActivity", "search selected")
                 R.id.menu_favorite -> Log.d("MainActivity", "favorite selected")
                 R.id.menu_profile -> {
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val loggedIn = prefs.getBoolean("logged_in", false)
+
                     if (isLoggedIn()) {
-                        // 로그인 되어 있으면 MyPageActivity로 이동
+                        // SharedPreferences에서 유저 정보 읽기
+                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        val user = User(
+                            userName = prefs.getString("user_name", "") ?: "",
+                            userId = prefs.getString("user_id", "") ?: "",
+                            userPw = prefs.getString("user_pw", "") ?: "",
+                            userTel = prefs.getString("user_tel", "") ?: "",
+                            userEmail = prefs.getString("user_email", "") ?: "",
+                            userDay = prefs.getString("user_day", "") ?: ""
+                        )
+
                         val intent = Intent(this, MyPageActivity::class.java)
+
                         startActivity(intent)
                     } else {
-                        // 로그인 안 되어 있으면 LoginActivity로 이동
                         val intent = Intent(this, LoginPageActivity::class.java)
                         startActivity(intent)
                         Toast.makeText(this, "로그인 후 이용 가능합니다.", Toast.LENGTH_SHORT).show()

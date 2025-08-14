@@ -12,10 +12,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Project2">
-
-        <activity android:name=".MyPageActivity" />
+        android:theme="@style/Theme.Project2"
+        android:usesCleartextTraffic="true">
         <activity android:name=".LoginPageActivity" />
+        <activity android:name=".JoinPageActivity" />
+        <activity android:name=".MyPageActivity" />
+        <activity android:name=".EditPageActivity" />
 
 
         <activity
