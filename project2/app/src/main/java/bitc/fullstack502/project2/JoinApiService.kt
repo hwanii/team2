@@ -11,7 +11,7 @@ data class JoinRequest(
     val userName: String,
     val userId: String,
     val userPassword: String,
-    val userAge: Int,
+    val userTel: String,
     val userEmail: String
 )
 
@@ -31,13 +31,14 @@ interface JoinApiService {
 
     // 회원가입 요청 (POST)
     @POST("/api/join")
-    fun joinUser(
-        @Body joinRequest: JoinRequest
-    ): Call<JoinResponse>
+    fun joinUser(@Body joinRequest: JoinRequest): Call<JoinResponse>
 
     // 아이디 중복 체크 (GET)
     @GET("/api/check-id")
-    fun checkIdDuplicate(
-        @Query("id") id: String
-    ): Call<IdCheckResponse>
+    fun checkIdDuplicate(@Query("id") id: String): Call<IdCheckResponse>
+
+    //  회원 데이터 수정 (POST)
+    @POST("/api/update-user")
+    fun updateUser(@Body request: EditRequest): Call<EditResponse>
+
 }

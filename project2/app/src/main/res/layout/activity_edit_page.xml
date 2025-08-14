@@ -20,7 +20,7 @@
 
             <android.widget.ImageView
                 android:id="@+id/logo"
-                android:layout_width="100dp"
+                android:layout_width="140dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="90dp"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="20dp"/>
 
             <EditText
-                android:id="@+id/join_name"
+                android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -60,7 +60,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/join_id"
+                android:id="@+id/user_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -84,7 +84,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/join_pw"
+                android:id="@+id/user_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -132,7 +132,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/join_tel"
+                android:id="@+id/user_tel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -156,7 +156,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/join_email"
+                android:id="@+id/user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -172,6 +172,7 @@
                 android:textColorHint="@color/gray" />
 
             <android.widget.Button
+                android:id="@+id/edit_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"

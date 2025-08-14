@@ -20,7 +20,13 @@ object RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    val joinApiService: JoinApiService by lazy {
-        retrofit.create(JoinApiService::class.java)
+    private const val SPRING_BASE_URL = "http://localhost:8080/api/join"
+
+    val JoinApiService: JoinApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(SPRING_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(JoinApiService::class.java)
     }
 }

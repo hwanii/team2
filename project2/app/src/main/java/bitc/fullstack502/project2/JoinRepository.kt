@@ -6,7 +6,7 @@ import retrofit2.Response
 
 class JoinRepository{
 
-    private val joinApiService = RetrofitClient.joinApiService
+    private val joinApiService = RetrofitClient.JoinApiService
 
 
     // 회원가입 요청 함수
@@ -14,11 +14,11 @@ class JoinRepository{
         name: String,
         id: String,
         password: String,
-        age: Int,
+        tel: String,
         email: String,
         onResult: (success: Boolean, message: String) -> Unit
     ) {
-        val joinRequest = JoinRequest(name, id, password, age, email)
+        val joinRequest = JoinRequest(name, id, password, tel, email)
         joinApiService.joinUser(joinRequest).enqueue(object : Callback<JoinResponse> {
             override fun onResponse(call: Call<JoinResponse>, response: Response<JoinResponse>) {
                 if (response.isSuccessful) {

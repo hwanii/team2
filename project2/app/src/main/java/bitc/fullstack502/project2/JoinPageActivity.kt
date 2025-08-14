@@ -17,7 +17,7 @@ class JoinPageActivity : AppCompatActivity() {
     private lateinit var checkIdButton: Button
     private lateinit var pwEditText: EditText
     private lateinit var pwCheckEditText: EditText
-    private lateinit var ageEditText: EditText
+    private lateinit var telEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var joinButton: Button
 
@@ -40,7 +40,7 @@ class JoinPageActivity : AppCompatActivity() {
         checkIdButton = findViewById(R.id.check_id)
         pwEditText = findViewById(R.id.user_pw)
         pwCheckEditText = findViewById(R.id.check_pw)
-        ageEditText = findViewById(R.id.user_age)
+        telEditText = findViewById(R.id.user_tel)
         emailEditText = findViewById(R.id.user_email)
         joinButton = findViewById(R.id.summit_btn)
 
@@ -74,7 +74,7 @@ class JoinPageActivity : AppCompatActivity() {
         val id = idEditText.text.toString().trim()
         val password = pwEditText.text.toString()
         val passwordCheck = pwCheckEditText.text.toString()
-        val ageStr = ageEditText.text.toString().trim()
+        val tel = telEditText.text.toString().trim()
         val email = emailEditText.text.toString().trim()
 
         if (name.isEmpty()) {
@@ -85,17 +85,17 @@ class JoinPageActivity : AppCompatActivity() {
             showToast("ID를 입력해주세요.")
             return
         }
-        if (password.length < 8) {
-            showToast("비밀번호는 8자리 이상이어야 합니다.")
+        if (password.isEmpty()) {
+            showToast("비밀번호를 입력해주세요.")
             return
         }
         if (password != passwordCheck) {
             showToast("비밀번호가 일치하지 않습니다.")
             return
         }
-        val age = ageStr.toIntOrNull()
-        if (age == null || age <= 0) {
-            showToast("올바른 나이를 입력해주세요.")
+
+        if (tel.isEmpty()) {
+            showToast("전화번호를 입력해주세요")
             return
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -104,7 +104,7 @@ class JoinPageActivity : AppCompatActivity() {
         }
 
         // 실제 회원가입 요청 호출
-        repository.joinUser(name, id, password, age, email) { success, message ->
+        repository.joinUser(name, id, password, tel, email) { success, message ->
             runOnUiThread {
                 if (success) {
                     showToast("회원가입 성공!")

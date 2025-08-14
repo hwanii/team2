@@ -15,7 +15,7 @@
 
         <android.widget.ImageView
             android:id="@+id/logo"
-            android:layout_width="100dp"
+            android:layout_width="140dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="90dp"
