@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityEditPageBinding
 
 class EditPageActivity : AppCompatActivity() {
+
     private lateinit var nameEditText: EditText
     private lateinit var idEditText: EditText
     private lateinit var pwEditText: EditText
@@ -19,8 +20,8 @@ class EditPageActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var editButton: Button
 
-    // Retrofit과 연결된 Repository
-    private val repository = EditRepository(RetrofitClient.JoinApiService)
+    private lateinit var repository: EditRepository
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,10 @@ class EditPageActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // 로그인 후 전달받은 User 객체
+        user = intent.getParcelableExtra<User>("user") ?: return finish()
+
         nameEditText = findViewById(R.id.user_name)
         idEditText = findViewById(R.id.user_id)
         pwEditText = findViewById(R.id.user_pw)
@@ -40,20 +45,22 @@ class EditPageActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.user_email)
         editButton = findViewById(R.id.edit_btn)
 
-        loadUserData()
+        repository = EditRepository(RetrofitClient.editApi)
+
+        loadUserData(user)
 
         editButton.setOnClickListener {
             attemptEdit()
         }
     }
 
-    private fun loadUserData() {
-        nameEditText.setText("홍길동")
-        idEditText.setText("user123")
+    private fun loadUserData(user: User) {
+        nameEditText.setText(user.userName)
+        idEditText.setText(user.userId)
         pwEditText.setText("")
         pwCheckEditText.setText("")
-        telEditText.setText("01012345678")
-        emailEditText.setText("test@test.com")
+        telEditText.setText(user.userTel)
+        emailEditText.setText(user.userEmail)
     }
 
     private fun attemptEdit() {
@@ -69,11 +76,13 @@ class EditPageActivity : AppCompatActivity() {
         if (password.isNotEmpty() && password != passwordCheck) { showToast("비밀번호가 일치하지 않습니다."); return }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { showToast("올바른 이메일 주소를 입력해주세요."); return }
 
-        // 서버 요청
-        repository.updateUser(name, id, password, tel, email) { success, message ->
+        // 비밀번호가 비어있으면 기존 비밀번호 사용
+        val finalPassword = if (password.isEmpty()) user.userPw else password
+
+        repository.updateUser(name, id, finalPassword, tel, email) { success, message ->
             runOnUiThread {
                 showToast(message)
-                if (success) finish() // 성공하면 화면 종료
+                if (success) finish()
             }
         }
     }

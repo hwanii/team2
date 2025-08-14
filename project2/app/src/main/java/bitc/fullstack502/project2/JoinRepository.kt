@@ -4,10 +4,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class JoinRepository{
+class JoinRepository {
 
-    private val joinApiService = RetrofitClient.JoinApiService
-
+    private val joinApiService = RetrofitClient.joinApi
 
     // 회원가입 요청 함수
     fun joinUser(
@@ -18,16 +17,19 @@ class JoinRepository{
         email: String,
         onResult: (success: Boolean, message: String) -> Unit
     ) {
-        val joinRequest = JoinRequest(name, id, password, tel, email)
+        val joinRequest = JoinRequest(
+            userName = name,
+            userId = id,
+            userPw = password,
+            userTel = tel,
+            userEmail = email
+        )
+
         joinApiService.joinUser(joinRequest).enqueue(object : Callback<JoinResponse> {
             override fun onResponse(call: Call<JoinResponse>, response: Response<JoinResponse>) {
                 if (response.isSuccessful) {
                     val body = response.body()
-                    if (body != null) {
-                        onResult(body.success, body.message)
-                    } else {
-                        onResult(false, "응답 데이터가 없습니다.")
-                    }
+                    onResult(body?.success ?: false, body?.message ?: "응답 데이터 없음")
                 } else {
                     onResult(false, "서버 오류: ${response.code()}")
                 }
@@ -46,16 +48,8 @@ class JoinRepository{
     ) {
         joinApiService.checkIdDuplicate(id).enqueue(object : Callback<IdCheckResponse> {
             override fun onResponse(call: Call<IdCheckResponse>, response: Response<IdCheckResponse>) {
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    if (body != null) {
-                        onResult(body.available, body.message)
-                    } else {
-                        onResult(false, "응답 데이터가 없습니다.")
-                    }
-                } else {
-                    onResult(false, "서버 오류: ${response.code()}")
-                }
+                val body = response.body()
+                onResult(body?.available ?: false, body?.message ?: "응답 데이터 없음")
             }
 
             override fun onFailure(call: Call<IdCheckResponse>, t: Throwable) {

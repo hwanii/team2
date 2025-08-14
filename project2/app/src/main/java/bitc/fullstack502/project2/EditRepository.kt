@@ -9,20 +9,22 @@ class EditRepository(private val apiService: JoinApiService) {
     fun updateUser(
         name: String,
         id: String,
-        password: String,
+        pw: String,
         tel: String,
         email: String,
-        onResult: (success: Boolean, message: String) -> Unit
+        onResult: (Boolean, String) -> Unit
     ) {
-        val request = EditRequest(name, id, password, tel, email)
+        val request = EditRequest(
+            userName = name,
+            userId = id,
+            userPw = pw,
+            userTel = tel,
+            userEmail = email
+        )
         apiService.updateUser(request).enqueue(object : Callback<EditResponse> {
             override fun onResponse(call: Call<EditResponse>, response: Response<EditResponse>) {
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    onResult(body?.success ?: false, body?.message ?: "응답 없음")
-                } else {
-                    onResult(false, "서버 오류: ${response.code()}")
-                }
+                val body = response.body()
+                onResult(body?.success ?: false, body?.message ?: "응답 데이터 없음")
             }
 
             override fun onFailure(call: Call<EditResponse>, t: Throwable) {

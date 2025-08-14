@@ -1,5 +1,6 @@
 package bitc.fullstack502.project2
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityJoinPageBinding
+import kotlin.jvm.java
 
 class JoinPageActivity : AppCompatActivity() {
 
@@ -21,7 +23,6 @@ class JoinPageActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var joinButton: Button
 
-    // Repository 선언
     private lateinit var repository: JoinRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +46,6 @@ class JoinPageActivity : AppCompatActivity() {
         joinButton = findViewById(R.id.summit_btn)
 
         repository = JoinRepository()
-
 
         checkIdButton.setOnClickListener {
             val id = idEditText.text.toString().trim()
@@ -93,7 +93,6 @@ class JoinPageActivity : AppCompatActivity() {
             showToast("비밀번호가 일치하지 않습니다.")
             return
         }
-
         if (tel.isEmpty()) {
             showToast("전화번호를 입력해주세요")
             return
@@ -106,9 +105,13 @@ class JoinPageActivity : AppCompatActivity() {
         // 실제 회원가입 요청 호출
         repository.joinUser(name, id, password, tel, email) { success, message ->
             runOnUiThread {
+                // 회원가입 성공 시
                 if (success) {
                     showToast("회원가입 성공!")
-                    // 다음 액션 예: 로그인 화면 이동
+
+                    val intent = Intent(this, LoginPageActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 } else {
                     showToast("회원가입 실패: $message")
                 }

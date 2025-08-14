@@ -23,7 +23,7 @@
             android:background="@drawable/logo_img"/>
 
         <EditText
-            android:id="@+id/insertId"
+            android:id="@+id/user_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -38,11 +38,11 @@
             android:background="@drawable/btn_type01"/>
 
         <EditText
-            android:id="@+id/insertPw"
+            android:id="@+id/user_pw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="Password를 입력하세요"
+            android:hint="비밀번호를 입력하세요"
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
             android:layout_gravity="center"
@@ -62,7 +62,7 @@
             android:background="@drawable/btn_type02"/>
 
         <TextView
-            android:id="@+id/join_button"
+            android:id="@+id/go_join"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="회원가입"
