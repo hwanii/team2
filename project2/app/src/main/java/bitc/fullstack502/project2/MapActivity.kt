@@ -34,12 +34,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
     override fun onMapReady(naverMap: NaverMap) {
-        val lat = intent.getDoubleExtra("lat", 0.0)
-        val lng = intent.getDoubleExtra("lng" , 0.0)
+        val lat = intent.getFloatExtra("lat",0.0f ).toDouble()
+        val lng = intent.getFloatExtra("lng" ,0.0f).toDouble()
         val title = intent.getStringExtra("title")
-        val addr = intent.getStringExtra("addr")
 
-        val location = LatLng(lat,lng)
+        val location = LatLng(lat, lng)
 
         val cameraUpdate = CameraUpdate.scrollAndZoomTo(location,18.0)
         naverMap.moveCamera(cameraUpdate)
@@ -48,7 +47,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             position = location
             map = naverMap
             captionText = title ?: ""
-            subCaptionText = addr ?:""
         }
         marker.onClickListener = Overlay.OnClickListener {
             finish()
