@@ -7,11 +7,6 @@
   android:id="@+id/main"
   android:padding="16dp">
   
-  <ImageView
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:src="@drawable/ic_logo1" />
-  
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,10 +16,16 @@
     <TextView
       android:text="부산에 숨어있는\n수많은 맛집들,\n이제부터 함께 찾아볼까요?"
       android:textSize="24sp"
+      android:textStyle="bold"
+      android:textColor="#000000"
       android:lineSpacingExtra="-2dp"
       android:layout_width="0dp"
       android:layout_weight="1"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content"
+      android:layout_marginTop="25dp"
+      android:layout_marginBottom="25dp"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"/>
   </LinearLayout>
   
   <LinearLayout
@@ -32,16 +33,20 @@
     android:layout_height="48dp"
     android:orientation="horizontal"
     android:background="#efefef"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
     
-<!--    <ImageView-->
-<!--      android:layout_width="36dp"-->
-<!--      android:layout_height="36dp"-->
-<!--      android:src="@drawable/ic_search"-->
-<!--      android:contentDescription="검색 아이콘"-->
-<!--      android:padding="6dp" />-->
-<!--    -->
+    <ImageView
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:src="@drawable/ic_search"
+      android:contentDescription="검색 아이콘"
+      android:padding="6dp" />
+    
     <EditText
+      android:id="@+id/searchEditText"
       android:layout_width="0dp"
       android:layout_height="30dp"
       android:layout_weight="1"
@@ -52,6 +57,20 @@
       android:inputType="text"
       android:textSize="14sp" />
   
+  </LinearLayout>
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+    
+    <Spinner
+      android:id="@+id/selectSpinner"
+      android:layout_width="match_parent"
+      android:layout_height="48dp" />
   </LinearLayout>
 
 </LinearLayout>
