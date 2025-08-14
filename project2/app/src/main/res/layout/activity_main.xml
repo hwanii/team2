@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/main"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -22,11 +21,19 @@
             android:id="@+id/btn_detail"
             android:layout_width="40dp"
             android:layout_height="40dp"
+<<<<<<< HEAD
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/app_name"
             android:focusable="true"
-          tools:ignore="MissingConstraints" />
+=======
+            android:id="@+id/btn_Detail"
+            android:clickable="true"
+>>>>>>> 6bc653948ee3726dc4c23f513599cd2d20b7a337
+            android:src="@drawable/ic_logo1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- 중앙 제목 -->
         <TextView

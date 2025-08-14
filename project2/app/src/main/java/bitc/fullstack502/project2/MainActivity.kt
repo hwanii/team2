@@ -123,24 +123,24 @@ class MainActivity : AppCompatActivity() {
         fetchFoodData()
 
         // 6. 디테일 버튼 클릭 이벤트
-//        binding.btnDetail.setOnClickListener {
-//            item?.let {
-//                val intent = Intent(this, DetailActivity::class.java)
-//                intent.putExtra("title", it.TITLE)
-//                intent.putExtra("addr", it.ADDR)
-//                intent.putExtra("subaddr", it.SubAddr)
-//                intent.putExtra("tel", it.TEL)
-//                intent.putExtra("time", it.Time)
-//                intent.putExtra("item", it.Item)
-//                intent.putExtra("imageurl", it.image)
-//                intent.putExtra("lat", it.Lat ?: 0.0f)
-//                intent.putExtra("lng", it.Lng ?: 0.0f)
-//                intent.putExtra("gugun", it.GUGUN_NM)
-//                startActivity(intent)
-//            } ?: run {
-//                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+        binding.btnDetail.setOnClickListener {
+            item?.let {
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra("title", it.TITLE)
+                intent.putExtra("addr", it.ADDR)
+                intent.putExtra("subaddr", it.SubAddr)
+                intent.putExtra("tel", it.TEL)
+                intent.putExtra("time", it.Time)
+                intent.putExtra("item", it.Item)
+                intent.putExtra("imageurl", it.image)
+                intent.putExtra("lat", it.Lat ?: 0.0f)
+                intent.putExtra("lng", it.Lng ?: 0.0f)
+                intent.putExtra("gugun", it.GUGUN_NM)
+                startActivity(intent)
+            } ?: run {
+                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroy() {
