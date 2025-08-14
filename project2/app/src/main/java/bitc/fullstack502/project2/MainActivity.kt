@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private val servicekey =
         "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
 
-    var item: FoodItem? = null
+    private var foodList: List<FoodItem>? = null
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -119,28 +119,28 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
+        setupButtonListeners()
         fetchFoodData()
 
         // 6. 디테일 버튼 클릭 이벤트
-        binding.btnDetail.setOnClickListener {
-            item?.let {
-                val intent = Intent(this, DetailActivity::class.java)
-                intent.putExtra("title", it.TITLE)
-                intent.putExtra("addr", it.ADDR)
-                intent.putExtra("subaddr", it.SubAddr)
-                intent.putExtra("tel", it.TEL)
-                intent.putExtra("time", it.Time)
-                intent.putExtra("item", it.Item)
-                intent.putExtra("imageurl", it.image)
-                intent.putExtra("lat", it.Lat ?: 0.0f)
-                intent.putExtra("lng", it.Lng ?: 0.0f)
-                intent.putExtra("gugun", it.GUGUN_NM)
-                startActivity(intent)
-            } ?: run {
-                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
-            }
-        }
+//        binding.btnDetail.setOnClickListener {
+//            item?.let {
+//                val intent = Intent(this, DetailActivity::class.java)
+//                intent.putExtra("title", it.TITLE)
+//                intent.putExtra("addr", it.ADDR)
+//                intent.putExtra("subaddr", it.SubAddr)
+//                intent.putExtra("tel", it.TEL)
+//                intent.putExtra("time", it.Time)
+//                intent.putExtra("item", it.Item)
+//                intent.putExtra("imageurl", it.image)
+//                intent.putExtra("lat", it.Lat ?: 0.0f)
+//                intent.putExtra("lng", it.Lng ?: 0.0f)
+//                intent.putExtra("gugun", it.GUGUN_NM)
+//                startActivity(intent)
+//            } ?: run {
+//                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     override fun onDestroy() {
@@ -152,17 +152,26 @@ class MainActivity : AppCompatActivity() {
     private fun fetchFoodData() {
         RetrofitClient.api.getFoodList(serviceKey = servicekey)
             .enqueue(object : Callback<FoodResponse> {
-                override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
+
+                override fun onResponse(
+                    call: Call<FoodResponse>,
+                    response: Response<FoodResponse>
+                ) {
                     if (response.isSuccessful) {
                         val foodList = response.body()?.getFoodkr?.item
                         if (!foodList.isNullOrEmpty()) {
-                            this@MainActivity.item = foodList[0]
-                            Toast.makeText(this@MainActivity, "${item?.TITLE} 데이터 로딩 완료!", Toast.LENGTH_SHORT).show()
+
+                            this@MainActivity.foodList = response.body()?.getFoodkr?.item
+
                         } else {
                             Log.d("MainActivity", "데이터가 없습니다.")
+                            Toast.makeText(this@MainActivity, "표시할 데이터가 없습니다.", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     } else {
                         Log.e("MainActivity", "서버 응답 오류: ${response.code()}")
+                        Toast.makeText(this@MainActivity, "서버에서 응답을 받지 못했습니다.", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
 
@@ -172,10 +181,29 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    // 로그인 상태 확인 함수 (SharedPreferences 사용)
     private fun isLoggedIn(): Boolean {
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         // "logged_in" key 값이 true이면 로그인 상태, 없거나 false면 미로그인
         return prefs.getBoolean("logged_in", false)
+    }
+
+    private fun setupButtonListeners() {
+        binding.btnDetail.setOnClickListener {
+            if (!foodList.isNullOrEmpty()) {
+                val currentItem = foodList!![0]
+
+                val randomSubList = foodList!!.shuffled().take(40)
+                val intent = Intent(this, DetailActivity::class.java).apply {
+                    putExtra("clicked_item", currentItem)
+                    putParcelableArrayListExtra("full_list", ArrayList(randomSubList))
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
+            }
+//        binding.btnList.setOnClickListener {
+//            val intent = Intent(this, ListActivity::class.java)
+//            startActivity(intent)
+        }
     }
 }
