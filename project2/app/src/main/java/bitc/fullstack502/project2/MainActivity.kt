@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private val servicekey =
         "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
 
-    var item: FoodItem? = null
+    private var foodList: List<FoodItem>? = null
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
+        setupButtonListeners()
         fetchFoodData()
 
         // 6. 디테일 버튼 클릭 이벤트
@@ -156,10 +156,13 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val foodList = response.body()?.getFoodkr?.item
                         if (!foodList.isNullOrEmpty()) {
-                            this@MainActivity.item = foodList[0]
-                            Toast.makeText(this@MainActivity, "${item?.TITLE} 데이터 로딩 완료!", Toast.LENGTH_SHORT).show()
+
+                            this@MainActivity.foodList = response.body()?.getFoodkr?.item
+
                         } else {
                             Log.d("MainActivity", "데이터가 없습니다.")
+                            Toast.makeText(this@MainActivity, "표시할 데이터가 없습니다.", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     } else {
                         Log.e("MainActivity", "서버 응답 오류: ${response.code()}")
@@ -177,5 +180,25 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         // "logged_in" key 값이 true이면 로그인 상태, 없거나 false면 미로그인
         return prefs.getBoolean("logged_in", false)
+    }
+
+    private fun setupButtonListeners() {
+        binding.btnDetail.setOnClickListener {
+            if (!foodList.isNullOrEmpty()) {
+                val currentItem = foodList!![0]
+
+                val randomSubList = foodList!!.shuffled().take(40)
+                val intent = Intent(this, DetailActivity::class.java).apply {
+                    putExtra("clicked_item", currentItem)
+                    putParcelableArrayListExtra("full_list", ArrayList(randomSubList))
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "데이터가 준비되지 않았어요.", Toast.LENGTH_SHORT).show()
+            }
+//        binding.btnList.setOnClickListener {
+//            val intent = Intent(this, ListActivity::class.java)
+//            startActivity(intent)
+        }
     }
 }
