@@ -16,12 +16,9 @@
 
         <activity android:name=".MyPageActivity" />
         <activity android:name=".LoginPageActivity" />
-
-
         <activity
             android:name=".MapActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".DetailActivity"
             android:exported="false" />

@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 기본 색상 -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="main">#FFFFFFFF</color>
-    <color name="lightgray">#FFFFFFFF</color>
-    <color name="gray">#FFFFFFFF</color>
+
+    <!-- 기존에 있던 색들 (값 수정) -->
+    <color name="main">#FFFFFFFF</color>           <!-- 앱 기본 배경 흰색 -->
+    <color name="lightgray">#F5F5F5</color>       <!-- 연한 회색 배경용 -->
+    <color name="gray">#888888</color>            <!-- 미선택 아이콘 / 텍스트 -->
+
+    <!-- 추가 색상 -->
+    <color name="primary">#4F8EF7</color>   <!-- 버튼 활성 색 -->
+    <color name="soft_blue">#A0D4FF</color>  <!-- 상단바 밝은색 -->
+    <color name="gray_dark">#888888</color> <!-- 버튼 비활성 색 -->
+    <color name="gray_light">#F0F0F0</color>
+    <color name="button_pressed">#D0E8FF</color>  <!-- 버튼 클릭 시 배경 -->
+    <color name="search_bg">#E0F0FF</color> <!-- 연한 하늘색 예시 -->
+
+    <!-- 배경 색 -->
+    <color name="bg_pastel">#FFF8F5</color>
+
+    <!-- 상단바 텍스트 색 -->
+    <color name="text_primary_pastel">#333333</color>
+
+    <!-- 하단 네비게이션 배경 -->
+    <color name="bottom_nav_pastel">#FFFFFF</color>
+
+    <!-- 하단 네비게이션 아이콘/텍스트 선택 색 -->
+    <color name="nav_item_selector_pastel">#FFB86C</color>
+
+    <!-- 카드 배경 -->
+    <color name="card_bg_pastel">#FAF3F0</color>
+
+    <!-- 카드 텍스트 -->
+    <color name="card_text_pastel">#333333</color>
+
 </resources>

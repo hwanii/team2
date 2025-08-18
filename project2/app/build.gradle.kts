@@ -8,6 +8,11 @@ android {
     namespace = "bitc.fullstack502.project2"
     compileSdk = 36
 
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "bitc.fullstack502.project2"
         minSdk = 29
@@ -17,6 +22,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
 
     buildTypes {
         release {
@@ -40,6 +46,14 @@ android {
 }
 
 dependencies {
+    // Retrofit & Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+// OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+// Logging Interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -1,39 +1,48 @@
 package bitc.fullstack502.project2.Adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.RatingBar
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import bitc.fullstack502.project2.R
+import bitc.fullstack502.project2.databinding.ItemHorizontalCardBinding
 import bitc.fullstack502.project2.model.Item
+import com.bumptech.glide.Glide
 
-/**
- * 가로 스크롤용 어댑터
- * @param itemList - Item 데이터 리스트
- */
-class HorizontalAdapter(private val itemList: List<Item>) :
-    RecyclerView.Adapter<HorizontalAdapter.HorizontalViewHolder>() {
+class HorizontalAdapter(
+    private val items: List<Item>,
+    private val onItemClick: ((Item) -> Unit)? = null
+) : RecyclerView.Adapter<HorizontalAdapter.HorizontalViewHolder>() {
 
-    inner class HorizontalViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.txtTitle)
-        val rating: RatingBar = view.findViewById(R.id.ratingBar)
-        val category: TextView = view.findViewById(R.id.txtCategory)
-    }
+    inner class HorizontalViewHolder(
+        val binding: ItemHorizontalCardBinding
+    ) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_horizontal_card, parent, false)
-        return HorizontalViewHolder(view)
+        val binding = ItemHorizontalCardBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return HorizontalViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HorizontalViewHolder, position: Int) {
-        val item = itemList[position]
-        holder.title.text = item.title
-        holder.rating.rating = item.rating.toFloat()
-        holder.category.text = item.category
+        val item = items[position]
+        with(holder.binding) {
+            txtTitle.text = item.title
+            txtCategory.text = item.category
+            ratingBar.rating = item.rating.toFloat()
+
+            // Glide로 이미지 로딩
+            Glide.with(imgPlace.context)
+                .load(item.thumbUrl)
+                .centerCrop()
+                .into(imgPlace)
+
+            root.setOnClickListener {
+                onItemClick?.invoke(item)
+            }
+        }
     }
 
-    override fun getItemCount(): Int = itemList.size
+    override fun getItemCount(): Int = items.size
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 메인 그라데이션 -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#4A90E2"
+                android:endColor="#B3D9F5"
+                android:angle="270"/>
+        </shape>
+    </item>
+
+    <!-- 반투명 원 패턴 (크기·위치 조절 가능) -->
+    <item>
+        <shape android:shape="oval">
+            <size android:width="200dp" android:height="200dp"/>
+            <solid android:color="#1AFFFFFF"/> <!-- 흰색 10% 투명 -->
+        </shape>
+    </item>
+
+    <item android:left="150dp" android:top="300dp">
+        <shape android:shape="oval">
+            <size android:width="250dp" android:height="250dp"/>
+            <solid android:color="#0DFFFFFF"/> <!-- 흰색 5% 투명 -->
+        </shape>
+    </item>
+
+    <item android:right="100dp" android:bottom="400dp">
+        <shape android:shape="oval">
+            <size android:width="180dp" android:height="180dp"/>
+            <solid android:color="#14FFFFFF"/> <!-- 흰색 8% 투명 -->
+        </shape>
+    </item>
+
+</layer-list>
