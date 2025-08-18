@@ -36,10 +36,10 @@ class JoinRepository {
                 }
             }
             override fun onFailure(call: Call<JoinResponse>, t: Throwable) {
-                ...
+            
             }
         })
-        */
+        
     }
 
     fun checkIdDuplicate(

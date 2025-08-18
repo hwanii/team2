@@ -44,8 +44,6 @@ data class  FoodItem(
     val MAIN_TITLE : String,
     @SerializedName("RPRSNTV_MENU")
     val CATE_NM : String?,
-    @SerializedName("MAIN_IMG_THUMB")
-    val MAIN_IMG : String,
 ): Parcelable
 
 // 임시 데이터! 확인용

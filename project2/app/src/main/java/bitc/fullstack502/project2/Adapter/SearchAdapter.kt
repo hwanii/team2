@@ -35,7 +35,7 @@ class SearchAdapter(private var items: List<FoodItem>) :
     holder.time.text = item.Time ?: "운영시간 정보 없음"
     
     Glide.with(holder.itemView.context)
-      .load(item.MAIN_IMG)
+      .load(item.thumb)
       .into(holder.image)
     
     holder.itemView.setOnClickListener {

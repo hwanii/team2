@@ -22,7 +22,7 @@ object RetrofitClient {
         val gson = GsonBuilder().setLenient().create()
 
         Retrofit.Builder()
-            .baseUrl(FOOD_BASE_URL)
+            .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
@@ -31,7 +31,7 @@ object RetrofitClient {
 
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("https://your.api.base.url/")
+            .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

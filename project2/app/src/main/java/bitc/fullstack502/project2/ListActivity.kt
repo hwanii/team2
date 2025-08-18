@@ -89,7 +89,7 @@ class ListActivity : AppCompatActivity() {
             putExtra("title", item.MAIN_TITLE)
             putExtra("addr", item.ADDR)
             putExtra("menu", item.CATE_NM)
-            putExtra("imageurl", item.MAIN_IMG)
+            putExtra("imageurl", item.thumb)
             putExtra("UcSeq", item.UcSeq)
         }
         startActivity(intent)
