@@ -39,7 +39,12 @@ data class  FoodItem(
     val Lat : Float?,
     @SerializedName("LNG")
     val Lng : Float?,
-    val MAIN_TITLE : String
+    val MAIN_TITLE : String,
+    
+    @SerializedName("RPRSNTV_MENU")
+    val CATE_NM : String?,
+    @SerializedName("MAIN_IMG_THUMB")
+    val MAIN_IMG : String,
 ): Parcelable
 
 

@@ -16,7 +16,7 @@ object RetrofitClient {
     }
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("https://your.api.base.url/")  // 실제 API 서버 주소로 바꾸세요
+            .baseUrl("http://10.0.2.2:8080/")  // 실제 API 서버 주소로 바꾸세요
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

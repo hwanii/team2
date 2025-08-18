@@ -5,5 +5,5 @@
     <color name="main">#FFFFFFFF</color>
     <color name="lightgray">#FFFFFFFF</color>
     <color name="gray">#FFFFFFFF</color>
-    <color name="dark_gray"></color>
+    <color name="dark_gray">#cccccc</color>
 </resources>
