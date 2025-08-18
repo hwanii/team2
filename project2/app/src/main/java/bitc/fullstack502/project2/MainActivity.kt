@@ -102,7 +102,10 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> Log.d("MainActivity", "home selected")
-                R.id.menu_search -> Log.d("MainActivity", "search selected")
+                R.id.menu_search -> {
+                    val intent = Intent(this, SearchActivity::class.java)
+                    startActivity(intent)
+                }
                 R.id.menu_favorite -> Log.d("MainActivity", "favorite selected")
                 R.id.menu_profile -> {
                     if (isLoggedIn()) {
