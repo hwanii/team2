@@ -42,7 +42,6 @@ data class  FoodItem(
     @SerializedName("LNG")
     val Lng : Float?,
     val MAIN_TITLE : String,
-    
     @SerializedName("RPRSNTV_MENU")
     val CATE_NM : String?,
     @SerializedName("MAIN_IMG_THUMB")

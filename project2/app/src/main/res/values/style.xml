@@ -1,8 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-    <style name="btn_bg" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/btn_background</item>
-        <item name="android:textColor">#ffffff</item>
+
+    <!-- BottomNavigationView 활성 상태 텍스트 스타일 -->
+    <style name="BottomNavTextActive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineHeight">14sp</item>
+        <item name="android:textColor">@color/black</item>
+        <!-- 아이콘과 텍스트 간격을 위해 위쪽 여백 추가 -->
+        <item name="android:paddingTop">8dp</item>
     </style>
+
+    <!-- BottomNavigationView 비활성 상태 텍스트 스타일 -->
+    <style name="BottomNavTextInactive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineHeight">14sp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:paddingTop">8dp</item>
+    </style>
+
+    <!-- 버튼 배경 스타일 정의 -->
+    <style name="btn_bg" parent="Widget.MaterialComponents.Button">
+        <!-- 버튼 배경 색상 -->
+        <item name="android:backgroundTint">@color/black</item>
+        <!-- 버튼 글자 색상 -->
+        <item name="android:textColor">@color/white</item>
+        <!-- 버튼 글자 크기 -->
+        <item name="android:textSize">14sp</item>
+        <!-- 버튼 안쪽 여백 -->
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <!-- 모서리 둥글게 만들기 -->
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+        <!-- Material Button 기본 스타일 상속으로 그림자 등 유지 -->
+    </style>
+
 </resources>

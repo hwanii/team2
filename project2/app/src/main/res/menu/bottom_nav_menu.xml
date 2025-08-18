@@ -7,9 +7,9 @@
         android:icon="@drawable/ic_home" />
 
     <item
-        android:id="@+id/menu_search"
-        android:title="Search"
-        android:icon="@drawable/ic_search" />
+        android:id="@+id/menu_list"
+        android:title="List"
+        android:icon="@drawable/ic_list" />
 
     <item
         android:id="@+id/menu_favorite"
