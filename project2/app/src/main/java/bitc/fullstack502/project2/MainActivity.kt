@@ -49,16 +49,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
+
+
         
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
         
         setupSlider()
         setupRecyclerViews()
         setupBottomNavigation()
+
+        binding.btnSearch.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+
+        }
         fetchFoodData()
     }
     
@@ -90,10 +99,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> true
-                R.id.menu_list -> {
-                    startActivity(Intent(this, SearchActivity::class.java))
-                    true
-                }
+                R.id.menu_list -> true
                 R.id.menu_favorite -> true
                 R.id.menu_profile -> {
                     val prefs = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
