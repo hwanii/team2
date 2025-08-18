@@ -13,15 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project2">
-
+        <activity
+            android:name=".FavoritesActivity"
+            android:exported="false" />
         <activity android:name=".MyPageActivity" />
         <activity android:name=".LoginPageActivity" />
-
-
         <activity
             android:name=".MapActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".DetailActivity"
             android:exported="false" />
@@ -34,9 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
-            android:value="2q1wp1mclt"/>
+            android:value="2q1wp1mclt" />
     </application>
 
 </manifest>

@@ -23,12 +23,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.jvm.java
 
+
+
 class MainActivity : AppCompatActivity() {
 
     // API 키값
     private val servicekey =
         "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
-
     private var foodList: List<FoodItem>? = null
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -159,9 +160,15 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         val foodList = response.body()?.getFoodkr?.item
+                        val originalFoodList = response.body()?.getFoodkr?.item
                         if (!foodList.isNullOrEmpty()) {
 
-                            this@MainActivity.foodList = response.body()?.getFoodkr?.item
+
+                            val listWithImages = originalFoodList?.filter { it.image != null }
+
+                            // 2단계: 이미지가 있는 목록을 기반으로 좌표 중복을 제거합니다.
+
+                            this@MainActivity.foodList = listWithImages
 
                         } else {
                             Log.d("MainActivity", "데이터가 없습니다.")
@@ -188,12 +195,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtonListeners() {
-        binding.btnDetail.setOnClickListener {
+        binding.btnFav.setOnClickListener {
             if (!foodList.isNullOrEmpty()) {
                 val currentItem = foodList!![0]
 
                 val randomSubList = foodList!!.shuffled().take(40)
-                val intent = Intent(this, DetailActivity::class.java).apply {
+                val intent = Intent(this, FavoritesActivity::class.java).apply {
                     putExtra("clicked_item", currentItem)
                     putParcelableArrayListExtra("full_list", ArrayList(randomSubList))
                 }

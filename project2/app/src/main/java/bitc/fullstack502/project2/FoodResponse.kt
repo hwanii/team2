@@ -40,7 +40,9 @@ data class  FoodItem(
     @SerializedName("LAT")
     val Lat : Float?,
     @SerializedName("LNG")
-    val Lng : Float?
+    val Lng : Float?,
+    @SerializedName("RPRSNTV_MENU")
+    val CATE_NM : String?
 ): Parcelable
 
 // 임시 데이터! 확인용

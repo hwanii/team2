@@ -9,21 +9,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txtImage"
-        android:background="@drawable/border_bg"
-        android:layout_marginHorizontal="10dp"/>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@color/black"
-        android:layout_marginTop="10dp"/>
-
+        android:id="@+id/txtImage" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="4dp">
         <TextView
             android:id="@+id/txtAddrcategory"
             android:layout_width="match_parent"
@@ -58,10 +55,16 @@
                     android:layout_height="24dp"
                     android:src="@drawable/heart_none"
                     android:clickable="true"
-                    android:focusable="true"/>
-
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"/>
             </LinearLayout>
         </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_marginBottom="10dp"/>
+
 
         <TextView
             android:id="@+id/txtAddr"
@@ -70,16 +73,6 @@
             android:layout_marginBottom="3dp"
             android:layout_marginEnd="10dp"
             android:text="주소"/>
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtSubAddr"
-        android:text="서브주소"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -321,6 +314,7 @@
         </LinearLayout>
 
         </LinearLayout>
+    </LinearLayout>
 </ScrollView>
 
 

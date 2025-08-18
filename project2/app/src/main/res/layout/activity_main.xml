@@ -18,7 +18,7 @@
 
         <!-- 왼쪽 로고 -->
         <ImageView
-            android:id="@+id/btn_detail"
+            android:id="@+id/btn_fav"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
