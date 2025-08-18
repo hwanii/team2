@@ -18,6 +18,8 @@ data class  FoodResult(
 )
 @Parcelize
 data class  FoodItem(
+    @SerializedName("MAIN_IMG_THUMB")
+    val thumb : String?,
     @SerializedName("MAIN_IMG_NORMAL")
     val image: String?,
     @SerializedName("UC_SEQ")
@@ -47,7 +49,10 @@ data class  FoodItem(
     val MAIN_IMG : String,
 ): Parcelable
 
-
-
-
+// 임시 데이터! 확인용
+data class Review(
+    val rating: Float,
+    val content: String,
+    val date: String
+)
 
