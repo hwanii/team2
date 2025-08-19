@@ -43,7 +43,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:shadowColor="#55000000"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4"/>
 
             <ImageView
                 android:id="@+id/btn_search"
@@ -142,10 +146,27 @@
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp"
-                    android:text="전체 장소"
+                    android:text="지역별 맛집"
                     android:textColor="@color/text_primary_pastel"
                     android:textSize="18sp"
                     android:textStyle="bold" />
+
+                <!-- 구 선택 HorizontalScrollView -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/guFilterLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp"/>
+                </HorizontalScrollView>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/verticalRecyclerView"

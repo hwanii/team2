@@ -20,7 +20,6 @@
     <color name="primary">#4F8EF7</color>   <!-- 버튼 활성 색 -->
     <color name="soft_blue">#A0D4FF</color>  <!-- 상단바 밝은색 -->
     <color name="gray_dark">#888888</color> <!-- 버튼 비활성 색 -->
-    <color name="gray_light">#F0F0F0</color>
     <color name="button_pressed">#D0E8FF</color>  <!-- 버튼 클릭 시 배경 -->
     <color name="search_bg">#E0F0FF</color> <!-- 연한 하늘색 예시 -->
 
@@ -41,5 +40,11 @@
 
     <!-- 카드 텍스트 -->
     <color name="card_text_pastel">#333333</color>
+
+    <color name="brand_orange">#FF6D00</color>
+    <color name="brand_orange_bg">#FFFFE0B2</color>
+    <color name="gray_light">#555555</color>
+    <color name="gray_light_bg">#F0F0F0</color>
+    <color name="text_secondary">#9E9E9E</color> <!-- 연한 회색 예시 -->
 
 </resources>

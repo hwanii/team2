@@ -1,74 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@color/card_bg_pastel"
+    android:clickable="true"
+    android:focusable="true">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_margin="8dp"
-        android:background="@color/card_bg_pastel"
-        android:clickable="true"
-        android:focusable="true"
-        card_view:cardCornerRadius="12dp"
-        card_view:cardElevation="6dp">
 
+    <!-- 장소 이미지 -->
+    <ImageView
+        android:id="@+id/itemImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
+        android:background="#E0E0E0" />
+
+    <!-- 텍스트 영역 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/itemImageView"
+        android:layout_toStartOf="@+id/likeIcon"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <!-- 가게 이름 -->
+        <TextView
+            android:id="@+id/itemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="2"/>
+
+        <!-- 카테고리 -->
+        <TextView
+            android:id="@+id/itemCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="2dp"/>
+
+        <!-- 평점 · 주소 -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
-            <!-- 장소 이미지 -->
-            <ImageView
-                android:id="@+id/imgPlace"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop" />
-
-            <!-- 제목 -->
             <TextView
-                android:id="@+id/txtTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="가게 이름"
-                android:textColor="@color/card_text_pastel"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <!-- 평점 표시 (별 아이콘 + 숫자) -->
-            <TextView
-                android:id="@+id/txtRating"
+                android:id="@+id/itemRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="⭐ 4.5"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
-            <!-- 주소 -->
             <TextView
-                android:id="@+id/txtAddress"
-                android:layout_width="match_parent"
+                android:id="@+id/itemAddr"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="주소"
-                android:textColor="#666666"
-                android:textSize="12sp" />
-
-            <!-- 카테고리: 카드 맨 아래로 이동, 진하게 표시 -->
-            <TextView
-                android:id="@+id/txtCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="카테고리"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:layout_marginStart="8dp"
+                android:textSize="12sp"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</layout>
+    </LinearLayout>
+
+    <!-- 좋아요 아이콘 -->
+    <ImageView
+        android:id="@+id/likeIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/heart_full"/>
+
+</RelativeLayout>
