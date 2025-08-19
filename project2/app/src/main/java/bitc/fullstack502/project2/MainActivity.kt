@@ -19,6 +19,7 @@ import bitc.fullstack502.project2.Adapter.VerticalAdapter
 import bitc.fullstack502.project2.Adapter.SliderAdapter
 import bitc.fullstack502.project2.databinding.ActivityMainBinding
 import bitc.fullstack502.project2.FoodResponse
+import bitc.fullstack502.project2.databinding.ActivityFavoritesBinding
 import bitc.fullstack502.project2.model.Item
 import retrofit2.Call
 import retrofit2.Callback
@@ -173,10 +174,12 @@ class MainActivity : AppCompatActivity() {
             ) {
                 binding.progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
-                    val list =
-                        response.body()?.getFoodkr?.item?.filter { !it.thumb.isNullOrEmpty() }
-                            ?.distinctBy { it.Lat to it.Lng } ?: emptyList()
-                    foodList = list
+                    val list = response.body()?.getFoodkr?.item?.filter { !it.thumb.isNullOrEmpty() }
+                        ?.distinctBy { it.Lat to it.Lng } ?: emptyList()
+
+                    val filteredList = list.filter { !it.thumb.isNullOrEmpty() }
+                        .distinctBy { it.Lat to it.Lng }
+                    foodList = filteredList
 
                     val itemList = list.map {
                         Item(
