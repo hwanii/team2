@@ -5,12 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import bitc.fullstack502.project2.DetailActivity
+import bitc.fullstack502.project2.FoodItem
 import bitc.fullstack502.project2.databinding.ItemVerticalCardBinding
-import bitc.fullstack502.project2.model.Item
 import com.bumptech.glide.Glide
 
-class VerticalAdapter(private val itemList: List<Item>) :
-    RecyclerView.Adapter<VerticalAdapter.VerticalViewHolder>() {
+// FoodItem 전용 Adapter
+class VerticalAdapter(
+    private val itemList: List<FoodItem>,
+    private val listener: ItemClickListener
+) : RecyclerView.Adapter<VerticalAdapter.VerticalViewHolder>() {
+
+    interface ItemClickListener {
+        fun onItemClick(item: FoodItem)
+    }
 
     inner class VerticalViewHolder(val binding: ItemVerticalCardBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -27,22 +34,35 @@ class VerticalAdapter(private val itemList: List<Item>) :
     override fun onBindViewHolder(holder: VerticalViewHolder, position: Int) {
         val item = itemList[position]
 
-        holder.binding.txtTitle.text = item.title
-        holder.binding.txtAddress.text = item.address
-        holder.binding.ratingBar.rating = item.rating.toFloat()
+        with(holder.binding) {
+            txtTitle.text = item.TITLE
+            txtAddress.text = cleanMenuText(item.ADDR)
+            txtCategory.text = cleanMenuText(item.CATE_NM)
+            txtRating.text = "⭐ 0.0" // 평점이 없으면 0.0 처리
 
-        Glide.with(holder.itemView.context)
-            .load(item.thumbUrl)
-            .centerCrop()
-            .into(holder.binding.imgPlace)
+            Glide.with(imgPlace.context)
+                .load(item.thumb)
+                .centerCrop()
+                .into(imgPlace)
 
-        holder.binding.root.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("item", item) // Item이 Parcelable 혹은 Serializable 이어야 합니다
-            context.startActivity(intent)
+            // 클릭 이벤트
+            root.setOnClickListener {
+                listener.onItemClick(item)
+            }
         }
     }
 
     override fun getItemCount(): Int = itemList.size
+
+    private fun cleanMenuText(menu: String?): String {
+        if (menu.isNullOrBlank()) return ""
+        var cleanedText = menu
+        cleanedText = cleanedText.replace(Regex("\\(.*?\\)"), "")
+        cleanedText = cleanedText.replace(Regex("[\\s=]*[₩￦][\\s=]*[\\d,]+"), "")
+        cleanedText = cleanedText.replace(Regex("-[\\d,]+"), "")
+        cleanedText = cleanedText.replace(Regex("/\\s*[\\d,]+"), "")
+        cleanedText = cleanedText.replace(Regex("\\d+g"), "")
+        val menuItems = cleanedText.split(Regex("[,\\s]+")).filter { it.isNotBlank() }
+        return menuItems.take(2).joinToString(", ")
+    }
 }

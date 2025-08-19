@@ -2,7 +2,6 @@ package bitc.fullstack502.project2
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,13 +13,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import bitc.fullstack502.project2.Adapter.HorizontalAdapter
-import bitc.fullstack502.project2.Adapter.SlideItem
 import bitc.fullstack502.project2.Adapter.VerticalAdapter
+import bitc.fullstack502.project2.Adapter.SlideItem
 import bitc.fullstack502.project2.Adapter.SliderAdapter
 import bitc.fullstack502.project2.databinding.ActivityMainBinding
-import bitc.fullstack502.project2.FoodResponse
-import bitc.fullstack502.project2.databinding.ActivityFavoritesBinding
-import bitc.fullstack502.project2.model.Item
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
 
     private var foodList: List<FoodItem>? = null
-
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private val sliderHandler = Handler(Looper.getMainLooper())
@@ -59,14 +54,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupSlider()
-        setupRecyclerViews()
         setupBottomNavigation()
+        fetchFoodData()
 
         binding.btnSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
-
-        fetchFoodData()
     }
 
     override fun onDestroy() {
@@ -76,46 +69,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSlider() {
         val slides = listOf(
-            SlideItem(
-                R.drawable.slide1,
-                "부산 맛집 검색",
-                "https://search.naver.com/search.naver?query=부산+맛집"
-            ),
-            SlideItem(
-                R.drawable.slide2,
-                "부산 조개구이 검색",
-                "https://search.naver.com/search.naver?query=부산+조개구이"
-            ),
-            SlideItem(
-                R.drawable.slide3,
-                "부산 야장 검색",
-                "https://search.naver.com/search.naver?query=부산+야장"
-            ),
-            SlideItem(
-                R.drawable.slide4,
-                "부산 고기집 검색",
-                "https://search.naver.com/search.naver?query=부산+고기집"
-            )
+            SlideItem(R.drawable.slide1, "부산 맛집 검색", "https://search.naver.com/search.naver?query=부산+맛집"),
+            SlideItem(R.drawable.slide2, "부산 조개구이 검색", "https://search.naver.com/search.naver?query=부산+조개구이"),
+            SlideItem(R.drawable.slide3, "부산 야장 검색", "https://search.naver.com/search.naver?query=부산+야장"),
+            SlideItem(R.drawable.slide4, "부산 고기집 검색", "https://search.naver.com/search.naver?query=부산+고기집")
         )
 
         binding.viewPager.adapter = SliderAdapter(slides, this)
         sliderHandler.postDelayed(sliderRunnable, 3000)
-
-        // ★ TabLayoutMediator 등 indicator 연결 코드 제거 ★
-        // 왼쪽 아래 dot가 생기는 문제를 완전히 제거
-    }
-
-    private fun setupRecyclerViews() {
-        binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.verticalRecyclerView.adapter = VerticalAdapter(emptyList())
-
-        binding.horizontalRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.horizontalRecyclerView.adapter = HorizontalAdapter(emptyList())
-
-        binding.horizontalRecyclerView2.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.horizontalRecyclerView2.adapter = HorizontalAdapter(emptyList())
     }
 
     private fun setupBottomNavigation() {
@@ -130,35 +91,25 @@ class MainActivity : AppCompatActivity() {
                     if (!foodList.isNullOrEmpty()) {
                         val mockFavorites = foodList!!.shuffled().take(6)
                         val intent = Intent(this, FavoritesActivity::class.java).apply {
-                            putParcelableArrayListExtra(
-                                "favorites_list",
-                                ArrayList(mockFavorites)
-                            )
+                            putParcelableArrayListExtra("favorites_list", ArrayList(mockFavorites))
                         }
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this, "아직 데이터 로딩 중입니다.", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, "아직 데이터 로딩 중입니다.", Toast.LENGTH_SHORT).show()
                     }
                     true
                 }
-
                 R.id.menu_profile -> {
                     val prefs = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
                     val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
                     val intent =
                         if (isLoggedIn) Intent(this, MyPageActivity::class.java)
                         else Intent(this, LoginPageActivity::class.java).also {
-                            Toast.makeText(
-                                this,
-                                "로그인 후 이용 가능합니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(this, "로그인 후 이용 가능합니다.", Toast.LENGTH_SHORT).show()
                         }
                     startActivity(intent)
                     true
                 }
-
                 else -> false
             }
         }
@@ -168,56 +119,67 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
 
         RetrofitClient.api.getFoodList(serviceKey).enqueue(object : Callback<FoodResponse> {
-            override fun onResponse(
-                call: Call<FoodResponse>,
-                response: Response<FoodResponse>
-            ) {
+            override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
                 binding.progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
-                    val list = response.body()?.getFoodkr?.item?.filter { !it.thumb.isNullOrEmpty() }
-                        ?.distinctBy { it.Lat to it.Lng } ?: emptyList()
-
-                    val filteredList = list.filter { !it.thumb.isNullOrEmpty() }
+                    val rawList = response.body()?.getFoodkr?.item ?: emptyList()
+                    val filteredList = rawList
+                        .filter { !it.thumb.isNullOrBlank() }
                         .distinctBy { it.Lat to it.Lng }
+
                     foodList = filteredList
 
-                    val itemList = list.map {
-                        Item(
-                            title = it.MAIN_TITLE ?: "이름 없음",
-                            rating = 0.0,
-                            category = it.CATE_NM ?: "메뉴 정보 없음",
-                            address = it.ADDR ?: "주소 없음",
-                            thumbUrl = it.thumb ?: ""
-                        )
-                    }
+                    setupRecyclerViews(filteredList)
 
-                    binding.verticalRecyclerView.adapter = VerticalAdapter(itemList.take(5))
-                    binding.horizontalRecyclerView.adapter =
-                        HorizontalAdapter(itemList.shuffled().take(5))
-                    binding.horizontalRecyclerView2.adapter =
-                        HorizontalAdapter(itemList.shuffled().take(5))
                 } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "서버에서 응답을 받지 못했습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@MainActivity, "서버에서 응답을 받지 못했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(
-                    this@MainActivity,
-                    "데이터를 불러오는 중 오류가 발생했습니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@MainActivity, "데이터를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun isLoggedIn(): Boolean {
-        val prefs = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
-        return prefs.getBoolean("isLoggedIn", false)
+    private fun setupRecyclerViews(foodItems: List<FoodItem>) {
+        // Vertical RecyclerView
+        binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.verticalRecyclerView.adapter = VerticalAdapter(foodItems.take(5),
+            object : VerticalAdapter.ItemClickListener {
+                override fun onItemClick(item: FoodItem) {
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                    intent.putExtra("item", item)
+                    intent.putParcelableArrayListExtra("full_list", ArrayList(foodItems))
+                    startActivity(intent)
+                }
+            })
+
+        // Horizontal RecyclerView 1
+        binding.horizontalRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.horizontalRecyclerView.adapter = HorizontalAdapter(foodItems.shuffled().take(5),
+            object : HorizontalAdapter.ItemClickListener {
+                override fun onItemClick(item: FoodItem) {
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                    intent.putExtra("item", item)
+                    intent.putParcelableArrayListExtra("full_list", ArrayList(foodItems))
+                    startActivity(intent)
+                }
+            })
+
+        // Horizontal RecyclerView 2
+        binding.horizontalRecyclerView2.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.horizontalRecyclerView2.adapter = HorizontalAdapter(foodItems.shuffled().take(5),
+            object : HorizontalAdapter.ItemClickListener {
+                override fun onItemClick(item: FoodItem) {
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                    intent.putExtra("item", item)
+                    intent.putParcelableArrayListExtra("full_list", ArrayList(foodItems))
+                    startActivity(intent)
+                }
+            })
     }
 }

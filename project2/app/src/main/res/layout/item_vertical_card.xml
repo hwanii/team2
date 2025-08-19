@@ -4,59 +4,71 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         android:layout_margin="8dp"
-        card_view:cardCornerRadius="12dp"
-        card_view:cardElevation="6dp"
+        android:background="@color/card_bg_pastel"
         android:clickable="true"
         android:focusable="true"
-        android:background="@color/card_bg_pastel">
+        card_view:cardCornerRadius="12dp"
+        card_view:cardElevation="6dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:padding="8dp">
 
+            <!-- 장소 이미지 -->
             <ImageView
                 android:id="@+id/imgPlace"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:scaleType="centerCrop"
-                android:clipToOutline="true"/>
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop" />
 
+            <!-- 제목 -->
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="가게 이름"
-                android:textStyle="bold"
                 android:textColor="@color/card_text_pastel"
                 android:textSize="14sp"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:textStyle="bold" />
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                style="?android:attr/ratingBarStyleSmall"
+            <!-- 평점 표시 (별 아이콘 + 숫자) -->
+            <TextView
+                android:id="@+id/txtRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
                 android:layout_marginTop="2dp"
-                android:isIndicator="true"
-                android:progressTint="@color/nav_item_selector_pastel"
-                android:secondaryProgressTint="@color/gray_light"/>
+                android:text="⭐ 4.5"
+                android:textSize="12sp" />
 
+            <!-- 주소 -->
             <TextView
                 android:id="@+id/txtAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="주소"
                 android:textColor="#666666"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp" />
+                android:textSize="12sp" />
 
+            <!-- 카테고리: 카드 맨 아래로 이동, 진하게 표시 -->
+            <TextView
+                android:id="@+id/txtCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="카테고리"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>
