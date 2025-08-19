@@ -9,6 +9,5 @@ data class User(
     val userId: String,
     val userPw: String,
     val userTel: String,
-    val userEmail: String,
-    val userDay: String // 회원 생성일
+    val userEmail: String
 ) : Parcelable

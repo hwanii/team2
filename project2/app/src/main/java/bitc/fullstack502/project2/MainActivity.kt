@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.menu_profile -> {
-                    val prefs = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
                     val intent =
                         if (isLoggedIn) Intent(this, MyPageActivity::class.java)
@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isLoggedIn(): Boolean {
-        val prefs = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         return prefs.getBoolean("isLoggedIn", false)
     }
 }

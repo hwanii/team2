@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    android:id="@+id/main">
-
-        <android.widget.Button
-            android:id="@+id/go_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="메인으로 가기"
-            android:textColor="@color/gray"
-            android:background="@drawable/btn_type01"
-            android:layout_gravity=""/>
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/logo"
@@ -29,17 +20,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
+        android:orientation="horizontal"
         android:paddingTop="40dp"
         android:paddingBottom="40dp">
 
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -53,9 +44,9 @@
                 android:id="@+id/user_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:text=""
-                android:textColor="@color/black"
-                android:layout_marginTop="12dp"/>
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,29 +54,43 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
+
             <android.widget.Button
                 android:id="@+id/go_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="프로필 수정"
-                android:textColor="@color/gray"
+                android:layout_gravity="end"
                 android:background="@drawable/btn_type01"
-                android:layout_gravity="end"/>
+                android:text="프로필 수정"
+                android:textColor="@color/gray" />
+
+
         </LinearLayout>
     </LinearLayout>
 
-    <android.widget.Button
+    <TextView
         android:id="@+id/logout_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:text="로그아웃"
         android:textColor="@color/gray"
-        android:background="@drawable/btn_type03"
-        android:paddingStart="70dp"
-        android:paddingEnd="70dp"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal">
-    </android.widget.Button>
+        android:layout_gravity="end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"/>
+
+    <!--    <android.widget.Button-->
+    <!--        android:id="@+id/logout_button"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center_horizontal"-->
+    <!--        android:layout_marginBottom="20dp"-->
+    <!--        android:background="@drawable/btn_type03"-->
+    <!--        android:paddingStart="70dp"-->
+    <!--        android:paddingEnd="70dp"-->
+    <!--        android:text="로그아웃"-->
+    <!--        android:textColor="@color/gray"></android.widget.Button>-->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,21 +99,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp">
+        android:layout_marginEnd="15dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="내가 쓴 Review"
-            android:textSize="20sp"
-            android:textColor="@color/black"
             android:paddingTop="30dp"
-            android:paddingBottom="20dp"/>
+            android:paddingBottom="20dp"
+            android:text="내가 쓴 Review"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <ScrollView
+            android:id="@+id/my_review"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -116,24 +122,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingEnd="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="15dp">
+                    android:orientation="horizontal">
 
                     <android.widget.ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/img"/>
+                        android:background="@drawable/img" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="10dp">
 
@@ -142,14 +149,14 @@
                             android:layout_height="wrap_content"
                             android:text="Title"
                             android:textColor="@color/black"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Reply content"
                             android:textColor="@color/gray"
-                            android:textSize="13sp"/>
+                            android:textSize="13sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -159,39 +166,39 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="별"
-                                android:padding="2dp"/>
+                                android:padding="2dp"
+                                android:text="별" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4.5"
-                                android:padding="2dp"/>
+                                android:padding="2dp"
+                                android:text="4.5" />
                         </LinearLayout>
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="x"
-                        android:textSize="20sp" />
+                    <ImageView
+                        android:id="@+id/delete_btn01"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/x_img" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="15dp">
+                    android:orientation="horizontal">
 
                     <android.widget.ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/img"/>
+                        android:background="@drawable/img" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="10dp">
 
@@ -200,14 +207,14 @@
                             android:layout_height="wrap_content"
                             android:text="Title"
                             android:textColor="@color/black"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Reply content"
                             android:textColor="@color/gray"
-                            android:textSize="13sp"/>
+                            android:textSize="13sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -217,39 +224,39 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="별"
-                                android:padding="2dp"/>
+                                android:padding="2dp"
+                                android:text="별" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4.5"
-                                android:padding="2dp"/>
+                                android:padding="2dp"
+                                android:text="4.5" />
                         </LinearLayout>
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="x"
-                        android:textSize="20sp" />
+                    <ImageView
+                        android:id="@+id/delete_btn02"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/x_img" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="15dp">
+                    android:orientation="horizontal">
 
                     <android.widget.ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/img"/>
+                        android:background="@drawable/img" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="10dp">
 
@@ -258,14 +265,14 @@
                             android:layout_height="wrap_content"
                             android:text="Title"
                             android:textColor="@color/black"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Reply content"
                             android:textColor="@color/gray"
-                            android:textSize="13sp"/>
+                            android:textSize="13sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -275,21 +282,21 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="별"
-                                android:padding="2dp"/>
+                                android:padding="2dp"
+                                android:text="별" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4.5"
-                                android:padding="2dp"/>
+                                android:padding="2dp"
+                                android:text="4.5" />
                         </LinearLayout>
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="x"
-                        android:textSize="20sp" />
+                    <ImageView
+                        android:id="@+id/delete_btn03"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/x_img" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -297,15 +304,16 @@
         </ScrollView>
     </LinearLayout>
 
-    <!--    <TextView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:text="작성한 Review가 없습니다"-->
-    <!--        android:textSize="23sp"-->
-    <!--        android:textColor="@color/black"-->
-    <!--        android:textAlignment="center"-->
-    <!--        android:gravity="center"/>-->
+    <TextView
+        android:id="@+id/no_review"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="작성한 Review가 없습니다"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="23sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -315,9 +323,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="메뉴 들어갈부분"
             android:textAlignment="center"
-            android:textSize="40sp"
-            android:text="메뉴 들어갈부분"/>
+            android:textSize="40sp" />
 
     </LinearLayout>
 </LinearLayout>

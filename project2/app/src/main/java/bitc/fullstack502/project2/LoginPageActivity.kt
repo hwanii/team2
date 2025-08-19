@@ -46,12 +46,13 @@ class LoginPageActivity : AppCompatActivity() {
                         // 로그인 상태 저장
                         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
                         prefs.edit()
-                            .putBoolean("logged_in", true)
+                            .putBoolean("isLoggedIn", true)
                             .putString("user_name", userResponse.userName)
                             .putString("user_id", userResponse.userId)
                             .putString("user_pw", userResponse.userPw)
+                            .putString("user_tel", userResponse.userTel)
                             .putString("user_email", userResponse.userEmail)
-                            .apply()
+                            .commit()
 
                         // 사용자 정보 객체 생성
                         val user = User(
@@ -59,11 +60,10 @@ class LoginPageActivity : AppCompatActivity() {
                             userId = userResponse.userId,
                             userPw = userResponse.userPw,
                             userTel = userResponse.userTel,
-                            userEmail = userResponse.userEmail,
-                            userDay = userResponse.userDay
+                            userEmail = userResponse.userEmail
                         )
 
-                        val intent = Intent(this, MyPageActivity::class.java)
+                        val intent = Intent(this, MainActivity::class.java)
                         intent.putExtra("user", user)
                         startActivity(intent)
 
