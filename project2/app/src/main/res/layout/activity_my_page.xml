@@ -6,6 +6,15 @@
     android:background="@color/white"
     android:id="@+id/main">
 
+        <android.widget.Button
+            android:id="@+id/go_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="메인으로 가기"
+            android:textColor="@color/gray"
+            android:background="@drawable/btn_type01"
+            android:layout_gravity=""/>
+
     <TextView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
@@ -62,26 +71,21 @@
                 android:textColor="@color/gray"
                 android:background="@drawable/btn_type01"
                 android:layout_gravity="end"/>
-
-            <android.widget.Button
-                android:id="@+id/logout_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="로그아웃 버튼"
-                android:textColor="@color/gray"
-                android:background="@drawable/btn_type01"
-                android:layout_gravity="end"/>
         </LinearLayout>
     </LinearLayout>
 
     <android.widget.Button
-        android:id="@+id/go_main"
+        android:id="@+id/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="로그아웃 버튼"
+        android:text="로그아웃"
         android:textColor="@color/gray"
-        android:background="@drawable/btn_type01"
-        android:layout_gravity="end"/>
+        android:background="@drawable/btn_type03"
+        android:paddingStart="70dp"
+        android:paddingEnd="70dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal">
+    </android.widget.Button>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
