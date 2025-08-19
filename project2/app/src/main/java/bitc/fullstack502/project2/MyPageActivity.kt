@@ -3,6 +3,7 @@ package bitc.fullstack502.project2
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,8 +30,7 @@ class MyPageActivity : AppCompatActivity() {
             userId = prefs.getString("user_id", "") ?: "",
             userPw = prefs.getString("user_pw", "") ?: "",
             userTel = prefs.getString("user_tel", "") ?: "",
-            userEmail = prefs.getString("user_email", "") ?: "",
-            userDay = prefs.getString("user_day", "") ?: ""
+            userEmail = prefs.getString("user_email", "") ?: ""
         )
 
         // 화면에 유저 정보 표시
@@ -56,11 +56,14 @@ class MyPageActivity : AppCompatActivity() {
             finish()
         }
 
-        // 메인으로 이동 버튼 클릭
-        binding.goMain.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("user", user)
-            startActivity(intent)
+        val hasReview = false
+
+        if (hasReview) {
+            binding.myReview.visibility = View.VISIBLE
+            binding.noReview.visibility = View.GONE
+        } else {
+            binding.myReview.visibility = View.GONE
+            binding.noReview.visibility = View.VISIBLE
         }
     }
 }

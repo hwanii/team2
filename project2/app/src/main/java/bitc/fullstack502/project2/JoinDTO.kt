@@ -12,8 +12,7 @@ data class JoinRequest(
 // 회원가입 응답
 data class JoinResponse(
     val success: Boolean,
-    val message: String,
-    val userDay: String? = null
+    val message: String
 )
 
 // 아이디 중복 체크 API 응답 예시
