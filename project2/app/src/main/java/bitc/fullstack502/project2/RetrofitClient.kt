@@ -27,10 +27,16 @@ object RetrofitClient {
             .build()
             .create(FoodApiService::class.java)
     }
-    
-    // 스프링부트 서버
+
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://your.api.base.url/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
     private const val SPRING_BASE_URL = "http://10.0.2.2:8080/"
-    
+
     // 회원가입 & 로그인 API
     val joinApi: JoinApiService by lazy {
         Retrofit.Builder()
