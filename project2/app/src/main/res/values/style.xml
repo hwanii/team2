@@ -34,5 +34,26 @@
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
         <!-- Material Button 기본 스타일 상속으로 그림자 등 유지 -->
     </style>
+    
+    
+    <style name="FilterOffButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/corner_radius</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="strokeColor">@color/stroke_gray</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    
+    <style name="FilterOnButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/corner_radius</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="strokeColor">@color/stroke_orange</item>
+        <item name="android:backgroundTint">@color/light_orange</item>
+        <item name="android:textColor">@color/stroke_orange</item>
+    </style>
+    
+    <style name="RoundedImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
 
 </resources>

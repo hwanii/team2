@@ -99,7 +99,10 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> true
-                R.id.menu_list -> true
+                R.id.menu_list -> {
+                    startActivity(Intent(this, ListActivity::class.java))
+                    true
+                }
                 R.id.menu_favorite -> true
                 R.id.menu_profile -> {
                     val prefs = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)

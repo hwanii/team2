@@ -7,10 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
 
 object RetrofitClient {
-
-    // 기본 시작 url 지정 (공공데이터 API)
+    
+    // 공공데이터 API
     private const val BASE_URL = "https://apis.data.go.kr/6260000/"
-
     val api: FoodApiService by lazy {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -18,9 +17,9 @@ object RetrofitClient {
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
-
+        
         val gson = GsonBuilder().setLenient().create()
-
+        
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
@@ -28,16 +27,10 @@ object RetrofitClient {
             .build()
             .create(FoodApiService::class.java)
     }
-
-    private val retrofit by lazy {
-        Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    private const val SPRING_BASE_URL = "http://localhost:8080/"
-
+    
+    // 스프링부트 서버
+    private const val SPRING_BASE_URL = "http://10.0.2.2:8080/"
+    
     // 회원가입 & 로그인 API
     val joinApi: JoinApiService by lazy {
         Retrofit.Builder()
@@ -46,7 +39,7 @@ object RetrofitClient {
             .build()
             .create(JoinApiService::class.java)
     }
-
+    
     // 회원정보 수정 API
     val editApi: JoinApiService by lazy {
         Retrofit.Builder()

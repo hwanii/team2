@@ -3,7 +3,6 @@ package bitc.fullstack502.project2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-// import bitc.fullstack502.project2.RetrofitClient  // 삭제해도 됨
 
 class JoinRepository {
 
@@ -35,28 +34,27 @@ class JoinRepository {
                     onResult(false, "서버 오류: ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<JoinResponse>, t: Throwable) {
-            
+                onResult(false, "네트워크 오류: ${t.message}")
             }
         })
-        
     }
 
+    // 아이디 중복 체크 함수
     fun checkIdDuplicate(
         id: String,
         onResult: (available: Boolean, message: String) -> Unit
     ) {
-        // joinApiService 사용 코드 주석 처리
-        /*
         joinApiService.checkIdDuplicate(id).enqueue(object : Callback<IdCheckResponse> {
             override fun onResponse(call: Call<IdCheckResponse>, response: Response<IdCheckResponse>) {
                 val body = response.body()
                 onResult(body?.available ?: false, body?.message ?: "응답 데이터 없음")
             }
+
             override fun onFailure(call: Call<IdCheckResponse>, t: Throwable) {
-                ...
+                onResult(false, "네트워크 오류: ${t.message}")
             }
         })
-        */
     }
 }

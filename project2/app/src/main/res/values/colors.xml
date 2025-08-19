@@ -9,7 +9,12 @@
     <color name="lightgray">#F5F5F5</color>       <!-- 연한 회색 배경용 -->
     <color name="gray">#888888</color>            <!-- 미선택 아이콘 / 텍스트 -->
 
-    <color name="dark_gray">#cccccc</color>
+    <color name="dark_gray">#666666</color>
+    <color name="main_color">#a57865</color>
+    <color name="line">#EEEEEE</color>
+    <color name="light_orange">#FAF0E4</color>
+    <color name="stroke_orange">#E66C45</color>
+    <color name="stroke_gray">#DDDDDD</color>
 
     <!-- 추가 색상 -->
     <color name="primary">#4F8EF7</color>   <!-- 버튼 활성 색 -->
