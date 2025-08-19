@@ -54,4 +54,12 @@ object RetrofitClient {
             .build()
             .create(JoinApiService::class.java)
     }
+
+    val reviewApi: ReviewApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(SPRING_BASE_URL) // 스프링 서버 주소 사용
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ReviewApiService::class.java)
+    }
 }
