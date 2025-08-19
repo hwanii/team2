@@ -7,36 +7,27 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "userlist")
 @Data
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_key")
+    private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     private String userId;
 
-    @Column(nullable = false)
+    @Column(name = "user_pw", nullable = false)
     private String userPw;
 
-    @Column(nullable = false)
+    @Column(name = "user_tel")
     private String userTel;
 
-    @Column(nullable = false)
+    @Column(name = "user_email")
     private String userEmail;
-
-    @Column(nullable = false)
-    private String userDay;
-
-    @PrePersist
-    public void prePersist() {
-        if (userDay == null) {
-            userDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        }
-    }
 }

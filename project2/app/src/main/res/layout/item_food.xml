@@ -9,6 +9,13 @@
     android:orientation="vertical"
     android:id="@+id/main">
 
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#f6f6f6"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,14 +31,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="음식점 이름"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="음식점 이름"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/bookMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_heart"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="즐겨찾기"
+                    android:layout_marginLeft="20dp"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvAddr"

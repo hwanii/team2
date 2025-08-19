@@ -8,5 +8,7 @@ data class Place(
     val category: String, // 카테고리 (구)
     val menu: String, // 대표메뉴
     val time: String,     // 운영시간
-    val imageUrl: String  // 이미지 주소
+    val imageUrl: String,  // 이미지 주소
+    var bookmark: Boolean = false // 즐겨찾기
+
 )

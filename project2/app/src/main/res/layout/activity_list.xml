@@ -1,89 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:id="@+id/main">
-    
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main">
+
     <!-- 상단 툴바 -->
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:background="@color/white">
-        
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
         <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:background="@color/white"
-          android:paddingHorizontal="20dp"
-          android:paddingVertical="10dp">
-            
-            <Button
-              android:id="@+id/btnBack"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:src="@drawable/ic_arrow_back" />
-            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                style="@style/arrowBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back"
+                android:background="@android:color/transparent"
+                android:contentDescription="뒤로가기"
+                android:layout_marginEnd="15dp"/>
+
             <EditText
-              android:id="@+id/etSearch"
-              android:layout_width="match_parent"
-              android:layout_height="50dp"
-              android:layout_weight="1"
-              android:background="@drawable/search_edit_bg"
-              android:drawableStart="@drawable/ic_search"
-              android:drawablePadding="12dp"
-              android:hint="맛집을 검색해보세요!"
-              android:textSize="16sp"
-              android:inputType="text"
-              android:singleLine="true"
-              android:focusableInTouchMode="true" />
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_edit_bg"
+                android:drawablePadding="12dp"
+                android:paddingHorizontal="20dp"
+                android:hint="찾고 있는 맛집을 검색해보세요!"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:singleLine="true"
+                android:focusableInTouchMode="true" />
         </LinearLayout>
-        
-        
+
+
         <View
-          android:layout_width="match_parent"
-          android:layout_height="2dp"
-          android:background="#eeeeee" />
-        
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#eeeeee" />
+
         <!-- 필터 버튼 영역 -->
         <HorizontalScrollView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:overScrollMode="never"
-          android:scrollbars="none" >
-            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none" >
+
             <LinearLayout
-              android:id="@+id/filterBtnContainer"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:paddingStart="10dp"
-              android:paddingEnd="10dp"
-              android:paddingTop="8dp"
-              android:paddingBottom="8dp">
+                android:id="@+id/filterBtnContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
             </LinearLayout>
-        
+
         </HorizontalScrollView>
-        
+
         <View
-          android:layout_width="match_parent"
-          android:layout_height="6dp"
-          android:background="#f9f9f9" />
-    
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee" />
+
     </LinearLayout>
-    
-    
+
+
     <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/rvList"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:clipToPadding="false"
-      android:background="#ffffff"/>
+        android:id="@+id/rvList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:background="#ffffff"/>
 
 </LinearLayout>
 

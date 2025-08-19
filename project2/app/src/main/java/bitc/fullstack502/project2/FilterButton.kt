@@ -23,7 +23,7 @@ class FilterButton(context: Context, attrs: AttributeSet? = null) :
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        setPadding(12, 6, 12, 6)
+        setPadding(10, 4, 10, 4)
         params.setMargins(10, 0, 10, 0)
         layoutParams = params
     }

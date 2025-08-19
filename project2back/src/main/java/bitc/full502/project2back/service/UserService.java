@@ -19,7 +19,7 @@ public class UserService {
     // 회원가입
     public JoinResponseDTO joinUser(JoinRequestDTO request) {
         if (userRepository.existsByUserId(request.getUserId())) {
-            return new JoinResponseDTO(false, "이미 존재하는 ID입니다.", null);
+            return new JoinResponseDTO(false, "이미 존재하는 ID입니다.");
         }
 
         UserEntity user = new UserEntity();
@@ -31,7 +31,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return new JoinResponseDTO(true, "회원가입 성공", user.getUserDay());
+        return new JoinResponseDTO(true, "회원가입 성공");
     }
 
     // 로그인
@@ -46,7 +46,6 @@ public class UserService {
                 response.setUserPw(user.getUserPw());
                 response.setUserTel(user.getUserTel());
                 response.setUserEmail(user.getUserEmail());
-                response.setUserDay(user.getUserDay());
                 return response;
             }
         }

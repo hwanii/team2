@@ -51,6 +51,12 @@
         <item name="android:textColor">@color/stroke_orange</item>
     </style>
     
+    <style name="arrowBack">
+        <item name="minWidth">0dp</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="strokeColor">@color/line</item>
+    </style>
+    
     <style name="RoundedImage" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>

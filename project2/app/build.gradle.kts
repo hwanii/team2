@@ -70,4 +70,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.bumptech.glide/glide
     implementation(libs.glide)
     implementation(libs.map.sdk)
+    
+    // 이미지 라운드 처리 (jin 추가)
+    // https://mvnrepository.com/artifact/com.google.android.material/material
+    runtimeOnly(libs.material)
 }

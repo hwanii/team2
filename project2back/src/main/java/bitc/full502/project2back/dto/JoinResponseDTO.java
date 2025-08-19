@@ -8,5 +8,4 @@ import lombok.Data;
 public class JoinResponseDTO {
     private boolean success;
     private String message;
-    private String userDay;
 }

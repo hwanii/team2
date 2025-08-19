@@ -12,7 +12,8 @@
       android:label="@string/app_name"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
-      android:theme="@style/Theme.Project2">
+      android:theme="@style/Theme.Project2"
+      android:usesCleartextTraffic="true">
         <activity
           android:name=".ListActivity"
           android:exported="false" />
@@ -23,6 +24,9 @@
         <activity android:name=".SearchActivity" />
         <activity android:name=".SearchListActivity" />
         <activity android:name=".LoginPageActivity" />
+        <activity android:name=".JoinPageActivity" />
+        <activity android:name=".EditPageActivity" />
+        
         <activity
           android:name=".MapActivity"
           android:exported="false" />
