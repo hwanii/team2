@@ -77,30 +77,20 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <!-- 슬라이더 -->
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPager"
+                <!-- 슬라이더 (뷰페이저 + 인디케이터를 FrameLayout으로 묶음) -->
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_marginTop="8dp"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp" />
+                    android:paddingEnd="12dp">
 
-                <!-- 슬라이드 번호 표시 -->
-                <TextView
-                    android:id="@+id/sliderIndicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/slider_indicator_bg"
-                    android:padding="4dp"
-                    android:text="1/4"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@id/viewPager"
-                    app:layout_constraintEnd_toEndOf="@id/viewPager" />
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
+                </FrameLayout>
 
                 <!-- 추천 장소 -->
                 <TextView
