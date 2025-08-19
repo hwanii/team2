@@ -67,18 +67,23 @@ class DetailActivity : AppCompatActivity() {
 
         var cleanedText = menu
 
-        // 1. (2인부터 주문) 과 같은 괄호와 그 안의 내용 제거
         cleanedText = cleanedText.replace(Regex("\\(.*?\\)"), "")
-
-        // 2. ₩12,000, W8,000 같은 가격 정보 제거
         cleanedText = cleanedText.replace(Regex("[\\s=]*[₩￦][\\s=]*[\\d,]+"), "")
+        cleanedText = cleanedText.replace(Regex("-[\\d,]+"), "")
         cleanedText = cleanedText.replace(Regex("/\\s*[\\d,]+"), "")
+        cleanedText = cleanedText.replace(Regex("\\d+g"), "")
 
         // 3. 줄바꿈(\n)을 쉼표와 공백으로 변경
         cleanedText = cleanedText.replace("\n", ", ")
 
         // 4. 앞뒤 공백 및 여러 개의 공백을 하나로 정리
-        return cleanedText.trim().replace(Regex("\\s+"), " ")
+        val menuItems = cleanedText.split(Regex("[,\\s]+")).filter { it.isNotBlank() }
+
+        // 3. 나눠진 메뉴 리스트에서 최대 2개만 선택합니다.
+        val limitedMenuItems = menuItems.take(2)
+
+        // 4. 선택된 메뉴들을 ", "로 연결하여 최종 문자열을 만듭니다.
+        return limitedMenuItems.joinToString(", ")
     }
 
 //        val title = intent.getStringExtra("title")
@@ -266,7 +271,7 @@ class DetailActivity : AppCompatActivity() {
                         itemLoc.longitude = lng
                         val distance = currentLoc.distanceTo(itemLoc)
                         // 거리 제한 조건 (예: 10km 이내)
-                        if (distance < 10000) {
+                        if (distance < 20000) {
                             Pair(foodItem, distance)
                         } else {
                             null
