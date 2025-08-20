@@ -97,6 +97,7 @@
                 </FrameLayout>
 
                 <!-- 추천 장소 -->
+                <!-- 대표 메뉴 -->
                 <TextView
                     android:id="@+id/tvHorizontalTitle1"
                     android:layout_width="match_parent"
@@ -104,10 +105,22 @@
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp"
-                    android:text="추천 장소"
+                    android:text="🍜 부산 대표 메뉴"
                     android:textColor="@color/text_primary_pastel"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02"
+                    android:backgroundTint="@color/transparent"
+                    android:drawablePadding="6dp"
+                    android:paddingEnd="12dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/pastel_accent"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="8dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView"
@@ -115,9 +128,9 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never" />
+                    android:overScrollMode="never"/>
 
-                <!-- 신규 장소 -->
+                <!-- 인스타 감성 카페 -->
                 <TextView
                     android:id="@+id/tvHorizontalTitle2"
                     android:layout_width="match_parent"
@@ -125,10 +138,22 @@
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp"
-                    android:text="신규 장소"
+                    android:text="☕ 감성 빼면 시체"
                     android:textColor="@color/text_primary_pastel"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02"
+                    android:backgroundTint="@color/transparent"
+                    android:drawablePadding="6dp"
+                    android:paddingEnd="12dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/pastel_accent"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="8dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView2"
@@ -136,9 +161,10 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never" />
+                    android:overScrollMode="never"/>
 
-                <!-- 전체 장소 -->
+
+                <!-- 지역별 맛집 제목 -->
                 <TextView
                     android:id="@+id/tvVerticalTitle"
                     android:layout_width="match_parent"
@@ -146,10 +172,15 @@
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp"
-                    android:text="지역별 맛집"
+                    android:text="📍 구석구석 "
                     android:textColor="@color/text_primary_pastel"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02"
+                    android:drawablePadding="6dp"
+                    android:paddingEnd="12dp"/>
+
+
 
                 <!-- 구 선택 HorizontalScrollView -->
                 <HorizontalScrollView

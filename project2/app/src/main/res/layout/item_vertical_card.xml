@@ -74,13 +74,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- 좋아요 아이콘 -->
-    <ImageView
-        android:id="@+id/likeIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/heart_full"/>
 
 </RelativeLayout>
