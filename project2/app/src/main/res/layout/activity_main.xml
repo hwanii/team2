@@ -36,6 +36,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:shadowColor="#55000000"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4"
                 android:text="Fork &amp; Wave"
                 android:textColor="@color/text_primary_pastel"
                 android:textSize="20sp"
@@ -43,11 +47,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:shadowColor="#55000000"
-                android:shadowDx="0"
-                android:shadowDy="2"
-                android:shadowRadius="4"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/btn_search"
@@ -102,25 +102,25 @@
                     android:id="@+id/tvHorizontalTitle1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/transparent"
+                    android:drawablePadding="6dp"
+                    android:letterSpacing="0.02"
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:text="🍜 부산 대표 메뉴"
                     android:textColor="@color/text_primary_pastel"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02"
-                    android:backgroundTint="@color/transparent"
-                    android:drawablePadding="6dp"
-                    android:paddingEnd="12dp"/>
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@color/pastel_accent"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/pastel_accent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView"
@@ -128,32 +128,32 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never"/>
+                    android:overScrollMode="never" />
 
                 <!-- 인스타 감성 카페 -->
                 <TextView
                     android:id="@+id/tvHorizontalTitle2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/transparent"
+                    android:drawablePadding="6dp"
+                    android:letterSpacing="0.02"
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:text="☕ 감성 빼면 시체"
                     android:textColor="@color/text_primary_pastel"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02"
-                    android:backgroundTint="@color/transparent"
-                    android:drawablePadding="6dp"
-                    android:paddingEnd="12dp"/>
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@color/pastel_accent"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/pastel_accent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView2"
@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never"/>
+                    android:overScrollMode="never" />
 
 
                 <!-- 지역별 맛집 제목 -->
@@ -169,17 +169,16 @@
                     android:id="@+id/tvVerticalTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="6dp"
+                    android:letterSpacing="0.02"
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:text="📍 구석구석 "
                     android:textColor="@color/text_primary_pastel"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02"
-                    android:drawablePadding="6dp"
-                    android:paddingEnd="12dp"/>
-
+                    android:textStyle="bold" />
 
 
                 <!-- 구 선택 HorizontalScrollView -->
@@ -194,9 +193,9 @@
                         android:id="@+id/guFilterLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp"/>
+                        android:orientation="horizontal" />
                 </HorizontalScrollView>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -218,21 +217,23 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <!-- 바텀 네비게이션 -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/bottom_nav_pastel"
-            app:itemIconPadding="18dp"
-            app:itemIconSize="28dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            android:elevation="0dp"
+            android:stateListAnimator="@null"
+            app:itemIconPadding="0dp"
+            app:itemIconSize="30dp"
             app:itemIconTint="@color/nav_item_selector_pastel"
-            app:itemTextAppearanceActive="@style/BottomNavTextActive"
-            app:itemTextAppearanceInactive="@style/BottomNavTextInactive"
+            app:itemTextAppearanceActive="@style/BottomNavTextActiveCustom"
+            app:itemTextAppearanceInactive="@style/BottomNavTextInactiveCustom"
             app:itemTextColor="@color/nav_item_selector_pastel"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

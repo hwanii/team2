@@ -2,6 +2,7 @@ package bitc.fullstack502.project2
 
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -74,6 +75,24 @@ class MainActivity : AppCompatActivity() {
     // onCreate
     // ============================
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // MainActivity onCreate() 안이나 초기화 코드에 추가
+        val hideHandler = Handler(Looper.getMainLooper())
+        var hideRunnable: Runnable? = null
+
+        binding.nestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
+            // 스크롤 중일 때 BottomNavigationView 숨김
+            binding.bottomNavigationView.visibility = View.GONE
+
+            // 기존 예약된 Runnable 취소
+            hideRunnable?.let { hideHandler.removeCallbacks(it) }
+
+            // 스크롤 멈춤 후 1초 뒤 BottomNavigationView 표시
+            hideRunnable = Runnable {
+                binding.bottomNavigationView.visibility = View.VISIBLE
+            }
+            hideHandler.postDelayed(hideRunnable!!, 1000) // 1초
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
