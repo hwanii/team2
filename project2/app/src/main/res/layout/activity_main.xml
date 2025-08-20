@@ -142,7 +142,7 @@
                     android:paddingTop="16dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
-                    android:text="☕ 감성 빼면 시체"
+                    android:text="☕ 인스타 감성 가득"
                     android:textColor="@color/text_primary_pastel"
                     android:textSize="20sp"
                     android:textStyle="bold" />
