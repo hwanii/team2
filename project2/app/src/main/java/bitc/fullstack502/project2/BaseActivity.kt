@@ -1,6 +1,7 @@
 package bitc.fullstack502.project2
 
 import android.content.Intent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -79,5 +80,11 @@ abstract class BaseActivity : AppCompatActivity() {
                 onError()
             }
         })
+    }
+
+    protected fun setupSearchButton(searchButton: View) {
+        searchButton.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
     }
 }

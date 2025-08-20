@@ -42,8 +42,10 @@ class EditPageActivity : BaseActivity() {
             }
         )
 
-        val bottomNavView = binding.baseLayout.bottomNavigationView
+        val bottomNavView = binding.bottomNav.bottomNavigationView
         setupBottomNavigation(bottomNavView)
+        val btnSearch = binding.topBar.btnSearch
+        setupSearchButton(btnSearch)
 
         // 로그인 후 전달받은 User 객체
         user = intent.getParcelableExtra<User>("user") ?: return finish()

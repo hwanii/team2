@@ -55,10 +55,6 @@ class MainActivity : BaseActivity() {
         setupVerticalAdapter()
         setupGuFilterButtons()
 
-        binding.btnSearch.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
-
         fetchFoodData(
             onSuccess = { list ->
                 setupHorizontalAdapters()
@@ -68,10 +64,10 @@ class MainActivity : BaseActivity() {
                 Toast.makeText(this, "데이터를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         )
-
-
-        val bottomNavView = binding.baseLayout.bottomNavigationView
+        val bottomNavView = binding.bottomNav.bottomNavigationView
         setupBottomNavigation(bottomNavView)
+        val btnSearch = binding.topBar.btnSearch
+        setupSearchButton(btnSearch)
     }
 
     override fun onDestroy() {

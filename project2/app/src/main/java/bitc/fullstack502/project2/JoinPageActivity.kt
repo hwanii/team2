@@ -44,8 +44,10 @@ class JoinPageActivity : BaseActivity() {
             }
         )
 
-        val bottomNavView = binding.baseLayout.bottomNavigationView
+        val bottomNavView = binding.bottomNav.bottomNavigationView
         setupBottomNavigation(bottomNavView)
+        val btnSearch = binding.topBar.btnSearch
+        setupSearchButton(btnSearch)
 
         nameEditText = findViewById(R.id.user_name)
         idEditText = findViewById(R.id.user_id)

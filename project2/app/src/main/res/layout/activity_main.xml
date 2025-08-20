@@ -8,61 +8,9 @@
         android:layout_height="match_parent"
         android:background="@color/bg_pastel">
 
-        <!-- 상단바 -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/topBar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/topbar_gradient"
-            android:elevation="6dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp">
-
-            <ImageView
-                android:id="@+id/btn_detail"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_button_translucent"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="6dp"
-                android:src="@drawable/ic_logo1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Fork &amp; Wave"
-                android:textColor="@color/text_primary_pastel"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:shadowColor="#55000000"
-                android:shadowDx="0"
-                android:shadowDy="2"
-                android:shadowRadius="4"/>
-
-            <ImageView
-                android:id="@+id/btn_search"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_button_shadow"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="6dp"
-                android:src="@drawable/ic_search"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            android:id="@+id/top_bar"
+            layout="@layout/top_bar"/>
 
         <!-- 스크롤 영역 -->
         <androidx.core.widget.NestedScrollView
@@ -188,7 +136,7 @@
             android:visibility="gone" />
 
         <include
-            android:id="@+id/baseLayout"
+            android:id="@+id/bottom_nav"
             layout="@layout/activity_base"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

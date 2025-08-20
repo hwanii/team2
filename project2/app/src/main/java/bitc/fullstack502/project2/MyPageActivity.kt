@@ -31,8 +31,10 @@ class MyPageActivity : BaseActivity() {
             }
         )
 
-        val bottomNavView = binding.baseLayout.bottomNavigationView
+        val bottomNavView = binding.bottomNav.bottomNavigationView
         setupBottomNavigation(bottomNavView)
+        val btnSearch = binding.topBar.btnSearch
+        setupSearchButton(btnSearch)
 
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val user = User(
