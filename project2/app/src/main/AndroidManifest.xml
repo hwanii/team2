@@ -14,12 +14,8 @@
       android:supportsRtl="true"
       android:theme="@style/Theme.Project2"
       android:usesCleartextTraffic="true">
-        <activity
-          android:name=".ListActivity"
-          android:exported="false" />
-        <activity
-          android:name=".FavoritesActivity"
-          android:exported="false" />
+        <activity android:name=".ListActivity"/>
+        <activity android:name=".FavoritesActivity"/>
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".SearchListActivity" />

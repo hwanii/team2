@@ -54,4 +54,26 @@ object RetrofitClient {
             .build()
             .create(JoinApiService::class.java)
     }
+    
+    val favoritesApi: FavoritesApi by lazy {
+        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+        val client = OkHttpClient.Builder().addInterceptor(logging).build()
+        
+        val gson = GsonBuilder().setLenient().create()
+        
+        Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/")  // 스프링부트 서버 주소
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(FavoritesApi::class.java)
+    }
+
+    val reviewApi: ReviewApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(SPRING_BASE_URL) // 스프링 서버 주소 사용
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ReviewApiService::class.java)
+    }
 }
