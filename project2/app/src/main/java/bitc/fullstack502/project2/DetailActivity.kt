@@ -43,7 +43,7 @@ class DetailActivity : AppCompatActivity() {
 
         var isLiked = false
 
-        val currentItem: FoodItem? = intent.getParcelableExtra("item")
+        val currentItem: FoodItem? = intent.getParcelableExtra("clicked_item")
         val allItems: ArrayList<FoodItem>? = intent.getParcelableArrayListExtra("full_list")
         if (currentItem == null) {
             finish()

@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -244,58 +245,6 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-    }
-
-    private fun fetchFoodData() {
-        binding.progressBar.visibility = View.VISIBLE
-
-        RetrofitClient.api.getFoodList(serviceKey).enqueue(object : Callback<FoodResponse> {
-            override fun onResponse(
-                call: Call<FoodResponse>,
-                response: Response<FoodResponse>
-            ) {
-                binding.progressBar.visibility = View.GONE
-                if (response.isSuccessful) {
-                    val list = response.body()?.getFoodkr?.item?.filter { !it.thumb.isNullOrEmpty() }
-                        ?.distinctBy { it.Lat to it.Lng } ?: emptyList()
-
-                    val filteredList = list.filter { !it.thumb.isNullOrEmpty() }
-                        .distinctBy { it.Lat to it.Lng }
-                    foodList = filteredList
-
-                    val itemList = list.map {
-                        Item(
-                            title = it.MAIN_TITLE ?: "이름 없음",
-                            rating = 0.0,
-                            category = it.CATE_NM ?: "메뉴 정보 없음",
-                            address = it.ADDR ?: "주소 없음",
-                            thumbUrl = it.thumb ?: ""
-                        )
-                    }
-
-                    binding.verticalRecyclerView.adapter = VerticalAdapter(itemList.take(5))
-                    binding.horizontalRecyclerView.adapter =
-                        HorizontalAdapter(itemList.shuffled().take(5))
-                    binding.horizontalRecyclerView2.adapter =
-                        HorizontalAdapter(itemList.shuffled().take(5))
-                } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "서버에서 응답을 받지 못했습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(
-                    this@MainActivity,
-                    "데이터를 불러오는 중 오류가 발생했습니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
     }
 
     private fun isLoggedIn(): Boolean {
