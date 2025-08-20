@@ -5,6 +5,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitClient {
     
@@ -72,6 +73,7 @@ object RetrofitClient {
     val reviewApi: ReviewApiService by lazy {
         Retrofit.Builder()
             .baseUrl(SPRING_BASE_URL) // 스프링 서버 주소 사용
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ReviewApiService::class.java)
