@@ -14,6 +14,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import bitc.fullstack502.project2.databinding.ActivityDetailBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -36,6 +39,8 @@ class DetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        checkLoginStatus()
+
         var isLiked = false
 
         val currentItem: FoodItem? = intent.getParcelableExtra("item")
@@ -51,10 +56,9 @@ class DetailActivity : AppCompatActivity() {
             setupRecommendations(currentItem, allItems)
         }
 //         확인용 데이터!!
-        val reviews = getMockReviews()
-
-        if (reviews.isNotEmpty()) {
-            createReviewsDynamically(reviews)
+        val placeCode = currentItem.UcSeq?.toInt() ?: -1
+        if (placeCode != -1) {
+            loadReviewsFromServer(placeCode)
         }
     }
 
@@ -327,32 +331,48 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-//    임시 데이터! 여기 밑은 전부 임시로 넣은것!
-    private fun getMockReviews(): List<Review> {
-        return listOf(
-            Review(4.5f, "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.", "2025.08.12"),
-            Review(5.0f, "음식이 매우 맛있고 분위기도 좋았습니다. 재방문 의사 100%입니다!", "2025.08.11"),
-            Review(3.0f, "조금 아쉬웠지만 그럭저럭 먹을만 했습니다.", "2025.08.10")
-        )
+    private fun loadReviewsFromServer(placeCode: Int) {
+        val call = RetrofitClient.reviewApi.getReviews(placeCode)
+
+        // API 비동기 실행
+        call.enqueue(object : Callback<List<ReviewResponse>> {
+
+            // API 호출 성공 시 실행되는 함수
+            override fun onResponse(
+                call: Call<List<ReviewResponse>>,
+                response: Response<List<ReviewResponse>>
+            ) {
+                if (response.isSuccessful) {
+                    val reviews = response.body()
+                    if (!reviews.isNullOrEmpty()) {
+                        createReviewsDynamically(reviews)
+                    }
+                } else {
+                    Log.e("DetailActivity", "리뷰 로딩 실패: ${response.code()}")
+                }
+            }
+
+            // API 호출 실패 시 실행되는 함수
+            override fun onFailure(call: Call<List<ReviewResponse>>, t: Throwable) {
+                Log.e("DetailActivity", "리뷰 로딩 네트워크 오류", t)
+            }
+        })
     }
-    private fun createReviewsDynamically(reviews: List<Review>) {
-        // 1단계에서 XML에 추가한 컨테이너를 바인딩으로 가져옴
+    private fun createReviewsDynamically(reviews: List<ReviewResponse>) {
         val reviewsContainer = binding.reviewsContainer
-        reviewsContainer.removeAllViews() // 혹시 모를 기존 뷰 제거
+        reviewsContainer.removeAllViews()
 
         reviews.forEach { reviewItem ->
-            // 리뷰 아이템 하나를 감싸는 전체 틀(수직 LinearLayout)
             val reviewLayout = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 ).also {
-                    it.setMargins(0, 0, 0, 24) // 각 리뷰 사이의 간격
+                    it.setMargins(0, 0, 0, 24)
                 }
             }
 
-            // 상단 라인(별점, 날짜)을 위한 수평 LinearLayout
             val topRowLayout = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
@@ -363,42 +383,58 @@ class DetailActivity : AppCompatActivity() {
             }
 
             val starIcon = ImageView(this).apply {
-                setImageResource(R.drawable.star) // 별 아이콘 (ic_star)
-                val iconSize = 20
+                setImageResource(R.drawable.star)
+                val iconSize = 40 // 아이콘 크기 조절
                 layoutParams = LinearLayout.LayoutParams(iconSize, iconSize)
             }
+
+            // ❗️ reviewItem.rating -> reviewItem.reviewRating 으로 수정
             val ratingText = TextView(this).apply {
-                text = reviewItem.rating.toString()
+                text = reviewItem.reviewRating.toString()
                 setTypeface(null, android.graphics.Typeface.BOLD)
                 setPadding(8, 0, 16, 0)
             }
+
+            // ❗️ reviewItem.date -> reviewItem.reviewDay 로 수정
             val dateText = TextView(this).apply {
-                text = reviewItem.date
+                text = reviewItem.reviewDay
             }
 
             topRowLayout.addView(starIcon)
             topRowLayout.addView(ratingText)
             topRowLayout.addView(dateText)
 
-            // 리뷰 내용 TextView
+            // ❗️ reviewItem.content -> reviewItem.reviewItem 으로 수정
             val contentText = TextView(this).apply {
-                text = reviewItem.content
+                text = reviewItem.reviewItem
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 ).also {
-                    it.setMargins(0, 0, 0, 0) // 각 리뷰 사이의 간격
+                    it.setMargins(0, 8, 0, 0) // 위쪽 여백 추가
                 }
-                // --- 이 부분을 추가하여 배경에 테두리 drawable을 설정합니다. ---
+                setPadding(24, 24, 24, 24) // 패딩 추가
                 background = getDrawable(R.drawable.border_bg)
             }
 
-            // 전체 틀에 상단 라인과 리뷰 내용 추가
             reviewLayout.addView(topRowLayout)
             reviewLayout.addView(contentText)
 
-            // 최종적으로 완성된 리뷰 뷰를 화면의 컨테이너에 추가
             reviewsContainer.addView(reviewLayout)
+        }
+    }
+    private fun checkLoginStatus() {
+        // SharedPreferences에서 토큰을 가져오는 로직 (로그인 구현 시 만드셨을 Util 클래스 등 활용)
+        // 예시: val token = App.prefs.token
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val authToken = sharedPreferences.getString("auth_token", null)
+
+        if (authToken.isNullOrBlank()) {
+            // 토큰이 없으면 (로그아웃 상태) 리뷰 작성란 숨기기
+            binding.reviewInputSection.visibility = View.GONE
+        } else {
+            // 토큰이 있으면 (로그인 상태) 리뷰 작성란 보이기
+            binding.reviewInputSection.visibility = View.VISIBLE
         }
     }
 }
