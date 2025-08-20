@@ -4,18 +4,17 @@
     <!-- 활성 상태 -->
     <style name="BottomNavTextActiveCustom" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">12sp</item>
-        <item name="android:lineHeight">14sp</item>
+        <!-- <item name="android:lineHeight">14sp</item> 제거 -->
         <item name="android:textColor">@color/black</item>
-        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingTop">60dp</item>
         <item name="android:gravity">center</item>
     </style>
-
     <!-- 비활성 상태 -->
     <style name="BottomNavTextInactiveCustom" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">12sp</item>
-        <item name="android:lineHeight">14sp</item>
+        <!-- <item name="android:lineHeight">14sp</item> 제거 -->
         <item name="android:textColor">@color/gray</item>
-        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingTop">60dp</item>
         <item name="android:gravity">center</item>
     </style>
 

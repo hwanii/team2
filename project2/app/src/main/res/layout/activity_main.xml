@@ -248,19 +248,27 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:layout_gravity="bottom"
-            android:background="#80FFFFFF"
+            android:background="#CCFFFFFF"
+            android:clipToPadding="false"
             android:elevation="0dp"
+            android:fitsSystemWindows="true"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
             android:stateListAnimator="@null"
-            app:itemIconPadding="0dp"
-            app:itemIconSize="30dp"
+            android:translationY="20dp"
+            app:itemIconPadding="8dp"
+            app:itemIconSize="28dp"
             app:itemIconTint="@color/nav_item_selector_pastel"
             app:itemTextAppearanceActive="@style/BottomNavTextActiveCustom"
             app:itemTextAppearanceInactive="@style/BottomNavTextInactiveCustom"
             app:itemTextColor="@color/nav_item_selector_pastel"
             app:labelVisibilityMode="labeled"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
-            app:menu="@menu/bottom_nav_menu" />
+            app:menu="@menu/bottom_nav_menu"
+            />  <!-- 전체 BottomNavigationView를 살짝 아래로 -->
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
