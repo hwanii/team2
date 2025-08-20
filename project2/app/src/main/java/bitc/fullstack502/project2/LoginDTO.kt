@@ -12,6 +12,7 @@ data class UserResponse(
     val userId: String,
     val userPw: String,
     val userTel: String,
-    val userEmail: String
+    val userEmail: String,
+    val userKey: Int
 )
 

@@ -2,6 +2,7 @@ package bitc.full502.project2back.service;
 
 import bitc.full502.project2back.dto.ReviewRequestDTO;
 import bitc.full502.project2back.dto.ReviewResponseDTO;
+import bitc.full502.project2back.dto.ReviewUpdateRequestDTO;
 import bitc.full502.project2back.entity.ReviewEntity;
 import bitc.full502.project2back.entity.UserEntity;
 import bitc.full502.project2back.repository.ReviewRepository;
@@ -24,10 +25,10 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository; // 사용자 정보를 가져오기 위해 UserRepository 필요
 
     @Override
-    public void createReview(String userId, ReviewRequestDTO reviewRequest) {
-        // 1. userId를 이용해 UserEntity 찾기
-        UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
+    public void createReview(ReviewRequestDTO reviewRequest) {
+        // userKey로 사용자를 찾습니다.
+        UserEntity user = userRepository.findById((reviewRequest.getUserKey()))
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + reviewRequest.getUserKey()));
 
         // 2. DTO와 UserEntity를 기반으로 새로운 ReviewEntity 생성
         ReviewEntity newReview = new ReviewEntity();
@@ -57,7 +58,30 @@ public class ReviewServiceImpl implements ReviewService {
                         .reviewRating(review.getReviewNum()) // 필드명 통일
                         .reviewItem(review.getReviewItem())
                         .reviewDay(review.getReviewDay().toString())
+                        .userKey(review.getUser().getId())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteReview(Integer reviewKey) {
+        if (!reviewRepository.existsById(reviewKey)) {
+            throw new IllegalArgumentException("리뷰를 찾을 수 없습니다: " + reviewKey);
+        }
+        reviewRepository.deleteById(reviewKey);
+    }
+
+    @Override
+    public void updateReview(Integer reviewKey, ReviewUpdateRequestDTO reviewUpdateRequest) {
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewKey)
+                .orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다: " + reviewKey));
+
+        // 2. DTO에 담겨온 새로운 정보로 엔티티의 값을 변경합니다.
+        reviewEntity.setReviewItem(reviewUpdateRequest.getReviewItem());
+        reviewEntity.setReviewNum(reviewUpdateRequest.getReviewNum());
+        reviewEntity.setReviewDay(LocalDateTime.now()); // 수정 시각을 현재로 업데이트
+
+        // 3. 변경된 내용을 데이터베이스에 저장(update)합니다.
+        reviewRepository.save(reviewEntity);
     }
 }
