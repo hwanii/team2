@@ -23,7 +23,6 @@ public class UserService {
         }
 
         UserEntity user = new UserEntity();
-        user.setUserKey(request.getUserKey());
         user.setUserName(request.getUserName());
         user.setUserId(request.getUserId());
         user.setUserPw(request.getUserPw());

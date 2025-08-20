@@ -17,7 +17,10 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun setupBottomNavigation(bottomNavView: BottomNavigationView) {
         bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.menu_home -> true
+                R.id.menu_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    true
+                }
                 R.id.menu_list -> {
                     startActivity(Intent(this, ListActivity::class.java))
                     true
