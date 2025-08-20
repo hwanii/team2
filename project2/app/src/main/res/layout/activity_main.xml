@@ -187,21 +187,9 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <!-- 바텀 네비게이션 -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_gravity="bottom"
-            android:background="@color/bottom_nav_pastel"
-            app:itemIconPadding="18dp"
-            app:itemIconSize="28dp"
-            app:itemIconTint="@color/nav_item_selector_pastel"
-            app:itemTextAppearanceActive="@style/BottomNavTextActive"
-            app:itemTextAppearanceInactive="@style/BottomNavTextInactive"
-            app:itemTextColor="@color/nav_item_selector_pastel"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu" />
+        <include
+            android:id="@+id/baseLayout"
+            layout="@layout/activity_base"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

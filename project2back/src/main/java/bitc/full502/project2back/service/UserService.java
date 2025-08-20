@@ -23,6 +23,7 @@ public class UserService {
         }
 
         UserEntity user = new UserEntity();
+        user.setUserKey(request.getUserKey());
         user.setUserName(request.getUserName());
         user.setUserId(request.getUserId());
         user.setUserPw(request.getUserPw());
@@ -41,6 +42,7 @@ public class UserService {
             UserEntity user = optionalUser.get();
             if (user.getUserPw().equals(request.getUserPw())) {
                 UserResponseDTO response = new UserResponseDTO();
+                response.setUserKey(user.getUserKey());
                 response.setUserName(user.getUserName());
                 response.setUserId(user.getUserId());
                 response.setUserPw(user.getUserPw());

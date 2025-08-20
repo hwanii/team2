@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityEditPageBinding
 
-class EditPageActivity : AppCompatActivity() {
+class EditPageActivity : BaseActivity() {
 
     private lateinit var nameEditText: EditText
     private lateinit var idEditText: EditText
@@ -33,6 +33,17 @@ class EditPageActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        fetchFoodData(
+            onSuccess = { list ->
+            },
+            onError = {
+                Toast.makeText(this, "데이터를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        val bottomNavView = binding.baseLayout.bottomNavigationView
+        setupBottomNavigation(bottomNavView)
 
         // 로그인 후 전달받은 User 객체
         user = intent.getParcelableExtra<User>("user") ?: return finish()

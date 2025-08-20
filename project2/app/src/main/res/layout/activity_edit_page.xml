@@ -189,12 +189,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="40sp"
-            android:text="메뉴 들어갈부분"/>
+        <include
+            android:id="@+id/baseLayout"
+            layout="@layout/activity_base"/>
 
     </LinearLayout>
 </LinearLayout>
