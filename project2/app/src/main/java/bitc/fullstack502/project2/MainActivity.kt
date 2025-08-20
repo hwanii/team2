@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -14,7 +13,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -72,27 +70,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ============================
-    // onCreate
+    // BottomNavigationView 숨김/반투명 관련
     // ============================
+    private val navHandler = Handler(Looper.getMainLooper())
+    private var hideRunnable: Runnable? = null
+
+    // 기본/스크롤 상태 배경색
+    private val navColorDefault by lazy { ContextCompat.getColor(this, R.color.button_unselected) }
+    private val navColorTransparent = Color.TRANSPARENT
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        // MainActivity onCreate() 안이나 초기화 코드에 추가
-        val hideHandler = Handler(Looper.getMainLooper())
-        var hideRunnable: Runnable? = null
-
-        binding.nestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
-            // 스크롤 중일 때 BottomNavigationView 숨김
-            binding.bottomNavigationView.visibility = View.GONE
-
-            // 기존 예약된 Runnable 취소
-            hideRunnable?.let { hideHandler.removeCallbacks(it) }
-
-            // 스크롤 멈춤 후 1초 뒤 BottomNavigationView 표시
-            hideRunnable = Runnable {
-                binding.bottomNavigationView.visibility = View.VISIBLE
-            }
-            hideHandler.postDelayed(hideRunnable!!, 1000) // 1초
-        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
@@ -104,7 +92,30 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // ============================
+        // BottomNavigationView 스크롤 숨김/반투명 처리
+        // ============================
+        binding.nestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
+            // 스크롤 중일 때: 네비 숨김 & 완전 투명
+            binding.bottomNavigationView.visibility = View.GONE
+            binding.bottomNavigationView.setBackgroundColor(Color.TRANSPARENT) // 스크롤 중
+
+
+            // 기존 예약된 Runnable 취소
+            hideRunnable?.let { navHandler.removeCallbacks(it) }
+
+            // 스크롤 멈춤 후 1초 뒤: 네비 등장 & 반투명 배경
+            hideRunnable = Runnable {
+                binding.bottomNavigationView.visibility = View.VISIBLE
+                binding.bottomNavigationView.setBackgroundColor(Color.parseColor("#CCFFFFFF")) // 멈췄을 때
+
+            }
+            navHandler.postDelayed(hideRunnable!!, 1000)
+        }
+
+        // ============================
         // 초기화
+        // ============================
         setupSlider()
         setupBottomNavigation()
         setupVerticalAdapter()
@@ -117,19 +128,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ============================
-    // onResume: 앱 복귀 시 HorizontalAdapter 갱신
-    // ============================
     override fun onResume() {
         super.onResume()
-        // 다른 페이지 다녀오고 돌아올 때 최신 데이터 가져오기
-        // 클릭 이벤트에서는 절대 호출하지 않음
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         sliderHandler.removeCallbacks(sliderRunnable)
+        hideRunnable?.let { navHandler.removeCallbacks(it) }
     }
 
     // ============================
@@ -139,13 +145,13 @@ class MainActivity : AppCompatActivity() {
         verticalAdapter = VerticalAdapter(object : VerticalAdapter.ItemClickListener {
             override fun onItemClick(item: FoodItem) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("clicked_item", item)  // 여기 키를 DetailActivity와 맞춰야 함
+                    putExtra("clicked_item", item)
                 }
                 startActivity(intent)
             }
 
             override fun onLoadMore() {
-                verticalAdapter.addMore() // 무한 스크롤
+                verticalAdapter.addMore()
             }
         })
         binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -243,8 +249,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ============================
-// HorizontalAdapter 세팅
-// ============================
+    // HorizontalAdapter 세팅
+    // ============================
     private fun setupHorizontalAdapters() {
 
         // ----------------- 대표 메뉴 -----------------
@@ -259,7 +265,7 @@ class MainActivity : AppCompatActivity() {
         recommendAdapter = HorizontalAdapter(recommendList, object : HorizontalAdapter.ItemClickListener {
             override fun onItemClick(item: FoodItem) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("clicked_item", item)  // 여기 키를 DetailActivity와 맞춰야 함
+                    putExtra("clicked_item", item)
                 }
                 startActivity(intent)
             }
@@ -279,7 +285,7 @@ class MainActivity : AppCompatActivity() {
         cafeAdapter = HorizontalAdapter(cafeList, object : HorizontalAdapter.ItemClickListener {
             override fun onItemClick(item: FoodItem) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("clicked_item", item)  // 여기 키를 DetailActivity와 맞춰야 함
+                    putExtra("clicked_item", item)
                 }
                 startActivity(intent)
             }
@@ -289,26 +295,6 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.horizontalRecyclerView2.adapter = cafeAdapter
     }
-    // ============================
-    // HorizontalAdapter 갱신 (앱 복귀 시만 호출)
-    // ============================
-//    private fun refreshHorizontalAdapters() {
-//        val newRecommendList = foodList
-//            .filter { it.CATE_NM?.contains("밀면") == true
-//                    || it.CATE_NM?.contains("회") == true
-//                    || it.CATE_NM?.contains("국밥") == true }
-//            .shuffled()
-//            .take(5)
-//
-//        recommendAdapter.updateList(newRecommendList)
-//
-//        val newCafeList = foodList
-//            .filter { it.CATE_NM?.contains("카페") == true }
-//            .shuffled()
-//            .take(5)
-//
-//        cafeAdapter.updateList(newCafeList)
-//    }
 
     // ============================
     // 슬라이더

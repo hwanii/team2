@@ -11,6 +11,9 @@
     android:clickable="true"
     android:focusable="true">
 
+    <!-- ====================
+         카드 내부 레이아웃 (RelativeLayout)
+         ==================== -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +30,9 @@
             android:clipToOutline="true"
             android:background="@android:color/transparent" />
 
-        <!-- 텍스트 영역 -->
+        <!-- ====================
+             텍스트 영역 (가게 정보)
+             ==================== -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,19 +64,21 @@
                 android:maxLines="1"
                 android:layout_marginTop="2dp"/>
 
-            <!-- 평점 · 주소 -->
+            <!-- 평점과 주소 (가로 배치) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="4dp">
 
+                <!-- 평점 -->
                 <TextView
                     android:id="@+id/itemRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"/>
 
+                <!-- 주소 -->
                 <TextView
                     android:id="@+id/itemAddr"
                     android:layout_width="wrap_content"

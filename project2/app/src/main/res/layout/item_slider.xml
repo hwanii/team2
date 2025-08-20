@@ -2,6 +2,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- ====================
+         슬라이더 이미지 (전체 배경)
+         클릭 가능, 포커스 가능, 터치 효과 적용
+         ==================== -->
     <ImageView
         android:id="@+id/imageSlider"
         android:layout_width="match_parent"
@@ -11,7 +15,9 @@
         android:foreground="?attr/selectableItemBackground"
         android:scaleType="centerCrop" />
 
-    <!-- 오른쪽 위 순서 표시 -->
+    <!-- ====================
+         오른쪽 위 순서 표시 (ex: 1/4)
+         ==================== -->
     <TextView
         android:id="@+id/tvSlideOrder"
         android:layout_width="wrap_content"
@@ -23,7 +29,10 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
-    <!-- 이미지 위 레이블 -->
+    <!-- ====================
+         이미지 위 레이블
+         이미지 하단 왼쪽에 위치, 반투명 배경
+         ==================== -->
     <TextView
         android:id="@+id/sliderLabel"
         android:layout_width="wrap_content"
