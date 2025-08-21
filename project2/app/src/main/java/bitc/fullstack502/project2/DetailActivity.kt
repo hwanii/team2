@@ -463,14 +463,37 @@ class DetailActivity : AppCompatActivity() {
                 }
                 topRowLayout.addView(spacer)
 
+                val editButton = TextView(this)
+                val deleteButton = TextView(this)
+                val cancelButton = TextView(this)
+
+                cancelButton.apply {
+                    text = "수정 취소"
+                    setPadding(16, 0, 0, 0)
+                    visibility = View.GONE
+                    setOnClickListener {
+                        deleteButton.visibility = View.VISIBLE
+                        editButton.visibility = View.VISIBLE
+                        cancelButton.visibility = View.GONE
+
+                        binding.reviewInputSection.visibility = View.VISIBLE
+                        binding.editTextReview.text.clear()
+                        binding.ratingBarInput.rating = 5.0f
+                        binding.btnSubmitReview.text = "리뷰 등록"
+                        setSubmitReviewClickListener()
+                    }
+                    topRowLayout.addView(cancelButton)
+                }
+
                 // 수정 버튼 추가
-                val editButton = TextView(this).apply {
+                editButton.apply {
                     text = "수정"
                     setPadding(16, 0, 0, 0)
                     setOnClickListener {
-                        // 기존 리뷰 뷰들을 숨김
-                        reviewLayout.visibility = View.GONE
-                        binding.reviewsContainer.visibility = View.GONE
+
+                        editButton.visibility = View.GONE
+                        deleteButton.visibility = View.GONE
+                        cancelButton.visibility = View.VISIBLE
 
                         // 리뷰 입력 섹션을 보이게 하고 값 채우기
                         binding.reviewInputSection.visibility = View.VISIBLE
@@ -515,7 +538,7 @@ class DetailActivity : AppCompatActivity() {
                 }
                 topRowLayout.addView(editButton)
                 // 삭제 버튼 추가
-                val deleteButton = TextView(this).apply {
+                deleteButton.apply {
                     text = "삭제"
                     setPadding(16, 0, 0, 0)
 
@@ -549,6 +572,8 @@ class DetailActivity : AppCompatActivity() {
                 }
                 topRowLayout.addView(deleteButton)
             }
+
+
 
 
             // ❗️ reviewItem.content -> reviewItem.reviewItem 으로 수정
