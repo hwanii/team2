@@ -2,6 +2,7 @@ package bitc.fullstack502.project2
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,7 @@ class LoginPageActivity : AppCompatActivity() {
             repository.loginUser(id, pw) { success, userResponse, message ->
                 runOnUiThread {
                     if (success && userResponse != null) {
+                        Log.d("LoginResponseDebug", "서버 응답: ${userResponse.toString()}")
                         Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
 
 
@@ -53,7 +55,8 @@ class LoginPageActivity : AppCompatActivity() {
                             .putString("user_pw", userResponse.userPw)
                             .putString("user_tel", userResponse.userTel)
                             .putString("user_email", userResponse.userEmail)
-                            .commit()
+                            .putInt("user_key", userResponse.userKey)
+                            .apply()
 
                         // 사용자 정보 객체 생성
                         val user = User(

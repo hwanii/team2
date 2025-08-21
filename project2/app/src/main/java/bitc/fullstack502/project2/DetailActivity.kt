@@ -5,10 +5,14 @@ import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,6 +38,7 @@ class DetailActivity : AppCompatActivity() {
 
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
+    private var placeCode: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -55,10 +60,53 @@ class DetailActivity : AppCompatActivity() {
         if(!allItems.isNullOrEmpty()) {
             setupRecommendations(currentItem, allItems)
         }
-//         확인용 데이터!!
-        val placeCode = currentItem.UcSeq?.toInt() ?: -1
+
+        placeCode = currentItem.UcSeq?.toInt() ?: -1
         if (placeCode != -1) {
             loadReviewsFromServer(placeCode)
+        }
+
+        binding.btnSubmitReview.setOnClickListener {
+            val rating = binding.ratingBarInput.rating
+            val content = binding.editTextReview.text.toString().trim()
+
+            // 1. SharedPreferences에서 사용자 키(user_key) 가져오기
+            val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            val userKey = sharedPreferences.getInt("user_key", -1)
+
+            // 3. 리뷰 내용이 비어있는지 확인
+            if (content.isEmpty()) {
+                Toast.makeText(this, "리뷰 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            Log.d("ReviewDebug", "전송하려는 placeCode: $placeCode")
+            Log.d("ReviewDebug", "전송하려는 userKey: $userKey")
+            // 4. 서버로 보낼 데이터 객체 생성 (1단계에서 만든 ReviewRequest 사용)
+            val reviewRequest = ReviewRequest(
+                userKey = userKey,
+                placeCode = placeCode,
+                reviewNum  = rating,
+                reviewItem  = content
+            )
+
+            // 5. Retrofit을 사용해 서버에 리뷰 전송 (2단계에서 만든 submitReview 함수 사용)
+            RetrofitClient.reviewApi.createReview(reviewRequest).enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@DetailActivity, "리뷰가 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
+                        binding.editTextReview.text.clear()
+                        loadReviewsFromServer(placeCode)
+                    } else {
+                        Toast.makeText(this@DetailActivity, "리뷰 등록 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Log.e("ReviewError", "서버 응답 실패: ${response.errorBody()?.string()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Toast.makeText(this@DetailActivity, "리뷰 등록 실패 (네트워크 오류)", Toast.LENGTH_SHORT).show()
+                    Log.e("ReviewError", "네트워크 실패", t)
+                }
+            })
         }
     }
 
@@ -362,6 +410,8 @@ class DetailActivity : AppCompatActivity() {
         val reviewsContainer = binding.reviewsContainer
         reviewsContainer.removeAllViews()
 
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val loggedInUserKey = sharedPreferences.getInt("user_key", -1)
         reviews.forEach { reviewItem ->
             val reviewLayout = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
@@ -397,12 +447,134 @@ class DetailActivity : AppCompatActivity() {
 
             // ❗️ reviewItem.date -> reviewItem.reviewDay 로 수정
             val dateText = TextView(this).apply {
-                text = reviewItem.reviewDay
+                text = reviewItem.reviewDay.replace("T", " ")
             }
 
             topRowLayout.addView(starIcon)
             topRowLayout.addView(ratingText)
             topRowLayout.addView(dateText)
+
+            if (reviewItem.userKey == loggedInUserKey) {
+                // 공간을 채울 Spacer View 추가
+                val spacer = View(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        0, 0, 1.0f // weight 1
+                    )
+                }
+                topRowLayout.addView(spacer)
+
+                val editButton = TextView(this)
+                val deleteButton = TextView(this)
+                val cancelButton = TextView(this)
+
+                cancelButton.apply {
+                    text = "수정 취소"
+                    setPadding(16, 0, 0, 0)
+                    visibility = View.GONE
+                    setOnClickListener {
+                        deleteButton.visibility = View.VISIBLE
+                        editButton.visibility = View.VISIBLE
+                        cancelButton.visibility = View.GONE
+
+                        binding.reviewInputSection.visibility = View.VISIBLE
+                        binding.editTextReview.text.clear()
+                        binding.ratingBarInput.rating = 5.0f
+                        binding.btnSubmitReview.text = "리뷰 등록"
+                        setSubmitReviewClickListener()
+                    }
+                    topRowLayout.addView(cancelButton)
+                }
+
+                // 수정 버튼 추가
+                editButton.apply {
+                    text = "수정"
+                    setPadding(16, 0, 0, 0)
+                    setOnClickListener {
+
+                        editButton.visibility = View.GONE
+                        deleteButton.visibility = View.GONE
+                        cancelButton.visibility = View.VISIBLE
+
+                        // 리뷰 입력 섹션을 보이게 하고 값 채우기
+                        binding.reviewInputSection.visibility = View.VISIBLE
+                        binding.editTextReview.setText(reviewItem.reviewItem)
+                        binding.ratingBarInput.rating = reviewItem.reviewRating
+                        binding.btnSubmitReview.text = "리뷰 수정"
+
+                        // "리뷰 수정" 버튼에 대한 새 클릭 리스너 설정
+                        binding.btnSubmitReview.setOnClickListener {
+                            val updatedContent = binding.editTextReview.text.toString().trim()
+                            val updatedRating = binding.ratingBarInput.rating
+
+                            if (updatedContent.isEmpty()) {
+                                Toast.makeText(this@DetailActivity, "리뷰 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                                return@setOnClickListener
+                            }
+
+                            val updateRequest = ReviewUpdateRequest(
+                                reviewItem = updatedContent,
+                                reviewNum = updatedRating
+                            )
+
+                            RetrofitClient.reviewApi.updateReview(reviewItem.reviewKey, updateRequest).enqueue(object : Callback<String> {
+                                override fun onResponse(call: Call<String>, response: Response<String>) {
+                                    if (response.isSuccessful) {
+                                        Toast.makeText(this@DetailActivity, "리뷰가 수정되었습니다.", Toast.LENGTH_SHORT).show()
+                                        binding.editTextReview.text.clear()
+                                        binding.reviewsContainer.visibility = View.VISIBLE
+                                        binding.btnSubmitReview.text = "리뷰 등록"
+                                        setSubmitReviewClickListener()
+                                        loadReviewsFromServer(placeCode)
+                                    } else {
+                                        Toast.makeText(this@DetailActivity, "수정 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                override fun onFailure(call: Call<String>, t: Throwable) {
+                                    Toast.makeText(this@DetailActivity, "네트워크 오류로 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                                }
+                            })
+                        }
+                    }
+                }
+                topRowLayout.addView(editButton)
+                // 삭제 버튼 추가
+                deleteButton.apply {
+                    text = "삭제"
+                    setPadding(16, 0, 0, 0)
+
+                    setOnClickListener {
+                        // ✅ 확인 창을 띄웁니다.
+                        androidx.appcompat.app.AlertDialog.Builder(this@DetailActivity)
+                            .setTitle("리뷰 삭제")
+                            .setMessage("정말로 이 리뷰를 삭제하시겠습니까?")
+                            .setPositiveButton("삭제") { _, _ ->
+                                // "삭제" 버튼을 누르면 API 호출
+                                val reviewKey = reviewItem.reviewKey
+                                RetrofitClient.reviewApi.deleteReview(reviewKey).enqueue(object : Callback<String> {
+                                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(this@DetailActivity, "리뷰가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                                            // 리뷰 목록을 새로고침하여 화면에서 즉시 사라지게 합니다.
+                                            loadReviewsFromServer(placeCode)
+                                        } else {
+                                            Toast.makeText(this@DetailActivity, "삭제 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<String>, t: Throwable) {
+                                        Toast.makeText(this@DetailActivity, "네트워크 오류로 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+                            }
+                            .setNegativeButton("취소", null)
+                            .show()
+                    }
+                }
+                topRowLayout.addView(deleteButton)
+            }
+
+
+
 
             // ❗️ reviewItem.content -> reviewItem.reviewItem 으로 수정
             val contentText = TextView(this).apply {
@@ -422,19 +594,61 @@ class DetailActivity : AppCompatActivity() {
 
             reviewsContainer.addView(reviewLayout)
         }
+
+
+    }
+    private fun setSubmitReviewClickListener() {
+        binding.btnSubmitReview.setOnClickListener {
+            val rating = binding.ratingBarInput.rating
+            val content = binding.editTextReview.text.toString().trim()
+
+            val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            val userKey = sharedPreferences.getInt("user_key", -1)
+
+            if (content.isEmpty()) {
+                Toast.makeText(this, "리뷰 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            Log.d("ReviewDebug", "전송하려는 placeCode: $placeCode")
+            Log.d("ReviewDebug", "전송하려는 userKey: $userKey")
+
+            val reviewRequest = ReviewRequest(
+                userKey = userKey,
+                placeCode = placeCode,
+                reviewNum  = rating,
+                reviewItem  = content
+            )
+
+            RetrofitClient.reviewApi.createReview(reviewRequest).enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@DetailActivity, "리뷰가 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
+                        binding.editTextReview.text.clear()
+                        loadReviewsFromServer(placeCode)
+                    } else {
+                        Toast.makeText(this@DetailActivity, "리뷰 등록 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Log.e("ReviewError", "서버 응답 실패: ${response.errorBody()?.string()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Toast.makeText(this@DetailActivity, "리뷰 등록 실패 (네트워크 오류)", Toast.LENGTH_SHORT).show()
+                    Log.e("ReviewError", "네트워크 실패", t)
+                }
+            })
+        }
     }
     private fun checkLoginStatus() {
         // SharedPreferences에서 토큰을 가져오는 로직 (로그인 구현 시 만드셨을 Util 클래스 등 활용)
         // 예시: val token = App.prefs.token
-        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val authToken = sharedPreferences.getString("auth_token", null)
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        // ❗️ 2. "auth_token" 대신 "isLoggedIn" 값을 확인 (기본값은 false)
+        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
-        if (authToken.isNullOrBlank()) {
-            // 토큰이 없으면 (로그아웃 상태) 리뷰 작성란 숨기기
-            binding.reviewInputSection.visibility = View.GONE
-        } else {
-            // 토큰이 있으면 (로그인 상태) 리뷰 작성란 보이기
+        if (isLoggedIn) {
             binding.reviewInputSection.visibility = View.VISIBLE
+        } else {
+            binding.reviewInputSection.visibility = View.GONE
         }
     }
 }

@@ -9,4 +9,5 @@ public class EditRequestDTO {
     private String userPw;
     private String userTel;
     private String userEmail;
+    private int userKey;
 }
