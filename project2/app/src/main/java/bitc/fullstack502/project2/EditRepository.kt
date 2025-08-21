@@ -32,4 +32,20 @@ class EditRepository(private val apiService: JoinApiService) {
             }
         })
     }
+
+    //  사용자 정보 가져오기
+    fun getUserById(userId: String, onResult: (User) -> Unit) {
+        apiService.getUserById(userId).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                val user = response.body()
+                if (user != null) {
+                    onResult(user)
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                // 필요시 에러 핸들링 추가
+            }
+        })
+    }
 }

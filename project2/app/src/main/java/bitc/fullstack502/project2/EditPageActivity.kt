@@ -1,5 +1,7 @@
 package bitc.fullstack502.project2
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -28,13 +30,14 @@ class EditPageActivity : AppCompatActivity() {
         enableEdgeToEdge()
         val binding = ActivityEditPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // 로그인 후 전달받은 User 객체
+        //  받아온 User 객체
         user = intent.getParcelableExtra<User>("user") ?: return finish()
 
         nameEditText = findViewById(R.id.user_name)
@@ -76,13 +79,27 @@ class EditPageActivity : AppCompatActivity() {
         if (password.isNotEmpty() && password != passwordCheck) { showToast("비밀번호가 일치하지 않습니다."); return }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { showToast("올바른 이메일 주소를 입력해주세요."); return }
 
-        // 비밀번호가 비어있으면 기존 비밀번호 사용
         val finalPassword = if (password.isEmpty()) user.userPw else password
 
         repository.updateUser(name, id, finalPassword, tel, email) { success, message ->
             runOnUiThread {
                 showToast(message)
-                if (success) finish()
+                if (success) {
+                    // 서버 업데이트 성공 시 User 객체 갱신
+                    user = user.copy(
+                        userName = name,
+                        userId = id,
+                        userPw = finalPassword,
+                        userTel = tel,
+                        userEmail = email
+                    )
+                    // MyPageActivity로 전달
+                    val resultIntent = Intent().apply {
+                        putExtra("updatedUser", user)
+                    }
+                    setResult(Activity.RESULT_OK, resultIntent)
+                    finish()
+                }
             }
         }
     }

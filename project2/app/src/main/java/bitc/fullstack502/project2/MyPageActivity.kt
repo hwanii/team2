@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,10 +13,25 @@ import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityMyPageBinding
 
 class MyPageActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMyPageBinding
+    private lateinit var user: User
+
+    private val editLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val updatedUser = result.data?.getParcelableExtra<User>("updatedUser")
+            if (updatedUser != null) {
+                user = updatedUser
+                updateUI(user)
+                saveToPrefs(user)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val binding = ActivityMyPageBinding.inflate(layoutInflater)
+        binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -23,10 +39,9 @@ class MyPageActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        
 
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val user = User(
+        user = User(
             userKey = prefs.getInt("user_key", 0),
             userName = prefs.getString("user_name", "") ?: "",
             userId = prefs.getString("user_id", "") ?: "",
@@ -35,37 +50,39 @@ class MyPageActivity : AppCompatActivity() {
             userEmail = prefs.getString("user_email", "") ?: ""
         )
 
-        // 화면에 유저 정보 표시
-        if (user.userName.isNotEmpty() && user.userId.isNotEmpty()) {
-            binding.userName.text = "이름 : ${user.userName}"
-            binding.userId.text = "ID : ${user.userId}"
-        } else {
-            Log.d("MyPageActivity", "User info not found in SharedPreferences")
-        }
+        updateUI(user)
 
-        // 프로필 수정 버튼 클릭
         binding.goEdit.setOnClickListener {
             val intent = Intent(this, EditPageActivity::class.java)
             intent.putExtra("user", user)
-            startActivity(intent)
+            editLauncher.launch(intent)
         }
 
-        // 로그아웃 버튼 클릭
         binding.logoutButton.setOnClickListener {
-            prefs.edit().clear().apply()  // 모든 사용자 정보 삭제
+            prefs.edit().clear().apply()
             Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, LoginPageActivity::class.java))
             finish()
         }
 
         val hasReview = false
+        binding.myReview.visibility = if (hasReview) View.VISIBLE else View.GONE
+        binding.noReview.visibility = if (hasReview) View.GONE else View.VISIBLE
+    }
 
-        if (hasReview) {
-            binding.myReview.visibility = View.VISIBLE
-            binding.noReview.visibility = View.GONE
-        } else {
-            binding.myReview.visibility = View.GONE
-            binding.noReview.visibility = View.VISIBLE
-        }
+    private fun updateUI(user: User) {
+        binding.userName.text = "이름 : ${user.userName}"
+        binding.userId.text = "ID : ${user.userId}"
+    }
+
+    private fun saveToPrefs(user: User) {
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        prefs.edit().apply {
+            putString("user_name", user.userName)
+            putString("user_id", user.userId)
+            putString("user_pw", user.userPw)
+            putString("user_tel", user.userTel)
+            putString("user_email", user.userEmail)
+        }.apply()
     }
 }
