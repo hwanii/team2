@@ -8,6 +8,7 @@ data class LoginRequest(
 
 // 서버에서 반환하는 사용자 정보
 data class UserResponse(
+    val userKey: Int,
     val userName: String,
     val userId: String,
     val userPw: String,

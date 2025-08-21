@@ -5,96 +5,99 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import bitc.fullstack502.project2.data.Place
 import bitc.fullstack502.project2.databinding.ActivityListBinding
-import com.google.android.material.button.MaterialButton
+import bitc.fullstack502.project2.model.FavoriteItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import androidx.appcompat.widget.SearchView
 
 
 class ListActivity : AppCompatActivity() {
+    
     private val binding by lazy { ActivityListBinding.inflate(layoutInflater) }
-//    공공데이터 포탈 부산맛집 정보 서비스 api key값
-    private val servicekey = "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
-
-    // jin 추가
-    private val placeList = mutableListOf<Place>()
-    private val originalList = mutableListOf<Place>()
+    private val serviceKey =
+        "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
+    
+    private val foodList = mutableListOf<FoodItem>()
+    private val originalList = mutableListOf<FoodItem>()
     private lateinit var adapter: PlaceAdapter
     private val categorySet = mutableSetOf<String>()
-
     private var selectedButton: FilterButton? = null
-    // jin 추가 end
-
+    private var currentUserKey: Int = 0
+    private val favoritePlaceCodes = mutableSetOf<Int>() // 서버에서 받은 즐겨찾기 placeCode
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
-
-        val userBookmarkedIds = mutableSetOf<Long>()
-
-        // jin 추가
-//        adapter = PlaceAdapter(placeList) { place ->
-//            val intent = Intent(this, DetailActivity::class.java).apply {
-//                putExtra("title", place.title)
-//                putExtra("addr", place.addr)
-//                putExtra("category", place.category)
-//                putExtra("menu", place.menu)
-//                putExtra("time", place.time)
-//                putExtra("imageurl", place.imageUrl)
-//            }
-//            startActivity(intent)
-//        }
-
+        
+        currentUserKey = intent.getIntExtra("user_key", 0)
+        
+        // 어댑터 초기화
         adapter = PlaceAdapter(
-            placeList,
-            itemClickListener = { place ->
+            foodList,
+            itemClickListener = { foodItem ->
                 val intent = Intent(this, DetailActivity::class.java).apply {
-                    putExtra("title", place.title)
-                    putExtra("addr", place.addr)
-                    putExtra("category", place.category)
-                    putExtra("menu", place.menu)
-                    putExtra("time", place.time)
-                    putExtra("imageurl", place.imageUrl)
+                    putExtra("clicked_item", foodItem)
+                    putParcelableArrayListExtra("full_list", ArrayList(originalList))
                 }
                 startActivity(intent)
             },
-            onBookmarkClick = { place, isBookmarked ->
-                if (isBookmarked) {
-                    userBookmarkedIds.add(place.id)
+            onBookmarkClick = { item, isBookmarked ->
+                val body = mapOf(
+                    "userKey" to currentUserKey,
+                    "placeCode" to item.UcSeq
+                )
+                
+                val call = if (isBookmarked) {
+                    RetrofitClient.favoritesApi.addFavorite(body)
                 } else {
-                    userBookmarkedIds.remove(place.id)
+                    RetrofitClient.favoritesApi.removeFavorite(body)
                 }
-            },
-            bookmarkedPlaceIds = userBookmarkedIds
+                
+                call.enqueue(object : Callback<Void> {
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        if (!response.isSuccessful) {
+                            Toast.makeText(
+                                this@ListActivity,
+                                "즐겨찾기 업데이트 실패",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            item.isBookmarked = !isBookmarked
+                            adapter.notifyItemChanged(foodList.indexOf(item))
+                        } else {
+                            // 서버에서 다시 즐겨찾기 상태 가져오기
+                            fetchUserFavorites()
+                        }
+                    }
+                    
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Toast.makeText(this@ListActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                        item.isBookmarked = !isBookmarked
+                        adapter.notifyItemChanged(foodList.indexOf(item))
+                    }
+                })
+            }
         )
-
+        
         binding.rvList.layoutManager = LinearLayoutManager(this)
         binding.rvList.adapter = adapter
-
+        
         // 리스트 구분선
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        val drawable = ContextCompat.getDrawable(this, R.drawable.divider_custom)
-        drawable?.let {
-            divider.setDrawable(it)
-        }
+        ContextCompat.getDrawable(this, R.drawable.divider_custom)?.let { divider.setDrawable(it) }
         binding.rvList.addItemDecoration(divider)
-
+        
         // 초기 전체 리스트 로딩
         fetchListData()
-
+        
         // 검색창
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -103,108 +106,106 @@ class ListActivity : AppCompatActivity() {
                 filterList(s?.toString())
             }
         })
-
+        
         // 이전 버튼
-        binding.btnBack.setOnClickListener {
-            finish() // 이전 화면으로 돌아가기
-        }
-        // jin 추가 end
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.btnBack.setOnClickListener { finish() }
     }
-
-
-//    현재 가지고 있는 값 (title,addr,subadder 등등 ) 을 DetailActivity 에 전달하는 역할,
-//    각각의 UcSeq(가게식별코드)에 맞는 값을 부여하는 소스
-    private fun navigateToDatail(item: FoodItem) {
-        val intent = Intent(this, DetailActivity::class.java).apply {
-            putExtra("title", item.TITLE)
-            putExtra("addr", item.ADDR)
-            putExtra("subaddr", item.SubAddr)
-            putExtra("tel", item.TEL)
-            putExtra("time", item.Time)
-            putExtra("item", item.Item)
-            putExtra("imageurl", item.image)
-            putExtra("lat", item.Lat ?: 0.0f)
-            putExtra("lng", item.Lng ?: 0.0f)
-            putExtra("UcSeq", item.UcSeq)
-        }
-        startActivity(intent)
-    }
-
-
-    // jin 추가
-    private fun fetchListData() {
-        RetrofitClient.api.getFoodList(
-            serviceKey = servicekey,
-            title = null,
-            gugun = null
-        ).enqueue(object : Callback<FoodResponse> {
-            override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
-                if (response.isSuccessful) {
-                    val foodList = response.body()?.getFoodkr?.item ?: emptyList()
-                    originalList.clear()
-                    categorySet.clear()
-
-                    foodList.forEach { item ->
-                        categorySet.add(item.GUGUN_NM)
-                        originalList.add(
-                            Place(
-                                id = item.hashCode().toLong(),
-                                title = item.TITLE,
-                                rating = 0.0,
-                                addr = item.ADDR,
-                                category = item.GUGUN_NM,
-                                menu = item.CATE_NM ?: "정보 없음",
-                                time = item.Time ?: "정보 없음",
-                                imageUrl = item.image ?: ""
+    
+    private fun fetchUserFavorites() {
+        RetrofitClient.favoritesApi.getFavorites(currentUserKey)
+            .enqueue(object : Callback<List<Int>> {
+                override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
+                    if (response.isSuccessful) {
+                        // 서버에서 받은 placeCode 리스트
+                        val favoritePlaceCodesFromServer = response.body() ?: emptyList()
+                        
+                        // 0은 제외하고 Set에 담기 (타입 안전)
+                        favoritePlaceCodes.clear()
+                        favoritePlaceCodes.addAll(favoritePlaceCodesFromServer.filter { it != 0 })
+                        
+                        Log.d("FavoritesDebug", "favoritePlaceCodes=$favoritePlaceCodes")
+                        
+                        // 원본 + 현재 리스트 모두 반영
+                        originalList.forEach { it.isBookmarked = favoritePlaceCodes.contains(it.UcSeq.toInt()) }
+                        foodList.forEach { it.isBookmarked = favoritePlaceCodes.contains(it.UcSeq.toInt()) }
+                        
+                        // 각 아이템 상태 로그 찍어보기
+                        foodList.forEach {
+                            Log.d(
+                                "FavoritesDebug",
+                                "UcSeq=${it.UcSeq}, isBookmarked=${it.isBookmarked}"
                             )
-                        )
+                        }
+                        
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        Log.e("ListActivity", "즐겨찾기 로딩 실패: ${response.code()}")
                     }
-
-                    // 전체 리스트 출력
-                    updateList(null)
-
-                    // 버튼 생성 (최초 1회만)
-                    createFilterButtons()
-                } else {
-                    Toast.makeText(this@ListActivity, "서버 응답 오류: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
-            }
-
-            override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
-                Log.e("ListActivity", "API 호출 실패", t)
-                Toast.makeText(this@ListActivity, "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        })
+                
+                override fun onFailure(call: Call<List<Int>>, t: Throwable) {
+                    Log.e("ListActivity", "즐겨찾기 API 호출 실패", t)
+                }
+            })
     }
-
-
+    
+    private fun fetchListData() {
+        RetrofitClient.api.getFoodList(serviceKey = serviceKey, title = null, gugun = null)
+            .enqueue(object : Callback<FoodResponse> {
+                override fun onResponse(
+                    call: Call<FoodResponse>,
+                    response: Response<FoodResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val items = response.body()?.getFoodkr?.item ?: emptyList()
+                        originalList.clear()
+                        categorySet.clear()
+                        items.forEach {
+                            categorySet.add(it.GUGUN_NM)
+                            originalList.add(it)
+                        }
+                        updateList(null)
+                        createFilterButtons()
+                        
+                        // 리스트 데이터가 준비된 후 즐겨찾기 상태 반영
+                        fetchUserFavorites()
+                    } else {
+                        Toast.makeText(
+                            this@ListActivity,
+                            "서버 응답 오류: ${response.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                
+                override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
+                    Log.e("ListActivity", "API 호출 실패", t)
+                    Toast.makeText(this@ListActivity, "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+    }
+    
     private fun createFilterButtons() {
         val container = binding.filterBtnContainer
         container.removeAllViews()
-
-        val desiredOrder = listOf("해운대구", "기장군", "수영구", "남구", "부산진구", "동구", "중구", "서구", "영도구", "연제구", "동래구", "금정구", "북구", "사상구", "강서구", "사하구")
+        val desiredOrder = listOf(
+            "해운대구", "기장군", "수영구", "남구", "부산진구", "동구", "중구", "서구",
+            "영도구", "연제구", "동래구", "금정구", "북구", "사상구", "강서구", "사하구"
+        )
         val sortedCategories: List<String> = desiredOrder.filter { categorySet.contains(it) }
-
-
-        // 전체 버튼
+        
         val allButton = FilterButton(this).apply {
             text = "부산 전체"
             setOnStyle()
-            selectedButton = this // 초기 선택 버튼
+            selectedButton = this
             setOnClickListener {
                 updateList(null)
                 updateSelectedButton(this, container)
             }
         }
         container.addView(allButton)
-
-        // 각 구 버튼
+        
         sortedCategories.forEach { category ->
             val button = FilterButton(this).apply {
                 text = category
@@ -216,51 +217,36 @@ class ListActivity : AppCompatActivity() {
             }
             container.addView(button)
         }
-
     }
-
-    // 선택 버튼 업데이트
+    
     private fun updateSelectedButton(newButton: FilterButton, container: LinearLayout) {
-        // 이전 선택 버튼 OFF
-        (selectedButton as? FilterButton)?.setOffStyle()
-
-        // 새로 선택한 버튼 ON
+        selectedButton?.setOffStyle()
         newButton.setOnStyle()
         selectedButton = newButton
     }
-
-    // 필터(구) 리스트
+    
     private fun updateList(filter: String?) {
-        placeList.clear()
-        if (filter.isNullOrEmpty()) {
-            placeList.addAll(originalList)
-        } else {
-            placeList.addAll(originalList.filter { it.category == filter })
-        }
+        foodList.clear()
+        if (filter.isNullOrEmpty()) foodList.addAll(originalList)
+        else foodList.addAll(originalList.filter { it.GUGUN_NM == filter })
+        
+        // 즐겨찾기 상태 반영
+        foodList.forEach { it.isBookmarked = favoritePlaceCodes.contains(it.UcSeq) }
         adapter.notifyDataSetChanged()
-
-        // 첫 번째 아이템으로 스크롤
         binding.rvList.scrollToPosition(0)
     }
-
-
-    // 검색 리스트
+    
     private fun filterList(query: String?) {
         val searchText = query?.trim()?.lowercase() ?: ""
-        placeList.clear()
-
-        if (searchText.isEmpty()) {
-            placeList.addAll(originalList)
-        } else {
-            placeList.addAll(
-                originalList.filter { place ->
-                    place.title.lowercase().contains(searchText) ||
-                            place.menu.lowercase().contains(searchText)
-                }
-            )
-        }
+        foodList.clear()
+        if (searchText.isEmpty()) foodList.addAll(originalList)
+        else foodList.addAll(originalList.filter {
+            it.TITLE.lowercase().contains(searchText) ||
+              (it.CATE_NM ?: "").lowercase().contains(searchText)
+        })
+        
+        // 검색 후 즐겨찾기 상태 반영
+        foodList.forEach { it.isBookmarked = favoritePlaceCodes.contains(it.UcSeq) }
         adapter.notifyDataSetChanged()
     }
-    // jin 추가 end
-
 }

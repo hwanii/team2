@@ -62,7 +62,7 @@ object RetrofitClient {
         val gson = GsonBuilder().setLenient().create()
         
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")  // 스프링부트 서버 주소
+            .baseUrl("http://10.0.2.2:8080/") // 스프링 부트 서버
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

@@ -22,8 +22,21 @@
         android:textSize="28sp"
         android:textColor="@android:color/black"
         android:gravity="center"
-        android:paddingBottom="10dp"/>
-
+        android:paddingBottom="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"/>
+    
+    <TextView
+      android:id="@+id/emptyTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="즐겨찾기 한 식당이 없습니다"
+      android:gravity="center"
+      android:visibility="gone"
+      android:textSize="16sp"
+      android:textColor="@android:color/darker_gray"
+      android:layout_marginTop="16dp"/>
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRecyclerView"
         android:layout_width="match_parent"

@@ -26,6 +26,7 @@ class MyPageActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val user = User(
+            userKey = prefs.getInt("user_key", 0),
             userName = prefs.getString("user_name", "") ?: "",
             userId = prefs.getString("user_id", "") ?: "",
             userPw = prefs.getString("user_pw", "") ?: "",

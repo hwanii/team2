@@ -3,76 +3,86 @@ package bitc.fullstack502.project2.Adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import bitc.fullstack502.project2.DetailActivity
 import bitc.fullstack502.project2.FoodItem
 import bitc.fullstack502.project2.R
-import bitc.fullstack502.project2.databinding.ItemFavoritBinding
+import bitc.fullstack502.project2.RetrofitClient
+import bitc.fullstack502.project2.databinding.ItemFavoriteBinding
 import com.bumptech.glide.Glide
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FavoritesAdapter(
-    private var items: MutableList<FoodItem>,
-    private val allItems: List<FoodItem>,
-    private val likedPlaceCodes: MutableSet<Int>
-) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
+    private val items: MutableList<FoodItem>,
+    private val likedPlaceCodes: MutableSet<Int>,
+    private val currentUserKey: Int
+) : RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
     
-    interface OnLikeClickListener {
-        fun onLikeToggle(item: FoodItem, position: Int, isLiked: Boolean)
+    private var listener: ((FoodItem, Int, Boolean) -> Unit)? = null
+    
+    fun setOnLikeClickListener(listener: (FoodItem, Int, Boolean) -> Unit) {
+        this.listener = listener
     }
     
-    private var likeClickListener: OnLikeClickListener? = null
-    fun setOnLikeClickListener(listener: OnLikeClickListener) { this.likeClickListener = listener }
-    
-    inner class ViewHolder(private val binding: ItemFavoritBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: FoodItem) {
-            binding.itemTitle.text = item.TITLE
-            binding.itemDescription.text = item.CATE_NM ?: "대표 메뉴 정보 없음"
-            binding.itemCategoryAddr.text = item.GUGUN_NM
-            binding.itemRating.text = "4.5"
-            
-            Glide.with(itemView.context).load(item.thumb).into(binding.itemImageView)
-            
-            // 상세 페이지 이동
-            itemView.setOnClickListener {
-                val intent = Intent(itemView.context, DetailActivity::class.java).apply {
-                    putExtra("clicked_item", item)
-                    putParcelableArrayListExtra("full_list", ArrayList(allItems))
-                }
-                itemView.context.startActivity(intent)
-            }
-            
-            // 하트 클릭 (즐겨찾기 토글)
-            binding.likeIcon.setOnClickListener {
-                val isLiked = likedPlaceCodes.contains(item.UcSeq)
-                if (isLiked) {
-                    likedPlaceCodes.remove(item.UcSeq)
-                    binding.likeIcon.setImageResource(android.R.drawable.btn_star_big_off)
-                } else {
-                    likedPlaceCodes.add(item.UcSeq)
-                    binding.likeIcon.setImageResource(android.R.drawable.btn_star_big_on)
-                }
-                likeClickListener?.onLikeToggle(item, adapterPosition, !isLiked)
-            }
-            
-            // 하트 초기 상태
-            val initialLiked = likedPlaceCodes.contains(item.UcSeq)
-            binding.likeIcon.setImageResource(
-                if (initialLiked) android.R.drawable.btn_star_big_on
-                else android.R.drawable.btn_star_big_off
-            )
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
+        val binding = ItemFavoriteBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return FavoritesViewHolder(binding)
     }
     
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemFavoritBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
-    }
-    
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+    override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
+        val item = items[position]
+        holder.bind(item)
     }
     
     override fun getItemCount(): Int = items.size
+    
+    inner class FavoritesViewHolder(private val binding: ItemFavoriteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        
+        fun bind(item: FoodItem) {
+            binding.itemTitle.text = item.TITLE
+            binding.itemCategoryAddr.text = "${item.GUGUN_NM}"
+            
+            Glide.with(binding.itemImageView.context)
+                .load(item.thumb)
+                .into(binding.itemImageView)
+            
+            // 하트 상태 초기화
+            val isLiked = likedPlaceCodes.contains(item.UcSeq)
+            binding.likeIcon.setImageResource(
+                if (isLiked) R.drawable.heart_full
+                else R.drawable.heart_none
+            )
+            
+            // 하트 클릭 처리
+            binding.likeIcon.setOnClickListener {
+                val currentlyLiked = likedPlaceCodes.contains(item.UcSeq)
+                val newLikeState = !currentlyLiked
+                listener?.invoke(item, adapterPosition, newLikeState)
+            }
+        }
+    }
+    
+    fun updateItems(newItems: MutableList<FoodItem>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+    
+    fun removeAt(position: Int) {
+        if (position in items.indices) {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, items.size)
+        }
+    }
     
     
     private fun cleanMenuText(menu: String?): String {

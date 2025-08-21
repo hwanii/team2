@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var foodList: List<FoodItem> = emptyList()
     private var currentFilteredList: List<FoodItem> = emptyList()
     private var currentGu: String = "전체"
+    private var currentUserKey: Int = 0
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var verticalAdapter: VerticalAdapter
@@ -206,22 +208,30 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.menu_home -> true
                 R.id.menu_list -> {
-                    startActivity(Intent(this, ListActivity::class.java))
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val currentUserKey = prefs.getInt("user_key", 0)
+                    Log.d("ListActivity", "userKey: $currentUserKey")
+                    
+                    val intent = Intent(this, ListActivity::class.java)
+                    intent.putExtra("user_key", currentUserKey)
+                    startActivity(intent)
                     true
                 }
                 R.id.menu_favorite -> {
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val currentUserKey = prefs.getInt("user_key", 0)
+                    Log.d("FavoritesActivity", "userKey: $currentUserKey")
                     if (!foodList.isNullOrEmpty()) {
-                        val mockFavorites = foodList!!.shuffled().take(6)
                         val intent = Intent(this, FavoritesActivity::class.java).apply {
                             putParcelableArrayListExtra(
-                                "favorites_list",
-                                ArrayList(mockFavorites)
+                                "full_list",
+                                ArrayList(foodList) // 전체 음식 리스트 전달
                             )
+                            putExtra("user_key", currentUserKey) // 로그인한 유저 키 전달
                         }
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this, "아직 데이터 로딩 중입니다.", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, "아직 데이터 로딩 중입니다.", Toast.LENGTH_SHORT).show()
                     }
                     true
                 }

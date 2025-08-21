@@ -9,7 +9,7 @@
         android:id="@+id/itemImageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:background="#E0E0E0"
+        android:background="#ffffff"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"/>
 
@@ -32,13 +32,6 @@
             android:textStyle="bold"
             android:textColor="@android:color/black"/>
 
-        <TextView
-            android:id="@+id/itemDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textSize="14sp"/>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +42,9 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/star"/> <TextView
+                android:src="@drawable/star"/>
+            
+            <TextView
             android:id="@+id/itemRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -41,6 +41,7 @@ public class UserService {
             UserEntity user = optionalUser.get();
             if (user.getUserPw().equals(request.getUserPw())) {
                 UserResponseDTO response = new UserResponseDTO();
+                response.setUserKey(user.getUser_key());
                 response.setUserName(user.getUserName());
                 response.setUserId(user.getUserId());
                 response.setUserPw(user.getUserPw());
@@ -76,5 +77,12 @@ public class UserService {
         boolean available = !userRepository.existsByUserId(userId);
         String message = available ? "사용 가능한 ID입니다." : "이미 존재하는 ID입니다.";
         return new IdCheckResponseDTO(available, message);
+    }
+
+
+    // userKey로 UserEntity 찾기
+    public UserEntity findByUserKey(Integer userKey) {
+        return userRepository.findById(userKey)
+            .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
     }
 }

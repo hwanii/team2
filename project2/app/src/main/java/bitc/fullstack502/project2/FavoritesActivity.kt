@@ -2,6 +2,7 @@ package bitc.fullstack502.project2
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,74 +17,87 @@ class FavoritesActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityFavoritesBinding
     private lateinit var adapter: FavoritesAdapter
-    private val currentUserKey = 1 // 로그인 시 받아오는 userKey
     private val likedPlaceCodes = mutableSetOf<Int>()
+    private var currentUserKey: Int = 0
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
+        // 1️⃣ Intent에서 user_key와 전체 리스트 받아오기
+        currentUserKey = intent.getIntExtra("user_key", 0)
+        val allItems: List<FoodItem> = intent.getParcelableArrayListExtra("full_list") ?: emptyList()
+        
+        // 2️⃣ RecyclerView 세팅
+        adapter = FavoritesAdapter(mutableListOf(), likedPlaceCodes, currentUserKey)
+        binding.favoritesRecyclerView.adapter = adapter
         binding.favoritesRecyclerView.layoutManager = LinearLayoutManager(this)
         
-        loadFavorites()
-    }
-    
-    private fun loadFavorites() {
-        // 1. DB에서 로그인 유저 즐겨찾기 가져오기
+        // 3️⃣ 서버에서 즐겨찾기 가져오기
         RetrofitClient.favoritesApi.getFavorites(currentUserKey)
-            .enqueue(object : Callback<List<FavoriteItem>> {
-                override fun onResponse(
-                    call: Call<List<FavoriteItem>>,
-                    response: Response<List<FavoriteItem>>
-                ) {
+            .enqueue(object : Callback<List<Int>> {
+                override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
                     if (response.isSuccessful) {
-                        val favoriteList = response.body() ?: emptyList()
+                        val favoritePlaceCodes = response.body() ?: emptyList()
+                        
+                        // 즐겨찾기 placeCode 리스트 갱신
                         likedPlaceCodes.clear()
-                        likedPlaceCodes.addAll(favoriteList.map { it.placeCode })
+                        likedPlaceCodes.addAll(favoritePlaceCodes)
                         
-                        // 2. 인텐트로 받은 전체 FoodItem 리스트
-                        val allItems: List<FoodItem> =
-                            intent.getParcelableArrayListExtra("full_list") ?: emptyList()
-                        val favoriteFoodItems = allItems.filter { it.UcSeq in likedPlaceCodes }
+                        // 전체 리스트에 isBookmarked 반영
+                        allItems.forEach { it.isBookmarked = it.UcSeq in likedPlaceCodes && it.UcSeq != 0 }
                         
-                        // 3. 어댑터 연결
-                        adapter = FavoritesAdapter(favoriteFoodItems.toMutableList(), favoriteFoodItems, likedPlaceCodes)
-                        binding.favoritesRecyclerView.adapter = adapter
+                        // 즐겨찾기 아이템만 뽑아서 어댑터에 전달
+                        val favoriteFoodItems = allItems.filter { it.isBookmarked }
+                        adapter.updateItems(favoriteFoodItems.toMutableList())
                         
-                        // 4. 하트 클릭 토글 처리
-                        adapter.setOnLikeClickListener(object : FavoritesAdapter.OnLikeClickListener {
-                            override fun onLikeToggle(item: FoodItem, position: Int, isLiked: Boolean) {
-                                if (isLiked) {
-                                    // 즐겨찾기 추가
-                                    RetrofitClient.favoritesApi.addFavorite(currentUserKey, item.UcSeq)
-                                        .enqueue(object : Callback<Void> {
-                                            override fun onResponse(call: Call<Void>, response: Response<Void>) {}
-                                            override fun onFailure(call: Call<Void>, t: Throwable) {
-                                                Log.e("FavoritesActivity", "즐찾 추가 오류", t)
-                                            }
-                                        })
-                                } else {
-                                    // 즐겨찾기 해제
-                                    val body = mapOf("userKey" to currentUserKey, "placeCode" to item.UcSeq)
-                                    RetrofitClient.favoritesApi.removeFavorite(body)
-                                        .enqueue(object : Callback<Void> {
-                                            override fun onResponse(call: Call<Void>, response: Response<Void>) {}
-                                            override fun onFailure(call: Call<Void>, t: Throwable) {
-                                                Log.e("FavoritesActivity", "즐찾 해제 오류", t)
-                                            }
-                                        })
-                                }
-                            }
-                        })
+                        binding.emptyTextView.visibility =
+                            if (favoriteFoodItems.isEmpty()) View.VISIBLE else View.GONE
                     } else {
-                        Log.e("FavoritesActivity", "즐겨찾기 로딩 실패")
+                        Log.e("FavoritesActivity", "즐겨찾기 로딩 실패: ${response.code()}")
                     }
                 }
                 
-                override fun onFailure(call: Call<List<FavoriteItem>>, t: Throwable) {
+                override fun onFailure(call: Call<List<Int>>, t: Throwable) {
                     Log.e("FavoritesActivity", "네트워크 오류", t)
                 }
             })
+        
+        // 4️⃣ 하트 클릭 이벤트 처리
+        adapter.setOnLikeClickListener { item, position, isLiked ->
+            val body = mapOf("userKey" to currentUserKey, "placeCode" to item.UcSeq)
+            val call = if (isLiked) {
+                RetrofitClient.favoritesApi.addFavorite(body)
+            } else {
+                RetrofitClient.favoritesApi.removeFavorite(body)
+            }
+            
+            call.enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        if (isLiked) {
+                            likedPlaceCodes.add(item.UcSeq)
+                            adapter.notifyItemChanged(position)
+                            
+                            if (adapter.itemCount == 0) {
+                                binding.emptyTextView.visibility = View.VISIBLE
+                            }
+                        } else {
+                            likedPlaceCodes.remove(item.UcSeq)
+                            
+                            // ✅ 즐겨찾기 목록에서도 제거
+                            adapter.removeAt(position)
+                        }
+                    } else {
+                        Toast.makeText(this@FavoritesActivity, "즐겨찾기 업데이트 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Toast.makeText(this@FavoritesActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 }

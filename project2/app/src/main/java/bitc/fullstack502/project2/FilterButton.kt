@@ -1,7 +1,5 @@
 package bitc.fullstack502.project2
 
-import android.R.attr.insetLeft
-import android.R.attr.insetRight
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
@@ -37,6 +35,14 @@ class FilterButton(context: Context, attrs: AttributeSet? = null) :
         strokeColor = ContextCompat.getColorStateList(context, R.color.stroke_orange)
 
         setTypeface(typeface, Typeface.BOLD)
+
+        minWidth = 0
+        minimumWidth = 0
+
+        // 패딩 적용 (dp → px 변환)
+        val leftRight = (16 * resources.displayMetrics.density).toInt()
+        val topBottom = (4 * resources.displayMetrics.density).toInt()
+        setPadding(leftRight, topBottom, leftRight, topBottom)
     }
 
     /** 버튼 OFF */
@@ -48,5 +54,13 @@ class FilterButton(context: Context, attrs: AttributeSet? = null) :
         strokeColor = ContextCompat.getColorStateList(context, R.color.stroke_gray)
 
         setTypeface(typeface, Typeface.NORMAL)
+
+        minWidth = 0
+        minimumWidth = 0
+
+        // 패딩 적용 (dp → px 변환)
+        val leftRight = (16 * resources.displayMetrics.density).toInt()
+        val topBottom = (4 * resources.displayMetrics.density).toInt()
+        setPadding(leftRight, topBottom, leftRight, topBottom)
     }
 }
