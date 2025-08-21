@@ -21,6 +21,7 @@ import bitc.fullstack502.project2.Adapter.HorizontalAdapter
 import bitc.fullstack502.project2.Adapter.VerticalAdapter
 import bitc.fullstack502.project2.Adapter.SlideItem
 import bitc.fullstack502.project2.Adapter.SliderAdapter
+import bitc.fullstack502.project2.RetrofitClient.reviewApi
 import bitc.fullstack502.project2.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -140,24 +141,36 @@ class MainActivity : AppCompatActivity() {
         sliderHandler.removeCallbacks(sliderRunnable)
         hideRunnable?.let { navHandler.removeCallbacks(it) }
     }
-    
+
     // ============================
-    // VerticalAdapter 초기화
-    // ============================
+// VerticalAdapter 초기화
+// RecyclerView 세로 스크롤용
+// 클릭 이벤트 처리 + 리뷰 API 연동
+// ============================
     private fun setupVerticalAdapter() {
-        verticalAdapter = VerticalAdapter(object : VerticalAdapter.ItemClickListener {
-            override fun onItemClick(item: FoodItem) {
-                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("clicked_item", item)
+        // 어댑터 생성: listener와 reviewApi 주입
+        verticalAdapter = VerticalAdapter(
+            listener = object : VerticalAdapter.ItemClickListener {
+                // 음식 카드 클릭 시 DetailActivity로 이동
+                override fun onItemClick(item: FoodItem) {
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                        putExtra("clicked_item", item) // 클릭된 아이템 전달
+                    }
+                    startActivity(intent)
                 }
-                startActivity(intent)
-            }
-            
-            override fun onLoadMore() {
-                verticalAdapter.addMore()
-            }
-        })
+
+                // "더보기" 버튼 클릭 시 추가 아이템 로드
+                override fun onLoadMore() {
+                    verticalAdapter.addMore()
+                }
+            },
+            reviewApi = reviewApi // Retrofit으로 만든 ReviewApiService 전달
+        )
+
+        // RecyclerView 레이아웃 매니저 설정 (세로 스크롤)
         binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        // 어댑터 연결
         binding.verticalRecyclerView.adapter = verticalAdapter
     }
     
