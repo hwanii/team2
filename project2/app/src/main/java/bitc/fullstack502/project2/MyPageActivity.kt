@@ -11,7 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityMyPageBinding
 
-class MyPageActivity : AppCompatActivity() {
+class MyPageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,6 +23,18 @@ class MyPageActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        fetchFoodData(
+            onSuccess = { list ->
+            },
+            onError = {
+                Toast.makeText(this, "데이터를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        val bottomNavView = binding.bottomNav.bottomNavigationView
+        setupBottomNavigation(bottomNavView)
+        val btnSearch = binding.topBar.btnSearch
+        setupSearchButton(btnSearch)
 
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val user = User(

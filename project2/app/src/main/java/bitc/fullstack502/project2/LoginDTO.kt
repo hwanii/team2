@@ -1,5 +1,7 @@
 package bitc.fullstack502.project2
 
+import com.bumptech.glide.load.Key
+
 // 로그인 요청
 data class LoginRequest(
     val userId: String,

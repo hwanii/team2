@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityJoinPageBinding
 import kotlin.jvm.java
 
-class JoinPageActivity : AppCompatActivity() {
+class JoinPageActivity : BaseActivity() {
 
     private lateinit var nameEditText: EditText
     private lateinit var idEditText: EditText
@@ -35,6 +35,19 @@ class JoinPageActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        fetchFoodData(
+            onSuccess = { list ->
+            },
+            onError = {
+                Toast.makeText(this, "데이터를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        val bottomNavView = binding.bottomNav.bottomNavigationView
+        setupBottomNavigation(bottomNavView)
+        val btnSearch = binding.topBar.btnSearch
+        setupSearchButton(btnSearch)
 
         nameEditText = findViewById(R.id.user_name)
         idEditText = findViewById(R.id.user_id)

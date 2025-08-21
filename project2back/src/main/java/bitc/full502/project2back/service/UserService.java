@@ -41,7 +41,7 @@ public class UserService {
             UserEntity user = optionalUser.get();
             if (user.getUserPw().equals(request.getUserPw())) {
                 UserResponseDTO response = new UserResponseDTO();
-                response.setUserKey(user.getUser_key());
+                response.setUserKey(user.getUserKey());
                 response.setUserName(user.getUserName());
                 response.setUserId(user.getUserId());
                 response.setUserPw(user.getUserPw());

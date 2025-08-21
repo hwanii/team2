@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class ReviewResponseDTO {
     private Integer reviewKey;
+    private Integer userKey;
     private String userId;
     private String userName;
     private float reviewRating; // 필드명 통일 (reviewNum -> reviewRating)
