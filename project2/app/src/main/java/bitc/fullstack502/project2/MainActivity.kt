@@ -1,6 +1,8 @@
 package bitc.fullstack502.project2
 
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,15 +28,37 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private val serviceKey = "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
-    private var foodList: List<FoodItem> = emptyList()
-    private var currentFilteredList: List<FoodItem> = emptyList()
+    // ============================
+    // API KEY
+    // ============================
+    private val serviceKey =
+        "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
+
+    // ============================
+    // 데이터 저장
+    // ============================
+    private var foodList: List<FoodItem> = emptyList()            // 전체 데이터
+    private var currentFilteredList: List<FoodItem> = emptyList() // 현재 선택 구 기준
+
+    // HorizontalAdapter (대표 메뉴, 감성 카페)
+    private lateinit var recommendAdapter: HorizontalAdapter
+    private lateinit var cafeAdapter: HorizontalAdapter
+
+    // 구 필터 버튼 관련
+    private val guList = listOf("전체", "부산진구", "북구", "해운대구")
+    private var selectedGuButton: Button? = null
     private var currentGu: String = "전체"
     private var currentUserKey: Int = 0
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    // VerticalAdapter (세로)
     private lateinit var verticalAdapter: VerticalAdapter
 
+    // ViewBinding
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
+    // ============================
+    // 슬라이더 관련
+    // ============================
     private val sliderHandler = Handler(Looper.getMainLooper())
     private var sliderPosition = 0
     private val sliderRunnable = object : Runnable {
@@ -46,43 +71,85 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val guList = listOf("전체", "부산진구", "북구", "해운대구")
-    private var selectedGuButton: Button? = null
+    // ============================
+    // BottomNavigationView 숨김/반투명 관련
+    // ============================
+    private val navHandler = Handler(Looper.getMainLooper())
+    private var hideRunnable: Runnable? = null
+
+    // 기본/스크롤 상태 배경색
+    private val navColorDefault by lazy { ContextCompat.getColor(this, R.color.button_unselected) }
+    private val navColorTransparent = Color.TRANSPARENT
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        // 시스템 바 inset 적용
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // ============================
+        // BottomNavigationView 스크롤 숨김/반투명 처리
+        // ============================
+        binding.nestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
+            // 스크롤 중일 때: 네비 숨김 & 완전 투명
+            binding.bottomNavigationView.visibility = View.GONE
+            binding.bottomNavigationView.setBackgroundColor(Color.TRANSPARENT) // 스크롤 중
+
+
+            // 기존 예약된 Runnable 취소
+            hideRunnable?.let { navHandler.removeCallbacks(it) }
+
+            // 스크롤 멈춤 후 1초 뒤: 네비 등장 & 반투명 배경
+            hideRunnable = Runnable {
+                binding.bottomNavigationView.visibility = View.VISIBLE
+                binding.bottomNavigationView.setBackgroundColor(Color.parseColor("#CCFFFFFF")) // 멈췄을 때
+
+            }
+            navHandler.postDelayed(hideRunnable!!, 1000)
+        }
+
+        // ============================
+        // 초기화
+        // ============================
         setupSlider()
         setupBottomNavigation()
         setupVerticalAdapter()
         setupGuFilterButtons()
-        fetchFoodData()
+        fetchFoodData() // API 호출
 
+        // 검색 버튼 클릭
         binding.btnSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         sliderHandler.removeCallbacks(sliderRunnable)
+        hideRunnable?.let { navHandler.removeCallbacks(it) }
     }
 
-    // ===================== VerticalAdapter =====================
+    // ============================
+    // VerticalAdapter 초기화
+    // ============================
     private fun setupVerticalAdapter() {
         verticalAdapter = VerticalAdapter(object : VerticalAdapter.ItemClickListener {
             override fun onItemClick(item: FoodItem) {
-                startActivity(Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("item", item)
-                })
+                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                    putExtra("clicked_item", item)
+                }
+                startActivity(intent)
             }
 
             override fun onLoadMore() {
@@ -93,52 +160,68 @@ class MainActivity : AppCompatActivity() {
         binding.verticalRecyclerView.adapter = verticalAdapter
     }
 
+    // ============================
+    // 구 필터 적용
+    // ============================
     private fun filterByGu(gu: String) {
         currentGu = gu
-        currentFilteredList = if (gu == "전체") {
-            foodList
-        } else {
-            foodList.filter { it.ADDR?.contains(gu) == true }
-        }
+        currentFilteredList = if (gu == "전체") foodList
+        else foodList.filter { it.ADDR?.contains(gu) == true }
 
         verticalAdapter.setFullList(currentFilteredList)
     }
 
-    // ===================== 구 버튼 =====================
+    // ============================
+    // 구 버튼 생성
+    // ============================
     private fun setupGuFilterButtons() {
         val guLayout = binding.guFilterLayout
         guLayout.removeAllViews()
+
         guList.forEach { gu ->
             val button = Button(this).apply {
                 text = gu
-                setPadding(36, 16, 36, 16)
-                setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
-                setTextColor(resources.getColor(android.R.color.white, null))
+                textSize = 14f
+                isAllCaps = false
+                setTextColor(resources.getColor(R.color.button_text, null))
+                background = ContextCompat.getDrawable(context, R.drawable.rounded_button)
+                setPadding(36, 16, 36, 20)
+                minHeight = 48
 
                 setOnClickListener {
                     filterByGu(gu)
+
                     // 이전 선택 해제
-                    selectedGuButton?.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+                    selectedGuButton?.background =
+                        ContextCompat.getDrawable(context, R.drawable.rounded_button)
+                    selectedGuButton?.setTextColor(resources.getColor(R.color.button_text, null))
+
                     // 현재 선택 강조
-                    setBackgroundColor(resources.getColor(android.R.color.holo_orange_light, null))
+                    background = ContextCompat.getDrawable(context, R.drawable.rounded_button_selected)
+                    setTextColor(resources.getColor(R.color.button_text, null))
                     selectedGuButton = this
                 }
             }
+
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            lp.setMargins(8, 0, 8, 0)
+            ).apply {
+                leftMargin = if (gu == guList.first()) 16 else 8
+                rightMargin = if (gu == guList.last()) 16 else 8
+                topMargin = 8
+                bottomMargin = 8
+            }
+
             guLayout.addView(button, lp)
 
-            // 기본 선택: 전체
-            if (gu == "전체") {
-                button.performClick()
-            }
+            if (gu == "전체") button.performClick()
         }
     }
 
-    // ===================== 데이터 가져오기 =====================
+    // ============================
+    // API 호출
+    // ============================
     private fun fetchFoodData() {
         binding.progressBar.visibility = View.VISIBLE
         RetrofitClient.api.getFoodList(serviceKey).enqueue(object : Callback<FoodResponse> {
@@ -147,10 +230,12 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val body = response.body()
                     val rawList = body?.getFoodkr?.item ?: emptyList()
+
+                    // 이미지 없는 항목 제거 & 위도/경도로 중복 제거
                     foodList = rawList.filter { !it.thumb.isNullOrBlank() }
                         .distinctBy { it.Lat to it.Lng }
 
-                    // HorizontalAdapter 세팅
+                    // HorizontalAdapter 초기화
                     setupHorizontalAdapters()
 
                     // VerticalAdapter에 전체 데이터 세팅
@@ -160,37 +245,62 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
                 binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@MainActivity, "데이터 로딩 실패", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+    // ============================
+    // HorizontalAdapter 세팅
+    // ============================
     private fun setupHorizontalAdapters() {
-        val recommendList = foodList.take(5)
+
+        // ----------------- 대표 메뉴 -----------------
+        val recommendList = foodList
+            .filter { it.CATE_NM?.contains("밀면") == true
+                    || it.CATE_NM?.contains("회") == true
+                    || it.CATE_NM?.contains("국밥") == true }
+            .shuffled()
+            .take(5)
+            .toMutableList()
+
+        recommendAdapter = HorizontalAdapter(recommendList, object : HorizontalAdapter.ItemClickListener {
+            override fun onItemClick(item: FoodItem) {
+                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                    putExtra("clicked_item", item)
+                }
+                startActivity(intent)
+            }
+        })
+
         binding.horizontalRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.horizontalRecyclerView.adapter = HorizontalAdapter(recommendList, object :
-            HorizontalAdapter.ItemClickListener {
+        binding.horizontalRecyclerView.adapter = recommendAdapter
+
+        // ----------------- 감성 카페 -----------------
+        val cafeList = foodList
+            .filter { it.CATE_NM?.contains("카페") == true }
+            .shuffled()
+            .take(5)
+            .toMutableList()
+
+        cafeAdapter = HorizontalAdapter(cafeList, object : HorizontalAdapter.ItemClickListener {
             override fun onItemClick(item: FoodItem) {
-                startActivity(Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("item", item)
-                })
+                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                    putExtra("clicked_item", item)
+                }
+                startActivity(intent)
             }
         })
 
-        val newList = foodList.takeLast(5)
         binding.horizontalRecyclerView2.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.horizontalRecyclerView2.adapter = HorizontalAdapter(newList, object :
-            HorizontalAdapter.ItemClickListener {
-            override fun onItemClick(item: FoodItem) {
-                startActivity(Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra("item", item)
-                })
-            }
-        })
+        binding.horizontalRecyclerView2.adapter = cafeAdapter
     }
 
-    // ===================== 슬라이더 =====================
+    // ============================
+    // 슬라이더
+    // ============================
     private fun setupSlider() {
         val slides = listOf(
             SlideItem(R.drawable.slide1, "부산 맛집 검색", ""),
@@ -202,7 +312,9 @@ class MainActivity : AppCompatActivity() {
         sliderHandler.postDelayed(sliderRunnable, 3000)
     }
 
-    // ===================== 바텀 네비 =====================
+    // ============================
+    // 바텀 네비게이션
+    // ============================
     private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -221,7 +333,8 @@ class MainActivity : AppCompatActivity() {
                     val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     val currentUserKey = prefs.getInt("user_key", 0)
                     Log.d("FavoritesActivity", "userKey: $currentUserKey")
-                    if (!foodList.isNullOrEmpty()) {
+                    if (foodList.isNotEmpty()) {
+                        val mockFavorites = foodList.shuffled().take(6)
                         val intent = Intent(this, FavoritesActivity::class.java).apply {
                             putParcelableArrayListExtra(
                                 "full_list",
@@ -235,7 +348,6 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
-
                 R.id.menu_profile -> {
                     val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
@@ -251,14 +363,8 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-
                 else -> false
             }
         }
-    }
-
-    private fun isLoggedIn(): Boolean {
-        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        return prefs.getBoolean("isLoggedIn", false)
     }
 }

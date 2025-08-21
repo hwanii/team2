@@ -2,13 +2,16 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- 최상위 CoordinatorLayout: 상단바, 스크롤, 바텀 네비 포함 -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_pastel">
 
-        <!-- 상단바 -->
+        <!-- ====================
+             상단바 (로고, 제목, 검색 버튼)
+             ==================== -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topBar"
             android:layout_width="match_parent"
@@ -18,6 +21,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp">
 
+            <!-- 좌측 로고 버튼 -->
             <ImageView
                 android:id="@+id/btn_detail"
                 android:layout_width="40dp"
@@ -31,11 +35,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- 중앙 제목 -->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:shadowColor="#55000000"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4"
                 android:text="Fork &amp; Wave"
                 android:textColor="@color/text_primary_pastel"
                 android:textSize="20sp"
@@ -43,12 +52,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:shadowColor="#55000000"
-                android:shadowDx="0"
-                android:shadowDy="2"
-                android:shadowRadius="4"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- 우측 검색 버튼 -->
             <ImageView
                 android:id="@+id/btn_search"
                 android:layout_width="40dp"
@@ -64,7 +70,9 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 스크롤 영역 -->
+        <!-- ====================
+             스크롤 영역 (메인 컨텐츠)
+             ==================== -->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
@@ -81,7 +89,10 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <!-- 슬라이더 (뷰페이저 + 인디케이터를 FrameLayout으로 묶음) -->
+                <!-- ====================
+                     상단 이미지 슬라이더
+                     ViewPager2 + FrameLayout
+                     ==================== -->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -96,19 +107,27 @@
 
                 </FrameLayout>
 
-                <!-- 추천 장소 -->
+                <!-- ====================
+                     대표 메뉴 섹션
+                     ==================== -->
                 <TextView
                     android:id="@+id/tvHorizontalTitle1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/transparent"
+                    android:drawablePadding="6dp"
+                    android:letterSpacing="0.02"
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
-                    android:text="추천 장소"
+                    android:text="🍜 부산 대표 메뉴"
                     android:textColor="@color/text_primary_pastel"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
+
+                <!-- Horizontal RecyclerView (대표 메뉴) -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView"
                     android:layout_width="match_parent"
@@ -117,19 +136,27 @@
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never" />
 
-                <!-- 신규 장소 -->
+                <!-- ====================
+                     감성 카페 섹션
+                     ==================== -->
                 <TextView
                     android:id="@+id/tvHorizontalTitle2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/transparent"
+                    android:drawablePadding="6dp"
+                    android:letterSpacing="0.02"
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
-                    android:text="신규 장소"
+                    android:text="☕ 인스타 감성 가득"
                     android:textColor="@color/text_primary_pastel"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
+
+                <!-- Horizontal RecyclerView (감성 카페) -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView2"
                     android:layout_width="match_parent"
@@ -138,20 +165,28 @@
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never" />
 
-                <!-- 전체 장소 -->
+                <!-- ====================
+                     지역별 맛집 섹션 제목
+                     ==================== -->
                 <TextView
                     android:id="@+id/tvVerticalTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="6dp"
+                    android:letterSpacing="0.02"
                     android:paddingStart="12dp"
                     android:paddingTop="16dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
-                    android:text="지역별 맛집"
+                    android:text="📍 구석구석 "
                     android:textColor="@color/text_primary_pastel"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <!-- 구 선택 HorizontalScrollView -->
+                <!-- ====================
+                     구 선택 버튼 영역
+                     HorizontalScrollView + LinearLayout
+                     ==================== -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -163,11 +198,12 @@
                         android:id="@+id/guFilterLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp"/>
+                        android:orientation="horizontal" />
                 </HorizontalScrollView>
 
+                <!-- Vertical RecyclerView (지역별 맛집 리스트) -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/verticalRecyclerView"
                     android:layout_width="match_parent"
@@ -178,7 +214,9 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- ProgressBar (로딩 표시용) -->
+        <!-- ====================
+             로딩 표시용 ProgressBar
+             ==================== -->
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
@@ -187,21 +225,34 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <!-- 바텀 네비게이션 -->
+        <!-- ====================
+             바텀 네비게이션
+             메뉴: 홈, 리스트, 즐겨찾기, 프로필
+             ==================== -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_gravity="bottom"
-            android:background="@color/bottom_nav_pastel"
-            app:itemIconPadding="18dp"
+            android:background="#CCFFFFFF"
+            android:clipToPadding="false"
+            android:elevation="0dp"
+            android:fitsSystemWindows="true"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:stateListAnimator="@null"
+            android:translationY="20dp"
+            app:itemIconPadding="8dp"
             app:itemIconSize="28dp"
             app:itemIconTint="@color/nav_item_selector_pastel"
-            app:itemTextAppearanceActive="@style/BottomNavTextActive"
-            app:itemTextAppearanceInactive="@style/BottomNavTextInactive"
+            app:itemTextAppearanceActive="@style/BottomNavTextActiveCustom"
+            app:itemTextAppearanceInactive="@style/BottomNavTextInactiveCustom"
             app:itemTextColor="@color/nav_item_selector_pastel"
             app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu" />
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            app:menu="@menu/bottom_nav_menu"
+            />  <!-- 전체 BottomNavigationView를 살짝 아래로 -->
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

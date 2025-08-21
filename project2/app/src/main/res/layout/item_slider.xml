@@ -2,15 +2,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- ====================
+         슬라이더 이미지 (전체 배경)
+         클릭 가능, 포커스 가능, 터치 효과 적용
+         ==================== -->
     <ImageView
         android:id="@+id/imageSlider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:scaleType="centerCrop" />
 
-    <!-- 오른쪽 위 순서 표시 -->
+    <!-- ====================
+         오른쪽 위 순서 표시 (ex: 1/4)
+         ==================== -->
     <TextView
         android:id="@+id/tvSlideOrder"
         android:layout_width="wrap_content"
@@ -19,6 +26,22 @@
         android:padding="8dp"
         android:text="1/4"
         android:textColor="@android:color/white"
-        android:visibility="visible"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <!-- ====================
+         이미지 위 레이블
+         이미지 하단 왼쪽에 위치, 반투명 배경
+         ==================== -->
+    <TextView
+        android:id="@+id/sliderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="8dp"
+        android:background="#66000000"
+        android:padding="4dp"
+        android:text="밥 검색"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
 </FrameLayout>

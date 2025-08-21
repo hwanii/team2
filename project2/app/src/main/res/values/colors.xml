@@ -47,4 +47,16 @@
     <color name="gray_light_bg">#F0F0F0</color>
     <color name="text_secondary">#9E9E9E</color> <!-- 연한 회색 예시 -->
 
+    <!-- TextView 배경 투명 -->
+    <color name="transparent">#00000000</color>
+
+    <!-- 카테고리 밑줄 색상 -->
+    <color name="pastel_accent">#FFB86C</color>
+
+    <!-- 구 버튼용 색상 -->
+    <color name="button_selected">#FFD8A5</color>  <!-- 연한 주황 -->
+    <color name="button_unselected">#E0E0E0</color> <!-- 연한 회색 -->
+    <color name="button_text">#333333</color>       <!-- 버튼 텍스트 -->
+
+
 </resources>

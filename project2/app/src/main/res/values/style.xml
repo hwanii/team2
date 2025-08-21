@@ -1,20 +1,26 @@
 <resources>
 
-    <!-- BottomNavigationView 활성 상태 텍스트 스타일 -->
-    <style name="BottomNavTextActive" parent="TextAppearance.MaterialComponents.Caption">
+
+    <!-- 활성 상태 -->
+    <style name="BottomNavTextActiveCustom" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">12sp</item>
-        <item name="android:lineHeight">14sp</item>
+        <!-- <item name="android:lineHeight">14sp</item> 제거 -->
         <item name="android:textColor">@color/black</item>
-        <!-- 아이콘과 텍스트 간격을 위해 위쪽 여백 추가 -->
-        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingTop">60dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!-- 비활성 상태 -->
+    <style name="BottomNavTextInactiveCustom" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <!-- <item name="android:lineHeight">14sp</item> 제거 -->
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:paddingTop">60dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
-    <!-- BottomNavigationView 비활성 상태 텍스트 스타일 -->
-    <style name="BottomNavTextInactive" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textSize">12sp</item>
-        <item name="android:lineHeight">14sp</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:paddingTop">8dp</item>
+    <style name="RoundedBottomNav" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
     </style>
 
     <!-- 버튼 배경 스타일 정의 -->
@@ -50,6 +56,8 @@
         <item name="android:backgroundTint">@color/light_orange</item>
         <item name="android:textColor">@color/stroke_orange</item>
     </style>
+
+
     
     <style name="arrowBack">
         <item name="minWidth">0dp</item>
