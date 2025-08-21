@@ -13,5 +13,4 @@ public class ReviewResponseDTO {
     private float reviewRating; // 필드명 통일 (reviewNum -> reviewRating)
     private String reviewItem;
     private String reviewDay;
-    private Integer userKey;
 }

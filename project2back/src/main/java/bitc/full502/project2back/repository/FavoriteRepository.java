@@ -18,6 +18,6 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Intege
 
   void deleteByUserAndPlaceCode(UserEntity user, Integer placeCode);
 
-  @Query("SELECT f.placeCode FROM FavoriteEntity f WHERE f.user.user_key = :userKey AND f.isFavorite = true")
+  @Query("SELECT f.placeCode FROM FavoriteEntity f WHERE f.user.userKey = :userKey AND f.isFavorite = true")
   List<Integer> findPlaceCodesByUserKey(@Param("userKey") Integer userKey);
 }

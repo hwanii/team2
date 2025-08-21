@@ -47,7 +47,6 @@ public class UserService {
                 response.setUserPw(user.getUserPw());
                 response.setUserTel(user.getUserTel());
                 response.setUserEmail(user.getUserEmail());
-                response.setUserKey(user.getId());
                 return response;
             }
         }

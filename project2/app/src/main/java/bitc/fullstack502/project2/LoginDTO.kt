@@ -16,6 +16,5 @@ data class UserResponse(
     val userPw: String,
     val userTel: String,
     val userEmail: String,
-    val userKey: Int
 )
 

@@ -58,7 +58,6 @@ public class ReviewServiceImpl implements ReviewService {
                         .reviewRating(review.getReviewNum()) // 필드명 통일
                         .reviewItem(review.getReviewItem())
                         .reviewDay(review.getReviewDay().toString())
-                        .userKey(review.getUser().getId())
                         .build())
                 .collect(Collectors.toList());
     }
