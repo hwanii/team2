@@ -349,10 +349,12 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
-                
+
                 R.id.menu_profile -> {
                     val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val currentUserKey = prefs.getInt("user_key", 0)
                     val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
+
                     val intent =
                         if (isLoggedIn) Intent(this, MyPageActivity::class.java)
                         else Intent(this, LoginPageActivity::class.java).also {
@@ -362,6 +364,17 @@ class MainActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+                    intent.putExtra("user_key", currentUserKey)
+
+                    //  foodList 같이 넘기기
+                    if (!foodList.isNullOrEmpty()) {
+                        intent.putParcelableArrayListExtra(
+                            "full_list",
+                            ArrayList(foodList)
+                        )
+                    }
+
                     startActivity(intent)
                     true
                 }

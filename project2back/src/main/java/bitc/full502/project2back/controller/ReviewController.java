@@ -53,4 +53,11 @@ public class ReviewController {
         return ResponseEntity.badRequest().body("리뷰 수정 실패: " + e.getMessage());
     }
     }
+
+    @GetMapping("/reviews/user/{userKey}")
+    public ResponseEntity<List<ReviewResponseDTO>> getUserReviews(@PathVariable("userKey") int userKey) {
+        List<ReviewResponseDTO> reviews = reviewService.getReviewsByUserKey(userKey);
+        return ResponseEntity.ok(reviews);
+    }
+
 }

@@ -8,6 +8,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 // 순수한 코틀린 문법으로 작성된 인터페이스
 
@@ -28,13 +29,17 @@ interface ReviewApiService {
     @POST("/reviews/add")
     fun submitReview(@Body reviewData: ReviewRequest): Call<Void>
 
-    @DELETE("api/reviews/{reviewKey}")
-    fun deleteReview(@Path("reviewKey") reviewKey: Int): Call<String>
-
     @PUT("api/reviews/{reviewKey}")
     fun updateReview(
         @Path("reviewKey") reviewKey: Int,
         @Body reviewUpdateRequest: ReviewUpdateRequest
     ): Call<String>
+
+    @GET("api/reviews/user/{userKey}") // 예: /api/reviews/user/1
+    fun getUserReviews(@Path("userKey") userKey: Int): Call<List<ReviewResponse>>
+
+    @DELETE("api/reviews/{reviewKey}")
+    fun deleteReview(@Path("reviewKey") reviewKey: Int): Call<String>
+
 
 }

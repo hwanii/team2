@@ -18,5 +18,6 @@ data class ReviewResponse(
     @SerializedName("reviewRating") val reviewRating: Float,
     @SerializedName("reviewItem") val reviewItem: String,
     @SerializedName("reviewDay") val reviewDay: String,
-    @SerializedName("userKey") val userKey: Int
+    @SerializedName("userKey") val userKey: Int,
+    @SerializedName("placeCode") val placeCode: Int
 )

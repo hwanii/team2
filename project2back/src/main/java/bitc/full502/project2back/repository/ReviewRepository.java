@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
     List<ReviewEntity> findByPlaceCode(int placeCode);
-
+    List<ReviewEntity> findByUser_UserKey(int userKey);
 }
