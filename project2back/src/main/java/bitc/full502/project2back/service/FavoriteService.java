@@ -5,6 +5,7 @@ import bitc.full502.project2back.entity.UserEntity;
 import bitc.full502.project2back.repository.FavoriteRepository;
 import bitc.full502.project2back.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,12 +43,9 @@ public class FavoriteService {
   }
 
   // 즐겨찾기 해제
+  @Transactional
   public void removeFavorite(Integer userKey, Integer placeCode) {
     UserEntity user = userService.findByUserKey(userKey);
-    favoriteRepository.findByUserAndPlaceCode(user, placeCode)
-        .ifPresent(fav -> {
-          fav.setFavorite(false);
-          favoriteRepository.save(fav);
-        });
+    favoriteRepository.deleteByUserAndPlaceCode(user, placeCode);
   }
 }

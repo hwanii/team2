@@ -1,5 +1,6 @@
 package bitc.fullstack502.project2
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -54,6 +55,8 @@ class SearchActivity : AppCompatActivity() {
       val selectedCategory = binding.selectSpinner.selectedItem?.toString()
       filterFood(keyword, selectedCategory)
     }
+    
+    setupBottomNavigation()
   }
 
   private fun loadFoodCategories() {
@@ -120,5 +123,59 @@ class SearchActivity : AppCompatActivity() {
     searchAdapter.updateData(filtered)
     Toast.makeText(this, "${filtered.size}개 결과", Toast.LENGTH_SHORT).show()
     Log.d("SearchActivity", "필터 결과: ${filtered.map { it.TITLE }}")
+  }
+  
+  private fun setupBottomNavigation() {
+    binding.bottomNavigationView.setOnItemSelectedListener { item ->
+      when (item.itemId) {
+        R.id.menu_home -> true
+        R.id.menu_list -> {
+          val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+          val currentUserKey = prefs.getInt("user_key", 0)
+          Log.d("ListActivity", "userKey: $currentUserKey")
+          
+          val intent = Intent(this, ListActivity::class.java)
+          intent.putExtra("user_key", currentUserKey)
+          startActivity(intent)
+          true
+          
+        }
+        R.id.menu_favorite -> {
+          val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+          val currentUserKey = prefs.getInt("user_key", 0)
+          Log.d("FavoritesActivity", "userKey: $currentUserKey")
+          if (!fullFoodList.isNullOrEmpty()) {
+            val intent = Intent(this, FavoritesActivity::class.java).apply {
+              putParcelableArrayListExtra(
+                "full_list",
+                ArrayList(fullFoodList) // 전체 음식 리스트 전달
+              )
+              putExtra("user_key", currentUserKey) // 로그인한 유저 키 전달
+            }
+            startActivity(intent)
+          } else {
+            Toast.makeText(this, "아직 데이터 로딩 중입니다.", Toast.LENGTH_SHORT).show()
+          }
+          true
+        }
+        
+        R.id.menu_profile -> {
+          val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+          val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
+          val intent =
+            if (isLoggedIn) Intent(this, MyPageActivity::class.java)
+            else Intent(this, LoginPageActivity::class.java).also {
+              Toast.makeText(
+                this,
+                "로그인 후 이용 가능합니다.",
+                Toast.LENGTH_SHORT
+              ).show()
+            }
+          startActivity(intent)
+          true
+        }
+        else -> false
+      }
+    }
   }
 }

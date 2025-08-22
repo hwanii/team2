@@ -1,5 +1,6 @@
 package bitc.fullstack502.project2
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import bitc.fullstack502.project2.Adapter.FavoritesAdapter
 import bitc.fullstack502.project2.databinding.ActivityFavoritesBinding
-import bitc.fullstack502.project2.model.FavoriteItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,6 +98,18 @@ class FavoritesActivity : AppCompatActivity() {
                     Toast.makeText(this@FavoritesActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
                 }
             })
+        }
+        
+        adapter.setOnItemClickListener { item ->
+            val intent = Intent(this, DetailActivity::class.java).apply {
+                putExtra("clicked_item", item)
+                putParcelableArrayListExtra(
+                    "full_list",
+                    ArrayList(adapter.getItems())
+                )
+                putExtra("user_key", currentUserKey)
+            }
+            startActivity(intent)
         }
     }
 }
