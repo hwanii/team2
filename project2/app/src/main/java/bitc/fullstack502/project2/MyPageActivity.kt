@@ -2,7 +2,6 @@ package bitc.fullstack502.project2
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -31,7 +30,6 @@ class MyPageActivity : AppCompatActivity() {
     private lateinit var reviewContainer: LinearLayout
 
     // 리뷰에 매칭된 FoodItem을 저장할 리스트
-    private val foodList = mutableListOf<FoodItem>()
     private val allFoodList = mutableListOf<FoodItem>()
 
     private val editLauncher = registerForActivityResult(
@@ -88,26 +86,27 @@ class MyPageActivity : AppCompatActivity() {
             finish()
         }
 
-        if (user.userKey != 0) {
-            loadUserReviews(user.userKey)
-        }
-        
         loadAllFood()
     }
-    
+
     private fun loadAllFood() {
-        RetrofitClient.api.getFoodList(
-            serviceKey = serviceKey,
-            ucSeq = null // 전체 리스트 조회
-        ).enqueue(object : Callback<FoodResponse> {
-            override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
-                if (response.isSuccessful) {
-                    allFoodList.clear()
-                    response.body()?.getFoodkr?.item?.let { allFoodList.addAll(it) }
+        RetrofitClient.api.getFoodList(serviceKey = serviceKey, ucSeq = null)
+            .enqueue(object : Callback<FoodResponse> {
+                override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
+                    if (response.isSuccessful) {
+                        allFoodList.clear()
+                        response.body()?.getFoodkr?.item?.let { allFoodList.addAll(it) }
+
+                        if (user.userKey != 0) {
+                            loadUserReviews(user.userKey)
+                        }
+                    }
                 }
-            }
-            override fun onFailure(call: Call<FoodResponse>, t: Throwable) { /* 실패 처리 */ }
-        })
+
+                override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
+                    Toast.makeText(this@MyPageActivity, "음식 데이터 불러오기 실패", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     private fun updateUI(user: User) {
@@ -133,7 +132,6 @@ class MyPageActivity : AppCompatActivity() {
         reviewContainer.removeAllViews()
         binding.myReview.visibility = View.GONE
         binding.noReview.visibility = View.GONE
-        foodList.clear() // 리스트 초기화
 
         RetrofitClient.reviewApi.getUserReviews(userKey)
             .enqueue(object : Callback<List<ReviewResponse>> {
@@ -167,8 +165,17 @@ class MyPageActivity : AppCompatActivity() {
 
                                 // 이미지 설정
                                 val reviewImageView = item.findViewById<ImageView>(R.id.review_image)
-                                review.placeCode?.let { placeCode ->
-                                    loadFoodImageAndSaveFoodItem(placeCode, reviewImageView)
+                                val clickedFood = allFoodList.find { it.UcSeq == review.placeCode }
+                                val imageUrl = clickedFood?.image ?: clickedFood?.thumb
+
+                                if (!imageUrl.isNullOrEmpty()) {
+                                    Glide.with(this@MyPageActivity)
+                                        .load(imageUrl)
+                                        .placeholder(R.drawable.heart_full)
+                                        .error(R.drawable.heart_none)
+                                        .into(reviewImageView)
+                                } else {
+                                    reviewImageView.setImageResource(R.drawable.heart_none)
                                 }
 
                                 // 삭제 버튼
@@ -191,7 +198,6 @@ class MyPageActivity : AppCompatActivity() {
 
                                 // 리뷰 클릭 -> DetailActivity 이동
                                 item.setOnClickListener {
-                                    val clickedFood = allFoodList.find { it.UcSeq == review.placeCode }
                                     if (clickedFood != null) {
                                         val intent = Intent(this@MyPageActivity, DetailActivity::class.java)
                                         intent.putExtra("clicked_item", clickedFood)
@@ -214,41 +220,5 @@ class MyPageActivity : AppCompatActivity() {
                     Toast.makeText(this@MyPageActivity, "리뷰 불러오기 실패", Toast.LENGTH_SHORT).show()
                 }
             })
-    }
-
-    // placeCode 기반 음식 이미지 가져오기 + 리스트에 저장
-    private fun loadFoodImageAndSaveFoodItem(placeCode: Int, reviewImageView: ImageView) {
-        RetrofitClient.api.getFoodList(
-            serviceKey = serviceKey,
-            pageNo = 1,
-            numOfRows = 1,
-        ).enqueue(object : Callback<FoodResponse> {
-            override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
-                if (response.isSuccessful) {
-                    val foodItem = response.body()?.getFoodkr?.item?.firstOrNull()
-                    if (foodItem != null) {
-                        foodList.add(foodItem) // ✅ 실제 리뷰랑 매칭된 음식만 저장
-                        val imageUrl = foodItem.image ?: foodItem.thumb
-                        if (!imageUrl.isNullOrEmpty()) {
-                            Glide.with(this@MyPageActivity)
-                                .load(imageUrl)
-                                .placeholder(R.drawable.heart_full)
-                                .error(R.drawable.heart_none)
-                                .into(reviewImageView)
-                        } else {
-                            reviewImageView.setImageResource(R.drawable.heart_none)
-                        }
-                    } else {
-                        reviewImageView.setImageResource(R.drawable.heart_none)
-                    }
-                } else {
-                    reviewImageView.setImageResource(R.drawable.heart_none)
-                }
-            }
-            
-            override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
-                reviewImageView.setImageResource(R.drawable.heart_none)
-            }
-        })
     }
 }
