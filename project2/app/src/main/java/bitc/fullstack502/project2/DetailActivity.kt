@@ -35,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
 
 
     private var isLike = false
+    private var userKey: Int = -1
 
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
@@ -44,9 +45,11 @@ class DetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        userKey = sharedPreferences.getInt("user_key", -1)
+
         checkLoginStatus()
 
-        var isLiked = false
 
         val currentItem: FoodItem? = intent.getParcelableExtra("clicked_item")
         val allItems: ArrayList<FoodItem>? = intent.getParcelableArrayListExtra("full_list")
@@ -62,6 +65,10 @@ class DetailActivity : AppCompatActivity() {
         }
 
         placeCode = currentItem.UcSeq?.toInt() ?: -1
+
+        if (userKey != -1 && placeCode != -1) {
+            checkFavoriteStatus()
+        }
         if (placeCode != -1) {
             loadReviewsFromServer(placeCode)
         }
@@ -183,15 +190,69 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.btnLike.setOnClickListener {
-            isLike = !isLike
-
-            if(isLike) {
-                binding.btnLike.setImageResource(R.drawable.heart_full)
-            }else {
-                binding.btnLike.setImageResource(R.drawable.heart_none)
+            if (userKey == -1) {
+                Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            // isLiked 상태에 따라 즐겨찾기 추가 또는 삭제 함수 호출
+            toggleFavorite()
+        }
+    }
+    private fun checkFavoriteStatus() {
+        RetrofitClient.favoritesApi.getFavorites(userKey).enqueue(object : Callback<List<Int>> {
+            override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
+                if (response.isSuccessful) {
+                    val favoritePlaceCodes = response.body()
+                    // 서버에서 받은 즐겨찾기 목록에 현재 장소가 포함되어 있는지 확인
+                    isLike = favoritePlaceCodes?.contains(placeCode) == true
+                    updateLikeButtonUI() // UI 업데이트
+                } else {
+                    Log.e("DetailActivity", "Failed to check favorite status: ${response.code()}")
+                }
             }
 
+            override fun onFailure(call: Call<List<Int>>, t: Throwable) {
+                Log.e("DetailActivity", "Network error while checking favorite status", t)
+            }
+        })
+    }
+
+    // 5. (추가) isLiked 상태에 따라 하트 아이콘을 업데이트하는 함수
+    private fun updateLikeButtonUI() {
+        if (isLike) {
+            binding.btnLike.setImageResource(R.drawable.heart_full)
+        } else {
+            binding.btnLike.setImageResource(R.drawable.heart_none)
         }
+    }
+    private fun toggleFavorite() {
+        val body = mapOf("userKey" to userKey, "placeCode" to placeCode)
+
+        // 현재 '좋아요'가 아닌 상태 -> '좋아요' 추가 API 호출
+        val call: Call<Void> = if (!isLike) {
+            RetrofitClient.favoritesApi.addFavorite(body)
+        } else { // 현재 '좋아요' 상태 -> '좋아요' 삭제 API 호출
+            RetrofitClient.favoritesApi.removeFavorite(body)
+        }
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // 요청 성공 시, isLiked 상태를 반전시키고 UI 업데이트
+                    isLike = !isLike
+                    updateLikeButtonUI()
+                    val message = if (isLike) "즐겨찾기에 추가되었습니다." else "즐겨찾기에서 삭제되었습니다."
+                    Toast.makeText(this@DetailActivity, message, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@DetailActivity, "요청 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@DetailActivity, "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                Log.e("DetailActivity", "Favorite toggle network error", t)
+            }
+        })
     }
 
     // AM/PM이 포함된 시간을 24시간제 텍스트로 변환하는 필수 헬퍼 함수
