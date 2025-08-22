@@ -4,6 +4,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface JoinApiService {
@@ -22,5 +23,8 @@ interface JoinApiService {
     //  회원 데이터 수정 (POST)
     @POST("/api/edit")
     fun updateUser(@Body request: EditRequest): Call<EditResponse>
+
+    @GET("user/{id}")
+    fun getUserById(@Path("id") userId: String): Call<User>
 
 }

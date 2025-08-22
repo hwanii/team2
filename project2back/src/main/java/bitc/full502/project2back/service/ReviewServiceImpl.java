@@ -57,8 +57,9 @@ public class ReviewServiceImpl implements ReviewService {
                         .userName(review.getUser().getUserName())
                         .reviewRating(review.getReviewNum()) // 필드명 통일
                         .reviewItem(review.getReviewItem())
-                        .reviewDay(review.getReviewDay().toString())
+                        .reviewDay(review.getReviewDay())
                         .userKey(review.getUser().getUserKey())
+                        .placeCode(review.getPlaceCode())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -84,4 +85,22 @@ public class ReviewServiceImpl implements ReviewService {
         // 3. 변경된 내용을 데이터베이스에 저장(update)합니다.
         reviewRepository.save(reviewEntity);
     }
+
+    @Override
+    public List<ReviewResponseDTO> getReviewsByUserKey(int userKey) {
+        return reviewRepository.findByUser_UserKey(userKey)
+                .stream()
+                .map(review -> new ReviewResponseDTO(
+                        review.getReviewKey(),
+                        review.getUser().getUserId(),
+                        review.getUser().getUserName(),
+                        review.getReviewNum(),
+                        review.getReviewItem(),
+                        review.getReviewDay(),
+                        review.getUser().getUserKey(),
+                        review.getPlaceCode()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

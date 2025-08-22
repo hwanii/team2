@@ -4,18 +4,53 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import bitc.fullstack502.project2.databinding.ActivityMyPageBinding
+import com.bumptech.glide.Glide
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MyPageActivity : AppCompatActivity() {
+
+    private val serviceKey =
+        "jXBU6vV0oil9ri%2BdWayTquROwX0nqAU70wAnWwE%2BVLyI%2FAIo6iSXppra2iJxeBkscalGGpVa0%2FuTsTOjQ0oQsA%3D%3D"
+
+    private lateinit var binding: ActivityMyPageBinding
+    private lateinit var user: User
+    private lateinit var reviewContainer: LinearLayout
+
+    // 리뷰에 매칭된 FoodItem을 저장할 리스트
+    private val foodList = mutableListOf<FoodItem>()
+
+    private val editLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val updatedUser = result.data?.getParcelableExtra<User>("updatedUser")
+            if (updatedUser != null) {
+                user = updatedUser
+                updateUI(user)
+                saveToPrefs(user)
+                loadUserReviews(user.userKey)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val binding = ActivityMyPageBinding.inflate(layoutInflater)
+        binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -23,10 +58,12 @@ class MyPageActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        
 
+        reviewContainer = binding.myReview.findViewById(R.id.review_container)
+
+        // SharedPreferences에서 사용자 정보 불러오기
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val user = User(
+        user = User(
             userKey = prefs.getInt("user_key", 0),
             userName = prefs.getString("user_name", "") ?: "",
             userId = prefs.getString("user_id", "") ?: "",
@@ -35,37 +72,166 @@ class MyPageActivity : AppCompatActivity() {
             userEmail = prefs.getString("user_email", "") ?: ""
         )
 
-        // 화면에 유저 정보 표시
-        if (user.userName.isNotEmpty() && user.userId.isNotEmpty()) {
-            binding.userName.text = "이름 : ${user.userName}"
-            binding.userId.text = "ID : ${user.userId}"
-        } else {
-            Log.d("MyPageActivity", "User info not found in SharedPreferences")
-        }
+        updateUI(user)
 
-        // 프로필 수정 버튼 클릭
         binding.goEdit.setOnClickListener {
             val intent = Intent(this, EditPageActivity::class.java)
             intent.putExtra("user", user)
-            startActivity(intent)
+            editLauncher.launch(intent)
         }
 
-        // 로그아웃 버튼 클릭
         binding.logoutButton.setOnClickListener {
-            prefs.edit().clear().apply()  // 모든 사용자 정보 삭제
+            prefs.edit().clear().apply()
             Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, LoginPageActivity::class.java))
             finish()
         }
 
-        val hasReview = false
-
-        if (hasReview) {
-            binding.myReview.visibility = View.VISIBLE
-            binding.noReview.visibility = View.GONE
-        } else {
-            binding.myReview.visibility = View.GONE
-            binding.noReview.visibility = View.VISIBLE
+        if (user.userKey != 0) {
+            loadUserReviews(user.userKey)
         }
+    }
+
+    private fun updateUI(user: User) {
+        binding.userName.text = "이름 : ${user.userName}"
+        binding.userId.text = "ID : ${user.userId}"
+    }
+
+    private fun saveToPrefs(user: User) {
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        prefs.edit().apply {
+            putInt("user_key", user.userKey)
+            putString("user_name", user.userName)
+            putString("user_id", user.userId)
+            putString("user_pw", user.userPw)
+            putString("user_tel", user.userTel)
+            putString("user_email", user.userEmail)
+        }.apply()
+    }
+
+    private fun loadUserReviews(userKey: Int) {
+        if (userKey == 0) return
+
+        reviewContainer.removeAllViews()
+        binding.myReview.visibility = View.GONE
+        binding.noReview.visibility = View.GONE
+        foodList.clear() // 리스트 초기화
+
+        RetrofitClient.reviewApi.getUserReviews(userKey)
+            .enqueue(object : Callback<List<ReviewResponse>> {
+                override fun onResponse(
+                    call: Call<List<ReviewResponse>>,
+                    response: Response<List<ReviewResponse>>
+                ) {
+                    if (response.isSuccessful) {
+                        val reviews = response.body() ?: emptyList()
+
+                        if (reviews.isEmpty()) {
+                            binding.noReview.visibility = View.VISIBLE
+                        } else {
+                            binding.myReview.visibility = View.VISIBLE
+
+                            for (review in reviews) {
+                                val item = layoutInflater.inflate(
+                                    R.layout.item_review,
+                                    reviewContainer,
+                                    false
+                                )
+
+                                // 텍스트 설정
+                                item.findViewById<TextView>(R.id.review_item).text = review.reviewItem
+                                item.findViewById<TextView>(R.id.review_num).text = review.reviewRating.toString()
+
+                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                val dateTime = LocalDateTime.parse(review.reviewDay)
+                                val formattedDate = dateTime.format(formatter)
+                                item.findViewById<TextView>(R.id.review_day).text = formattedDate
+
+                                // 이미지 설정
+                                val reviewImageView = item.findViewById<ImageView>(R.id.review_image)
+                                review.placeCode?.let { placeCode ->
+                                    loadFoodImageAndSaveFoodItem(placeCode, reviewImageView)
+                                }
+
+                                // 삭제 버튼
+                                val deleteBtn = item.findViewById<ImageView>(R.id.delete_btn)
+                                deleteBtn.setOnClickListener {
+                                    RetrofitClient.reviewApi.deleteReview(review.reviewKey)
+                                        .enqueue(object : Callback<String> {
+                                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                                                if (response.isSuccessful) {
+                                                    Toast.makeText(this@MyPageActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
+                                                    loadUserReviews(userKey)
+                                                }
+                                            }
+
+                                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                                Toast.makeText(this@MyPageActivity, "삭제 실패", Toast.LENGTH_SHORT).show()
+                                            }
+                                        })
+                                }
+
+                                // 리뷰 클릭 -> DetailActivity 이동
+                                item.setOnClickListener {
+                                    val foodItem = foodList.find { it.UcSeq == review.placeCode }
+                                    if (foodItem != null) {
+                                        val intent = Intent(this@MyPageActivity, DetailActivity::class.java)
+                                        intent.putExtra("clicked_item", foodItem)
+                                        startActivity(intent)
+                                    } else {
+                                        Toast.makeText(this@MyPageActivity, "유효하지 않은 placeCode", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                                reviewContainer.addView(item)
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this@MyPageActivity, "리뷰 불러오기 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<ReviewResponse>>, t: Throwable) {
+                    Toast.makeText(this@MyPageActivity, "리뷰 불러오기 실패", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    // placeCode 기반 음식 이미지 가져오기 + 리스트에 저장
+    private fun loadFoodImageAndSaveFoodItem(placeCode: Int, reviewImageView: ImageView) {
+        RetrofitClient.api.getFoodList(
+            serviceKey = serviceKey,
+            title = null,
+            gugun = null,
+            numOfRows = 1,
+            pageNo = 1
+        ).enqueue(object : Callback<FoodResponse> {
+            override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
+                if (response.isSuccessful) {
+                    val foodItem = response.body()?.getFoodkr?.item?.firstOrNull()
+                    if (foodItem != null) {
+                        foodList.add(foodItem)
+                        val imageUrl = foodItem.image ?: foodItem.thumb
+                        if (!imageUrl.isNullOrEmpty()) {
+                            Glide.with(this@MyPageActivity)
+                                .load(imageUrl)
+                                .placeholder(R.drawable.heart_full)
+                                .error(R.drawable.heart_none)
+                                .into(reviewImageView)
+                        } else {
+                            reviewImageView.setImageResource(R.drawable.heart_none)
+                        }
+                    } else {
+                        reviewImageView.setImageResource(R.drawable.heart_none)
+                    }
+                } else {
+                    reviewImageView.setImageResource(R.drawable.heart_none)
+                }
+            }
+
+            override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
+                reviewImageView.setImageResource(R.drawable.heart_none)
+            }
+        })
     }
 }

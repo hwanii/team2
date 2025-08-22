@@ -11,4 +11,6 @@ public interface ReviewService {
     List<ReviewResponseDTO> getReviewsByPlaceCode(int placeCode);
     void deleteReview(Integer reviewKey);
     void updateReview(Integer reviewKey, ReviewUpdateRequestDTO reviewUpdateRequest);
+    List<ReviewResponseDTO> getReviewsByUserKey(int userKey);
+
 }
