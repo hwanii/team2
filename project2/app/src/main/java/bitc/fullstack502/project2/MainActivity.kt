@@ -151,21 +151,22 @@ class MainActivity : AppCompatActivity() {
         // 어댑터 생성: listener와 reviewApi 주입
         verticalAdapter = VerticalAdapter(
             listener = object : VerticalAdapter.ItemClickListener {
-                // 음식 카드 클릭 시 DetailActivity로 이동
                 override fun onItemClick(item: FoodItem) {
                     val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
                         putExtra("clicked_item", item) // 클릭된 아이템 전달
+                        // 🔹 전체 리스트도 같이 전달 (추천 가게 계산용)
+                        putParcelableArrayListExtra("full_list", ArrayList(foodList))
                     }
                     startActivity(intent)
                 }
 
-                // "더보기" 버튼 클릭 시 추가 아이템 로드
                 override fun onLoadMore() {
                     verticalAdapter.addMore()
                 }
             },
-            reviewApi = reviewApi // Retrofit으로 만든 ReviewApiService 전달
+            reviewApi = reviewApi
         )
+
 
         // RecyclerView 레이아웃 매니저 설정 (세로 스크롤)
         binding.verticalRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -237,33 +238,42 @@ class MainActivity : AppCompatActivity() {
     // API 호출
     // ============================
     private fun fetchFoodData() {
+        // 프로그레스 바 표시
         binding.progressBar.visibility = View.VISIBLE
+
+        // Retrofit으로 음식 데이터 호출
         RetrofitClient.api.getFoodList(serviceKey).enqueue(object : Callback<FoodResponse> {
             override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
+                // 로딩 끝나면 프로그레스 바 숨김
                 binding.progressBar.visibility = View.GONE
+
                 if (response.isSuccessful) {
                     val body = response.body()
                     val rawList = body?.getFoodkr?.item ?: emptyList()
-                    
-                    // 이미지 없는 항목 제거 & 위도/경도로 중복 제거
-                    foodList = rawList.filter { !it.thumb.isNullOrBlank() }
-                        .distinctBy { it.Lat to it.Lng }
-                    
+
+                    // 필터링 과정
+                    foodList = rawList.filter {
+                        // 이미지가 있고, 좌표가 null/0이 아닌 항목만 남김
+                        !it.thumb.isNullOrBlank() && it.Lat != null && it.Lng != null && it.Lat != 0f && it.Lng != 0f
+                    }.distinctBy { it.Lat to it.Lng }
+
                     // HorizontalAdapter 초기화
                     setupHorizontalAdapters()
-                    
-                    // VerticalAdapter에 전체 데이터 세팅
+
+                    // VerticalAdapter에 전체 데이터 세팅 (기본 필터: 전체)
                     filterByGu("전체")
                 }
             }
-            
+
             override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
+                // 실패 시 프로그레스 바 숨기고 토스트 표시
                 binding.progressBar.visibility = View.GONE
                 Toast.makeText(this@MainActivity, "데이터 로딩 실패", Toast.LENGTH_SHORT).show()
             }
         })
     }
-    
+
+
     // ============================
     // HorizontalAdapter 세팅
     // ============================

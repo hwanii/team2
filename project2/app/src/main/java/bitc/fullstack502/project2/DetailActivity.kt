@@ -61,6 +61,7 @@ class DetailActivity : AppCompatActivity() {
             setupRecommendations(currentItem, allItems)
         }
 
+
         placeCode = currentItem.UcSeq?.toInt() ?: -1
         if (placeCode != -1) {
             loadReviewsFromServer(placeCode)
