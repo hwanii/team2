@@ -32,6 +32,7 @@ class MyPageActivity : AppCompatActivity() {
 
     // 리뷰에 매칭된 FoodItem을 저장할 리스트
     private val foodList = mutableListOf<FoodItem>()
+    private val allFoodList = mutableListOf<FoodItem>()
 
     private val editLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -90,6 +91,23 @@ class MyPageActivity : AppCompatActivity() {
         if (user.userKey != 0) {
             loadUserReviews(user.userKey)
         }
+        
+        loadAllFood()
+    }
+    
+    private fun loadAllFood() {
+        RetrofitClient.api.getFoodList(
+            serviceKey = serviceKey,
+            ucSeq = null // 전체 리스트 조회
+        ).enqueue(object : Callback<FoodResponse> {
+            override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
+                if (response.isSuccessful) {
+                    allFoodList.clear()
+                    response.body()?.getFoodkr?.item?.let { allFoodList.addAll(it) }
+                }
+            }
+            override fun onFailure(call: Call<FoodResponse>, t: Throwable) { /* 실패 처리 */ }
+        })
     }
 
     private fun updateUI(user: User) {
@@ -173,10 +191,11 @@ class MyPageActivity : AppCompatActivity() {
 
                                 // 리뷰 클릭 -> DetailActivity 이동
                                 item.setOnClickListener {
-                                    val foodItem = foodList.find { it.UcSeq == review.placeCode }
-                                    if (foodItem != null) {
+                                    val clickedFood = allFoodList.find { it.UcSeq == review.placeCode }
+                                    if (clickedFood != null) {
                                         val intent = Intent(this@MyPageActivity, DetailActivity::class.java)
-                                        intent.putExtra("clicked_item", foodItem)
+                                        intent.putExtra("clicked_item", clickedFood)
+                                        intent.putParcelableArrayListExtra("full_list", ArrayList(allFoodList))
                                         startActivity(intent)
                                     } else {
                                         Toast.makeText(this@MyPageActivity, "유효하지 않은 placeCode", Toast.LENGTH_SHORT).show()
@@ -201,16 +220,14 @@ class MyPageActivity : AppCompatActivity() {
     private fun loadFoodImageAndSaveFoodItem(placeCode: Int, reviewImageView: ImageView) {
         RetrofitClient.api.getFoodList(
             serviceKey = serviceKey,
-            title = null,
-            gugun = null,
+            pageNo = 1,
             numOfRows = 1,
-            pageNo = 1
         ).enqueue(object : Callback<FoodResponse> {
             override fun onResponse(call: Call<FoodResponse>, response: Response<FoodResponse>) {
                 if (response.isSuccessful) {
                     val foodItem = response.body()?.getFoodkr?.item?.firstOrNull()
                     if (foodItem != null) {
-                        foodList.add(foodItem)
+                        foodList.add(foodItem) // ✅ 실제 리뷰랑 매칭된 음식만 저장
                         val imageUrl = foodItem.image ?: foodItem.thumb
                         if (!imageUrl.isNullOrEmpty()) {
                             Glide.with(this@MyPageActivity)
@@ -228,7 +245,7 @@ class MyPageActivity : AppCompatActivity() {
                     reviewImageView.setImageResource(R.drawable.heart_none)
                 }
             }
-
+            
             override fun onFailure(call: Call<FoodResponse>, t: Throwable) {
                 reviewImageView.setImageResource(R.drawable.heart_none)
             }

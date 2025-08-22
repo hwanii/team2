@@ -13,7 +13,8 @@ interface FoodApiService {
         @Query("numOfRows") numOfRows: Int = 5000,
         @Query("pageNo") pageNo: Int = 1,
         @Query("TITLE") title: String? = null,
-        @Query("GUGUN_NM") gugun: String? = null
+        @Query("GUGUN_NM") gugun: String? = null,
+        @Query("uc_seq") ucSeq: Int? = null
     ): Call<FoodResponse>
 
 }
