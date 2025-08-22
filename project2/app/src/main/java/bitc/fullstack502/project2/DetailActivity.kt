@@ -64,6 +64,7 @@ class DetailActivity : AppCompatActivity() {
             setupRecommendations(currentItem, allItems)
         }
 
+
         placeCode = currentItem.UcSeq?.toInt() ?: -1
 
         if (userKey != -1 && placeCode != -1) {
