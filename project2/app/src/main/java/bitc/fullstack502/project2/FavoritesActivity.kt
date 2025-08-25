@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import bitc.fullstack502.project2.Adapter.FavoritesAdapter
@@ -19,10 +20,12 @@ class FavoritesActivity : AppCompatActivity() {
     private lateinit var adapter: FavoritesAdapter
     private val likedPlaceCodes = mutableSetOf<Int>()
     private var currentUserKey: Int = 0
+    private var fullFoodList: List<FoodItem> = emptyList()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.root)
         
         // 1️⃣ Intent에서 user_key와 전체 리스트 받아오기
@@ -88,6 +91,10 @@ class FavoritesActivity : AppCompatActivity() {
                             
                             // ✅ 즐겨찾기 목록에서도 제거
                             adapter.removeAt(position)
+                            
+                            if (adapter.itemCount == 0) {
+                                binding.emptyTextView.visibility = View.VISIBLE
+                            }
                         }
                     } else {
                         Toast.makeText(this@FavoritesActivity, "즐겨찾기 업데이트 실패", Toast.LENGTH_SHORT).show()
@@ -110,6 +117,68 @@ class FavoritesActivity : AppCompatActivity() {
                 putExtra("user_key", currentUserKey)
             }
             startActivity(intent)
+        }
+        
+        setupBottomNavigation()
+    }
+    
+    private fun setupBottomNavigation() {
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    // 현재 Activity 스택을 초기화하고 MainActivity를 새로 시작하고 싶으면 아래 플래그 추가 가능
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    startActivity(intent)
+                    true
+                }
+                R.id.menu_list -> {
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val currentUserKey = prefs.getInt("user_key", 0)
+                    Log.d("ListActivity", "userKey: $currentUserKey")
+                    
+                    val intent = Intent(this, ListActivity::class.java)
+                    intent.putExtra("user_key", currentUserKey)
+                    startActivity(intent)
+                    true
+                    
+                }
+                R.id.menu_favorite -> {
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val currentUserKey = prefs.getInt("user_key", 0)
+                    Log.d("FavoritesActivity", "userKey: $currentUserKey")
+                    if (!fullFoodList.isNullOrEmpty()) {
+                        val intent = Intent(this, FavoritesActivity::class.java).apply {
+                            putParcelableArrayListExtra(
+                                "full_list",
+                                ArrayList(fullFoodList) // 전체 음식 리스트 전달
+                            )
+                            putExtra("user_key", currentUserKey) // 로그인한 유저 키 전달
+                        }
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, "아직 데이터 로딩 중입니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    true
+                }
+                
+                R.id.menu_profile -> {
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
+                    val intent =
+                        if (isLoggedIn) Intent(this, MyPageActivity::class.java)
+                        else Intent(this, LoginPageActivity::class.java).also {
+                            Toast.makeText(
+                                this,
+                                "로그인 후 이용 가능합니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

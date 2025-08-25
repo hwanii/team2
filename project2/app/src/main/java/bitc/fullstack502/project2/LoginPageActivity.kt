@@ -85,6 +85,8 @@ class LoginPageActivity : AppCompatActivity() {
             val intent = Intent(this, JoinPageActivity::class.java)
             startActivity(intent)
         }
+        
+        binding.btnClose.setOnClickListener { finish() }
 
     }
 }

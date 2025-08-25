@@ -67,6 +67,8 @@ class JoinPageActivity : AppCompatActivity() {
         joinButton.setOnClickListener {
             attemptJoin()
         }
+        
+        binding.btnClose.setOnClickListener { finish() }
     }
 
     private fun attemptJoin() {

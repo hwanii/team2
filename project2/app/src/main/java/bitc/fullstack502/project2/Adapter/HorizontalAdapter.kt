@@ -62,7 +62,7 @@ class HorizontalAdapter(
             // ------------------------
             txtTitle.text = item.MAIN_TITLE.ifBlank { item.TITLE } // 메인 제목이 없으면 보조 제목 사용
             txtAddress.text = cleanMenuText(item.ADDR)             // 주소 문자열 정리 후 표시
-            txtCategory.text = cleanMenuText(item.CATE_NM)         // 카테고리 문자열 정리 후 표시
+//            txtCategory.text = cleanMenuText(item.CATE_NM)         // 카테고리 문자열 정리 후 표시
             txtRating.text = "⭐ -"                                // 초기값 (평점이 아직 없을 때)
 
             // ------------------------

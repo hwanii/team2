@@ -44,6 +44,35 @@ class PlaceAdapter(
             val menu = item.CATE_NM?.replace("\n", " ") ?: ""
             binding.tvAddr.text = "$category · $menu"
             
+            val rawTime = item.Time ?: ""
+            val cleanedTime = cleanRawTime(rawTime)
+            val statusText = getStoreStatus(cleanedTime)
+            
+            val displayText =
+                if (statusText.isNotEmpty()) "$statusText  •  $cleanedTime" else cleanedTime
+            val timeSpannable = SpannableString("  $displayText")
+            
+            // 시계 아이콘 붙이기
+            val clockDrawable = binding.root.context.getDrawable(R.drawable.ic_time)
+            clockDrawable?.setBounds(0, 0, clockDrawable.intrinsicWidth, clockDrawable.intrinsicHeight)
+            timeSpannable.setSpan(
+                CenterAlignImageSpan(clockDrawable!!),
+                0,
+                1,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            
+            // 줄바꿈 시 들여쓰기
+            val marginPx = 48
+            timeSpannable.setSpan(
+                LeadingMarginSpan.Standard(marginPx, 0),
+                1,
+                timeSpannable.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            
+            binding.tvTime.text = timeSpannable
+            
             Glide.with(binding.root.context)
                 .load(item.image)
                 .into(binding.ivFoodImage)

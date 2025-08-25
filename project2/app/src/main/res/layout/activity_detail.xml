@@ -1,364 +1,502 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/main"
-    android:padding="24dp">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/main"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginBottom="20dp"
+  android:background="@color/white"
+  android:orientation="vertical">
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtImage" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="12dp"
-        android:paddingTop="4dp">
-        <TextView
-            android:id="@+id/txtAddrcategory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="10dp"
-            android:text="주소"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/txtTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="음식점 이름"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/btn_like"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/heart_none"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"/>
-            </LinearLayout>
-        </LinearLayout>
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_marginBottom="10dp"/>
-
-
-        <TextView
-            android:id="@+id/txtAddr"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="3dp"
-            android:layout_marginEnd="10dp"
-            android:text="주소"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtTel"
-        android:text="전화번호"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtTime"
-        android:text="운영시간"
-        android:layout_marginBottom="8dp"/>
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_marginBottom="10dp"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:clickable="true"
-        android:id="@+id/btn_map"
-        android:gravity="center"
-        style="@style/btn_bg"
-        android:autoSizeTextType="uniform"
-        android:padding="0dp"
-        android:layout_marginBottom="10dp"
-        android:text="지도 보기"/>
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtItem"
-        android:text="상세설명"
-        android:background="@drawable/border_bg"
-        android:layout_marginBottom="8dp"/>
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="주변 가게"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:divider="@drawable/spacer"
-        android:showDividers="middle">
-        <LinearLayout
-            android:id="@+id/recommend_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@drawable/border_bg"
-            android:clickable="true"
-            android:visibility="gone"> <!-- 처음에는 숨김 -->
-
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+        
+        <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+            
             <ImageView
-                android:id="@+id/recommend_image_1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginVertical="4dp"/>
-            <TextView
-                android:id="@+id/recommend_title_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
+              android:id="@+id/txtImage"
+              android:layout_width="match_parent"
+              android:layout_height="220dp"
+              android:scaleType="centerCrop"
+              android:src="@drawable/no_image" />
+            
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <TextView
-                android:id="@+id/recommend_gugun_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:layout_marginHorizontal="8dp"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-<!-- 별점 시스템 넣을곳-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="별점"
-                    android:textSize="10sp"
-                    android:layout_gravity="end"/>
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="top|start"
+              android:orientation="horizontal"
+              android:paddingStart="20dp"
+              android:paddingTop="10dp">
+                
+                <ImageButton
+                  android:id="@+id/btnBack"
+                  style="@style/arrowBack"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginRight="6dp"
+                  android:background="@android:color/transparent"
+                  android:contentDescription="뒤로가기"
+                  android:src="@drawable/ic_arrow_back_bg" />
+                
+                <ImageButton
+                  android:id="@+id/btnHome"
+                  style="@style/arrowBack"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/transparent"
+                  android:contentDescription="홈으로"
+                  android:src="@drawable/ic_home_top_bg" />
             </LinearLayout>
-        </LinearLayout>
+        
+        </FrameLayout>
+        
         <LinearLayout
-            android:id="@+id/recommend_2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@drawable/border_bg"
-            android:clickable="true"
-            android:visibility="gone"> <!-- 처음에는 숨김 -->
-
-            <ImageView
-                android:id="@+id/recommend_image_2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginVertical="4dp"/>
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:paddingTop="20dp">
+            
             <TextView
-                android:id="@+id/recommend_title_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
+              android:id="@+id/txtAddrcategory"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="4dp"
+              android:paddingHorizontal="20dp"
+              android:text="주소"
+              android:textColor="@color/gray"
+              android:textSize="10dp" />
+            
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-            <TextView
-                android:id="@+id/recommend_gugun_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:textSize="10sp"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="별점"
-                    android:textSize="10sp"
-                    android:layout_gravity="end"/>
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingHorizontal="20dp">
+                
+                <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal">
+                    
+                    <TextView
+                      android:id="@+id/txtTitle"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="음식점 이름"
+                      android:textSize="20sp"
+                      android:textStyle="bold" />
+                    
+                    <ImageView
+                      android:id="@+id/btn_like"
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+                      android:background="?android:attr/selectableItemBackgroundBorderless"
+                      android:clickable="true"
+                      android:focusable="true"
+                      android:src="@drawable/heart_none" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/recommend_3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@drawable/border_bg"
-            android:clickable="true"
-            android:horizontalGap="8dp"
-            android:visibility="gone"> <!-- 처음에는 숨김 -->
-
-            <ImageView
-                android:id="@+id/recommend_image_3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginVertical="4dp"/>
-            <TextView
-                android:id="@+id/recommend_title_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textSize="12sp"
-                android:layout_marginHorizontal="8dp"
-                android:textStyle="bold"/>
+            
+            <View
+              android:layout_width="wrap_content"
+              android:layout_height="1dp"
+              android:layout_marginVertical="14dp"
+              android:background="@color/line" />
+            
+            
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-            <TextView
-                android:id="@+id/recommend_gugun_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:textSize="10sp"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingHorizontal="20dp">
+                
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="별점"
-                    android:textSize="10sp"
-                    android:layout_gravity="end"/>
-
+                  android:id="@+id/txtAddr"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginEnd="10dp"
+                  android:layout_marginBottom="8dp"
+                  android:drawableLeft="@drawable/ic_map"
+                  android:drawablePadding="10dp"
+                  android:gravity="center_vertical"
+                  android:text="주소"
+                  android:textColor="#444444"
+                  android:textSize="14sp" />
+                
+                <TextView
+                  android:id="@+id/txtTel"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="8dp"
+                  android:drawableLeft="@drawable/ic_phone"
+                  android:drawablePadding="10dp"
+                  android:gravity="center_vertical"
+                  android:text="전화번호"
+                  android:textColor="#347CE2"
+                  android:textSize="15sp" />
+                
+                <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="20dp"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal">
+                    
+                    <ImageView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="top"
+                      android:layout_marginTop="4dp"
+                      android:layout_marginEnd="10dp"
+                      android:adjustViewBounds="true"
+                      android:src="@drawable/ic_clock" />
+                    
+                    <TextView
+                      android:id="@+id/txtTime"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="운영시간"
+                      android:textColor="#444444"
+                      android:textSize="14sp" />
+                </LinearLayout>
+            
             </LinearLayout>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-<!--        댓글 부분 -->
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_marginTop="10dp"/>
-        <LinearLayout
-            android:id="@+id/reviewsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-        <LinearLayout
-            android:id="@+id/reviewInputSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="24dp">
-
-
-
+            
+            <com.google.android.material.button.MaterialButton
+              android:id="@+id/btn_map"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginHorizontal="20dp"
+              android:backgroundTint="#FFFFFF"
+              android:clickable="true"
+              android:elevation="0dp"
+              android:gravity="center"
+              android:paddingHorizontal="15dp"
+              android:paddingVertical="8dp"
+              android:stateListAnimator="@null"
+              android:text="지도 보기"
+              android:textColor="@android:color/black"
+              android:textSize="15sp"
+              app:cornerRadius="6dp"
+              app:strokeColor="@color/btn_line"
+              app:strokeWidth="1dp" />
+            
+            <View
+              android:layout_width="wrap_content"
+              android:layout_height="6dp"
+              android:layout_marginVertical="25dp"
+              android:background="@color/line" />
+            
+            
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingHorizontal="20dp">
+                
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="리뷰"
-                    android:textSize="18sp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="4dp"/>
-
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="10dp"
+                  android:text="상세 정보"
+                  android:textSize="18sp"
+                  android:textStyle="bold" />
+                
+                <TextView
+                  android:id="@+id/txtItem"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="상세설명" />
+            </LinearLayout>
+            
+            <View
+              android:layout_width="wrap_content"
+              android:layout_height="6dp"
+              android:layout_marginVertical="25dp"
+              android:background="@color/line" />
+            
+            
+            <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="10dp"
+              android:paddingHorizontal="20dp"
+              android:text="주변 가게"
+              android:textSize="18sp"
+              android:textStyle="bold" />
+            
+            <!-- 주변 가게 영역 -->
+            <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:divider="@drawable/spacer"
+              android:orientation="horizontal"
+              android:paddingHorizontal="20dp"
+              android:showDividers="middle">
+                
+                <!-- 주변 가게 1 -->
+                <LinearLayout
+                  android:id="@+id/recommend_1"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:clickable="true"
+                  android:orientation="vertical"
+                  android:visibility="gone"> <!-- 처음에는 숨김 -->
+                    
+                    <com.google.android.material.imageview.ShapeableImageView
+                      android:id="@+id/recommend_image_1"
+                      android:layout_width="match_parent"
+                      android:layout_height="100dp"
+                      android:layout_marginHorizontal="4dp"
+                      android:layout_marginVertical="4dp"
+                      android:scaleType="centerCrop"
+                      app:shapeAppearanceOverlay="@style/RoundedImageMainV" />
+                    
+                    <TextView
+                      android:id="@+id/recommend_title_1"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginHorizontal="8dp"
+                      android:ellipsize="end"
+                      android:maxLines="1"
+                      android:singleLine="true"
+                      android:textSize="12sp"
+                      android:textStyle="bold" />
+                    
+                    <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal">
+                        
+                        <TextView
+                          android:id="@+id/recommend_gugun_1"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginHorizontal="8dp"
+                          android:textSize="10sp" />
+                        
+                        <View
+                          android:layout_width="0dp"
+                          android:layout_height="0dp"
+                          android:layout_weight="1" />
+                        <!-- 별점 시스템 넣을곳-->
+                        <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:layout_gravity="end"
+                          android:text="별점"
+                          android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+                
+                <!-- 주변 가게 2 -->
+                <LinearLayout
+                  android:id="@+id/recommend_2"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:clickable="true"
+                  android:orientation="vertical"
+                  android:visibility="gone"> <!-- 처음에는 숨김 -->
+                    
+                    <com.google.android.material.imageview.ShapeableImageView
+                      android:id="@+id/recommend_image_2"
+                      android:layout_width="match_parent"
+                      android:layout_height="100dp"
+                      android:layout_marginHorizontal="4dp"
+                      android:layout_marginVertical="4dp"
+                      android:scaleType="centerCrop"
+                      app:shapeAppearanceOverlay="@style/RoundedImageMainV" />
+                    
+                    <TextView
+                      android:id="@+id/recommend_title_2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginHorizontal="8dp"
+                      android:ellipsize="end"
+                      android:maxLines="1"
+                      android:singleLine="true"
+                      android:textSize="12sp"
+                      android:textStyle="bold" />
+                    
+                    <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
+                        
+                        
+                        <TextView
+                          android:id="@+id/recommend_gugun_2"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginHorizontal="8dp"
+                          android:textSize="10sp" />
+                        
+                        <View
+                          android:layout_width="0dp"
+                          android:layout_height="0dp"
+                          android:layout_weight="1" />
+                        
+                        <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:layout_gravity="end"
+                          android:text="별점"
+                          android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+                
+                <!-- 주변 가게 3 -->
+                <LinearLayout
+                  android:id="@+id/recommend_3"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:clickable="true"
+                  android:horizontalGap="8dp"
+                  android:orientation="vertical"
+                  android:visibility="gone"> <!-- 처음에는 숨김 -->
+                    
+                    <com.google.android.material.imageview.ShapeableImageView
+                      android:id="@+id/recommend_image_3"
+                      android:layout_width="match_parent"
+                      android:layout_height="100dp"
+                      android:layout_marginHorizontal="4dp"
+                      android:layout_marginVertical="4dp"
+                      android:scaleType="centerCrop"
+                      app:shapeAppearanceOverlay="@style/RoundedImageMainV" />
+                    
+                    <TextView
+                      android:id="@+id/recommend_title_3"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginHorizontal="8dp"
+                      android:ellipsize="end"
+                      android:maxLines="1"
+                      android:singleLine="true"
+                      android:textSize="12sp"
+                      android:textStyle="bold" />
+                    
+                    <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
+                        
+                        
+                        <TextView
+                          android:id="@+id/recommend_gugun_3"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginHorizontal="8dp"
+                          android:textSize="10sp" />
+                        
+                        <View
+                          android:layout_width="0dp"
+                          android:layout_height="0dp"
+                          android:layout_weight="1" />
+                        
+                        <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:layout_gravity="end"
+                          android:text="별점"
+                          android:textSize="10sp" />
+                    
+                    </LinearLayout>
+                
+                
+                </LinearLayout>
+            
+            </LinearLayout>
+            <!-- // 주변 가게 영역 -->
+            
+            <View
+              android:layout_width="wrap_content"
+              android:layout_height="6dp"
+              android:layout_marginVertical="25dp"
+              android:background="@color/line" />
+            
+            <!-- 내가 작성한 리뷰 -->
+            <LinearLayout
+              android:id="@+id/reviewsContainer"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingHorizontal="20dp" />
+            
+            <View
+              android:layout_width="wrap_content"
+              android:layout_height="6dp"
+              android:layout_marginVertical="25dp"
+              android:background="@color/line" />
+            
+            <!-- 리뷰 작성 영역 -->
+            <LinearLayout
+              android:id="@+id/reviewInputSection"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingHorizontal="20dp"
+              android:layout_marginBottom="30dp">
+                
+                <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="리뷰 작성"
+                  android:textSize="18sp"
+                  android:textStyle="bold"
+                  android:layout_marginBottom="10dp"/>
+                
                 <RatingBar
-                    android:id="@+id/ratingBarInput"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:rating="5.0"
-                    android:numStars="5"
-                    android:stepSize="0.5"
-                    android:isIndicator="false"
-                    android:progressTint="#FFEB38"
-                    android:secondaryProgressTint="#FFEB38"
-                    android:progressBackgroundTint="#CCCCCC"/>
-
-
+                  android:id="@+id/ratingBarInput"
+                  style="@style/Widget.AppCompat.RatingBar"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="start"
+                  android:isIndicator="false"
+                  android:numStars="5"
+                  android:progressBackgroundTint="#CCCCCC"
+                  android:progressTint="#F1B701"
+                  android:rating="5.0"
+                  android:secondaryProgressTint="#F1B701"
+                  android:stepSize="0.5" />
+                
+                <EditText
+                  android:id="@+id/editTextReview"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/btn_type01"
+                  android:gravity="top"
+                  android:hint="리뷰 내용을 입력하세요."
+                  android:textColorHint="@color/edit_hint"
+                  android:textColor="@color/black"
+                  android:textSize="16sp"
+                  android:inputType="textMultiLine"
+                  android:minLines="3"
+                  android:paddingVertical="10dp"
+                  android:paddingHorizontal="20dp"/>
+                
+                <android.widget.Button
+                  android:id="@+id/btnSubmitReview"
+                  android:layout_width="match_parent"
+                  android:layout_height="46dp"
+                  android:paddingHorizontal="30dp"
+                  android:layout_marginTop="12dp"
+                  android:background="@drawable/btn_type04"
+                  android:text="리뷰 등록"
+                  android:textColor="@color/white"
+                  android:textSize="16sp"
+                  android:layout_gravity="center"/>
+            
             </LinearLayout>
-
-            <EditText
-            android:id="@+id/editTextReview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="리뷰 내용을 입력하세요..."
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:background="@drawable/border_bg"
-            android:gravity="top"
-            android:padding="8dp"/>
-
-            <Button
-                android:id="@+id/btnSubmitReview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="리뷰 등록"/>
-
+            <!-- // 리뷰 작성 영역 -->
+        
         </LinearLayout>
-    </LinearLayout>
     </LinearLayout>
 </ScrollView>
 

@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    card_view:cardElevation="0dp"
-    android:orientation="vertical"
-    android:id="@+id/main">
-
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:card_view="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  card_view:cardElevation="0dp"
+  android:orientation="vertical"
+  android:id="@+id/main">
+    
     <View
-        android:id="@+id/topDivider"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="#f6f6f6"
-        android:visibility="gone"/>
-
+      android:id="@+id/topDivider"
+      android:layout_width="match_parent"
+      android:layout_height="5dp"
+      android:background="#f6f6f6"
+      android:visibility="gone"/>
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="15dp"
-        android:paddingBottom="25dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp" >
-
-
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingTop="15dp"
+      android:paddingBottom="25dp"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp" >
+        
+        
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+            
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:gravity="center_vertical">
+                
                 <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="음식점 이름"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black" />
-
+                  android:id="@+id/tvTitle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:text="음식점 이름"
+                  android:textSize="20sp"
+                  android:textStyle="bold"
+                  android:textColor="@color/black" />
+                
                 <ImageButton
-                    android:id="@+id/bookMark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_heart"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="즐겨찾기"
-                    android:layout_marginLeft="20dp"/>
+                  android:id="@+id/bookMark"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:src="@drawable/ic_heart"
+                  android:background="@android:color/transparent"
+                  android:contentDescription="즐겨찾기"
+                  android:layout_marginLeft="20dp"/>
             </LinearLayout>
-
+            
             <TextView
-                android:id="@+id/tvAddr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="별점 · 카테고리(구) · 대표메뉴"
-                android:textSize="15sp"
-                android:textColor="@color/dark_gray"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"/>
-
+              android:id="@+id/tvAddr"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="별점 · 카테고리(구) · 대표메뉴"
+              android:textSize="15sp"
+              android:textColor="@color/dark_gray"
+              android:layout_marginTop="4dp"
+              android:layout_marginBottom="8dp"/>
+        
         </LinearLayout>
-
+        
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivFoodImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/no_image"
-            app:shapeAppearanceOverlay="@style/RoundedImage" />
-
+          android:id="@+id/ivFoodImage"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:scaleType="centerCrop"
+          android:src="@drawable/no_image"
+          app:shapeAppearanceOverlay="@style/RoundedImage" />
+        
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+            
             <TextView
-                android:id="@+id/tvTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="운영시간"
-                android:textSize="15sp"
-                android:textColor="@color/dark_gray"
-                android:layout_marginTop="10dp" />
+              android:id="@+id/tvTime"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="운영시간"
+              android:textSize="15sp"
+              android:textColor="@color/dark_gray"
+              android:layout_marginTop="10dp" />
         </LinearLayout>
-
+    
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

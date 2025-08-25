@@ -3,10 +3,13 @@ package bitc.fullstack502.project2
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -16,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import bitc.fullstack502.project2.Adapter.HorizontalAdapter
 import bitc.fullstack502.project2.Adapter.VerticalAdapter
@@ -49,6 +53,8 @@ class MainActivity : AppCompatActivity() {
     private val guList = listOf("전체", "부산진구", "북구", "해운대구")
     private var selectedGuButton: Button? = null
     private var currentGu: String = "전체"
+    
+    private var selectedGuContainer: LinearLayout? = null
     
     // VerticalAdapter (세로)
     private lateinit var verticalAdapter: VerticalAdapter
@@ -100,9 +106,15 @@ class MainActivity : AppCompatActivity() {
         // BottomNavigationView 스크롤 숨김/반투명 처리
         // ============================
         binding.nestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
-            // 스크롤 중일 때: 네비 숨김 & 완전 투명
-            binding.bottomNavigationView.visibility = View.GONE
-            binding.bottomNavigationView.setBackgroundColor(Color.TRANSPARENT) // 스크롤 중
+            // 스크롤 중
+            val hideTranslationY = binding.bottomNavigationView.height.toFloat() + 30f // 90dp + 30dp = 120f
+            
+            // ViewCompat.animate().translationY() 를 사용해서 부드럽게 애니메이션 적용
+            ViewCompat.animate(binding.bottomNavigationView)
+                .translationY(hideTranslationY) // 화면 아래로 밀어냄
+                .setDuration(200) // 애니메이션 지속 시간 (0.2초)
+                .setInterpolator(FastOutSlowInInterpolator()) // 부드러운 가속/감속 효과
+                .start()
             
             
             // 기존 예약된 Runnable 취소
@@ -110,9 +122,21 @@ class MainActivity : AppCompatActivity() {
             
             // 스크롤 멈춤 후 1초 뒤: 네비 등장 & 반투명 배경
             hideRunnable = Runnable {
-                binding.bottomNavigationView.visibility = View.VISIBLE
-                binding.bottomNavigationView.setBackgroundColor(Color.parseColor("#CCFFFFFF")) // 멈췄을 때
+                // 원래 위치 (XML에 정의된 translationY)로 돌아오게 함
+                val showTranslationY = 30f // XML의 원래 translationY 값
+                ViewCompat.animate(binding.bottomNavigationView)
+                    .translationY(showTranslationY) // 원래 위치로 복귀
+                    .setDuration(250) // 애니메이션 지속 시간 (0.25초)
+                    .setInterpolator(FastOutSlowInInterpolator()) // 부드러운 가속/감속 효과
+                    .start()
                 
+                // 그리고 이전에 말했던 Drawable의 투명도 조절
+                val currentDrawable = binding.bottomNavigationView.background
+                if (currentDrawable is LayerDrawable) {
+                    currentDrawable.alpha = (1f * 255).toInt() // 1f 투명도
+                } else {
+                    binding.bottomNavigationView.alpha = 1f // Fallback
+                }
             }
             navHandler.postDelayed(hideRunnable!!, 1000)
         }
@@ -192,45 +216,89 @@ class MainActivity : AppCompatActivity() {
     private fun setupGuFilterButtons() {
         val guLayout = binding.guFilterLayout
         guLayout.removeAllViews()
-        
         guList.forEach { gu ->
+            // 각 탭 아이템(버튼 + 라인)을 감싸는 수직 LinearLayout 컨테이너
+            val tabContainer = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, 0) // 버튼 간의 가로 여백
+                }
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
+            
+            // 탭 버튼
             val button = Button(this).apply {
                 text = gu
-                textSize = 14f
-                isAllCaps = false
-                setTextColor(resources.getColor(R.color.button_text, null))
-                background = ContextCompat.getDrawable(context, R.drawable.rounded_button)
-                setPadding(36, 16, 36, 20)
-                minHeight = 48
-                
-                setOnClickListener {
-                    filterByGu(gu)
-                    
-                    // 이전 선택 해제
-                    selectedGuButton?.background =
-                        ContextCompat.getDrawable(context, R.drawable.rounded_button)
-                    selectedGuButton?.setTextColor(resources.getColor(R.color.button_text, null))
-                    
-                    // 현재 선택 강조
-                    background = ContextCompat.getDrawable(context, R.drawable.rounded_button_selected)
-                    setTextColor(resources.getColor(R.color.button_text, null))
-                    selectedGuButton = this
+                isAllCaps = false // 대문자 자동 변환 방지
+                // 내부 패딩 (글자와 라인 사이의 여백)
+                setPadding(16, 16, 16, 16) // 좌우 패딩을 16dp로 줄이고, 상하도 16dp로 변경
+                setBackgroundColor(Color.TRANSPARENT) // 버튼 배경은 투명!
+                setTextColor(resources.getColor(android.R.color.darker_gray, null)) // 기본 글자색: 회색
+                setTypeface(null, Typeface.NORMAL) // 기본 글자 스타일: 보통
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+            
+            // 탭 아래의 라인 뷰
+            val lineView = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, // 너비는 컨테이너에 맞춰 늘림
+                    2 // 기본 라인 두께: 2dp
+                ).apply {
+                    topMargin = 0 // 버튼과 라인 사이의 틈 (원하면 조절)
                 }
+                setBackgroundColor(Color.parseColor("#BBBBBB")) // 기본 라인 색상: 연한 회색
             }
             
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                leftMargin = if (gu == guList.first()) 16 else 8
-                rightMargin = if (gu == guList.last()) 16 else 8
-                topMargin = 8
-                bottomMargin = 8
+            // 컨테이너에 버튼과 라인 추가
+            tabContainer.addView(button)
+            tabContainer.addView(lineView)
+            
+            // 최종적으로 guFilterLayout에 각 탭 컨테이너 추가
+            guLayout.addView(tabContainer)
+            
+            
+            // ===== 클릭 리스너 설정 =====
+            button.setOnClickListener {
+                filterByGu(gu) // 데이터 필터링
+                
+                // 이전 선택된 탭의 스타일을 원상복구
+                selectedGuContainer?.let { prevContainer ->
+                    // 이전 버튼과 라인 뷰 가져오기
+                    val prevButton = prevContainer.getChildAt(0) as Button
+                    val prevLine = prevContainer.getChildAt(1) as View
+                    
+                    // 스타일 원상복구 (회색 글자, 얇고 연한 회색 라인)
+                    prevButton.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+                    prevButton.setTypeface(null, Typeface.NORMAL)
+                    prevLine.layoutParams.height = 2 // 라인 두께 얇게
+                    prevLine.setBackgroundColor(Color.parseColor("#BBBBBB")) // 라인 색상 연한 회색
+                    prevLine.requestLayout() // 레이아웃 업데이트 요청
+                }
+                
+                // 현재 클릭된 탭의 스타일 변경
+                // 글자색 검정, 볼드체
+                button.setTextColor(Color.BLACK)
+                button.setTypeface(null, Typeface.BOLD)
+                
+                // 라인 색상 검정, 굵기 두껍게
+                lineView.layoutParams.height = 4 // 라인 두께 굵게
+                lineView.setBackgroundColor(Color.BLACK) // 라인 색상 검정
+                lineView.requestLayout() // 레이아웃 업데이트 요청
+                
+                // 현재 선택된 컨테이너 업데이트
+                selectedGuContainer = tabContainer
             }
             
-            guLayout.addView(button, lp)
-            
-            if (gu == "전체") button.performClick()
+            // "전체" 버튼을 기본 선택 상태로 만들기
+            if (gu == "전체") {
+                button.performClick()
+            }
         }
     }
     

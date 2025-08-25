@@ -1,5 +1,6 @@
 package bitc.fullstack502.project2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,23 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         mapFragment.getMapAsync(this)
+        
+        // ===== 뒤로가기 버튼 클릭 리스너 설정 =====
+        binding.btnBack.setOnClickListener {
+            // 이전 화면으로 돌아감
+            finish()
+        }
+        
+        // ===== 홈 버튼 클릭 리스너 설정 =====
+        binding.btnHome.setOnClickListener {
+            // MainActivity (홈 화면)으로 이동
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            
+            finish()
+        }
     }
     override fun onMapReady(naverMap: NaverMap) {
         val lat = intent.getFloatExtra("lat",0.0f ).toDouble()

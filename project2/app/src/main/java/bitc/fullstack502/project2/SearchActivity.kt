@@ -56,6 +56,7 @@ class SearchActivity : AppCompatActivity() {
       filterFood(keyword, selectedCategory)
     }
     
+    binding.btnClose.setOnClickListener { finish() }
     setupBottomNavigation()
   }
 
@@ -128,7 +129,13 @@ class SearchActivity : AppCompatActivity() {
   private fun setupBottomNavigation() {
     binding.bottomNavigationView.setOnItemSelectedListener { item ->
       when (item.itemId) {
-        R.id.menu_home -> true
+        R.id.menu_home -> {
+          val intent = Intent(this, MainActivity::class.java)
+          // 현재 Activity 스택을 초기화하고 MainActivity를 새로 시작하고 싶으면 아래 플래그 추가 가능
+          intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+          startActivity(intent)
+          true
+        }
         R.id.menu_list -> {
           val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
           val currentUserKey = prefs.getInt("user_key", 0)

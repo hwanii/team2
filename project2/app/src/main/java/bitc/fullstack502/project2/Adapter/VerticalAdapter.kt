@@ -56,7 +56,7 @@ class VerticalAdapter(
     private val pageSize = 5
 
     // ================================
-    // 뷰홀더 정의
+    // 뷰홀더 정의xx
     // FoodViewHolder : 음식 카드
     // MoreViewHolder : "더보기" 버튼
     // ================================

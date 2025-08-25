@@ -1,85 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
-
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/main"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white"
+  android:orientation="vertical">
+    
     <TextView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="20dp"
-        android:text="My Page"
-        android:textColor="@color/black"
-        android:textSize="30sp" />
-
-
+      android:id="@+id/logo"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="25dp"
+      android:text="My Page"
+      android:textColor="@color/black"
+      android:textSize="24sp"
+      android:textStyle="bold" />
+    
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:orientation="horizontal"
-        android:paddingTop="40dp"
-        android:paddingBottom="40dp">
-
-
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="15dp"
+      android:layout_marginEnd="15dp"
+      android:orientation="vertical"
+      android:paddingBottom="25dp">
+        
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/user_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text=""
-                android:textColor="@color/black" />
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="center_vertical"
+          android:gravity="center">
+            
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical"
+              android:layout_marginStart="15dp">
+                <TextView
+                  android:id="@+id/user_name"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text=""
+                  android:textColor="@color/black"
+                  android:textSize="20sp"
+                  android:textStyle="bold"
+                  android:layout_marginBottom="5dp"/>
+                
+                <TextView
+                  android:id="@+id/user_id"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text=""
+                  android:textColor="@color/black"
+                  android:textSize="15sp" />
+            </LinearLayout>
+        
         </LinearLayout>
-
+        
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
-
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_gravity="center_vertical"
+          android:layout_marginTop="16dp">
+            
             <android.widget.Button
-                android:id="@+id/go_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="@drawable/btn_type01"
-                android:text="프로필 수정"
-                android:textColor="@color/gray" />
-
-
+              android:id="@+id/go_edit"
+              android:layout_width="0dp"
+              android:layout_height="40dp"
+              android:background="@drawable/btn_type05"
+              android:text="프로필 수정"
+              android:textColor="@color/black"
+              android:layout_weight="1"
+              android:layout_marginRight="10dp"
+              android:elevation="0dp"
+              android:stateListAnimator="@null"/>
+            
+            <TextView
+              android:id="@+id/logout_button"
+              android:layout_width="0dp"
+              android:layout_height="40dp"
+              android:background="@drawable/btn_type05"
+              android:text="로그아웃"
+              android:textColor="@color/black"
+              android:layout_weight="1"
+              android:gravity="center" />
+        
         </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/logout_button"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="로그아웃"
-        android:textColor="@color/gray"
-        android:layout_gravity="end"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"/>
-
+    
     <!--    <android.widget.Button-->
     <!--        android:id="@+id/logout_button"-->
     <!--        android:layout_width="wrap_content"-->
@@ -91,54 +105,76 @@
     <!--        android:paddingEnd="70dp"-->
     <!--        android:text="로그아웃"-->
     <!--        android:textColor="@color/gray"></android.widget.Button>-->
-
+    
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/lightgray" />
-
+      android:layout_width="match_parent"
+      android:layout_height="6dp"
+      android:background="@color/lightgray" />
+    
     <LinearLayout
-        android:id="@+id/my_review"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
+      android:id="@+id/my_review"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:orientation="vertical"
+      android:paddingTop="20dp">
+        
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:paddingBottom="20dp"
-            android:text="내가 쓴 Review"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="내가 작성한 리뷰"
+          android:textColor="@color/black"
+          android:textSize="18sp"
+          android:textStyle="bold"
+          android:paddingHorizontal="20dp"/>
+        
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1">
+            
             <include layout="@layout/item_review"/>
-
+        
         </ScrollView>
     </LinearLayout>
-
+    
     <TextView
-        android:id="@+id/no_review"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="작성한 Review가 없습니다"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="23sp" />
-
+      android:id="@+id/no_review"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="작성된 리뷰가 없습니다"
+      android:textAlignment="center"
+      android:textColor="@color/gray"
+      android:textSize="16sp" />
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="30dp">
     </LinearLayout>
+    
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+      android:id="@+id/bottomNavigationView"
+      android:layout_width="match_parent"
+      android:layout_height="90dp"
+      android:layout_gravity="bottom"
+      android:background="@drawable/bottom_nav_top_line"
+      android:clipToPadding="false"
+      android:elevation="0dp"
+      android:fitsSystemWindows="true"
+      android:paddingTop="0dp"
+      android:paddingBottom="0dp"
+      android:stateListAnimator="@null"
+      android:translationY="30dp"
+      app:itemBackground="@android:color/transparent"
+      app:itemActiveIndicatorStyle="@null"
+      app:itemIconPadding="6dp"
+      app:itemIconSize="22dp"
+      app:itemTextAppearanceActive="@style/BottomNavTextActive"
+      app:itemTextAppearanceInactive="@style/BottomNavTextInactive"
+      app:itemTextColor="@color/nav_item_selector_pastel"
+      app:labelVisibilityMode="labeled"
+      app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>

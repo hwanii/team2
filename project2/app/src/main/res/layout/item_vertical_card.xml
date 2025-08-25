@@ -1,92 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="@android:color/white"
-    android:clickable="true"
-    android:focusable="true">
-
-    <!-- ====================
-         카드 내부 레이아웃 (RelativeLayout)
-         ==================== -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginBottom="20dp"
+  android:clickable="true"
+  android:focusable="true"
+  app:cardElevation="0dp"
+  app:cardBackgroundColor="@android:color/transparent">
+    
+    <!-- ==================== 카드 내부 레이 아웃 (RelativeLayout) ==================== -->
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" >
+        
         <!-- 장소 이미지 -->
-        <ImageView
-            android:id="@+id/itemImageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:clipToOutline="true"
-            android:background="@android:color/transparent" />
-
-        <!-- ====================
-             텍스트 영역 (가게 정보)
-             ==================== -->
+        <com.google.android.material.imageview.ShapeableImageView
+          android:id="@+id/itemImageView"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_alignParentStart="true"
+          android:layout_centerVertical="true"
+          android:background="#E0E0E0"
+          android:clipToOutline="true"
+          android:scaleType="centerCrop"
+          app:shapeAppearanceOverlay="@style/RoundedImageMainV" />
+        
+        <!-- 텍스트 영역 -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toEndOf="@id/itemImageView"
-            android:layout_toStartOf="@+id/likeIcon"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
-
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:layout_toEndOf="@id/itemImageView"
+          android:orientation="vertical">
+            
             <!-- 가게 이름 -->
             <TextView
-                android:id="@+id/itemTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:maxLines="2"/>
-
+              android:id="@+id/itemTitle"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:ellipsize="end"
+              android:maxLines="2"
+              android:textSize="16sp"
+              android:textStyle="bold" />
+            
             <!-- 카테고리 -->
             <TextView
-                android:id="@+id/itemCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:layout_marginTop="2dp"/>
-
-            <!-- 평점과 주소 (가로 배치) -->
+              android:id="@+id/itemCategory"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="2dp"
+              android:ellipsize="end"
+              android:maxLines="1"
+              android:textColor="@color/gray"
+              android:textSize="12sp" />
+            
+            <!-- 평점 · 주소 -->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
-
-                <!-- 평점 -->
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="4dp"
+              android:orientation="horizontal">
+                
                 <TextView
-                    android:id="@+id/itemRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"/>
-
-                <!-- 주소 -->
+                  android:id="@+id/itemRating"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textSize="12sp" />
+                
                 <TextView
-                    android:id="@+id/itemAddr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textSize="12sp"/>
+                  android:id="@+id/itemAddr"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginStart="8dp"
+                  android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
-
+        
+        <!-- 좋아요 아이콘 -->
+        <!--    android:layout_toStartOf="@+id/likeIcon"-->
+        <!--    <ImageView-->
+        <!--        android:id="@+id/likeIcon"-->
+        <!--        android:layout_width="16dp"-->
+        <!--        android:layout_height="16dp"-->
+        <!--        android:layout_alignParentEnd="true"-->
+        <!--        android:layout_centerVertical="true"-->
+        <!--        android:src="@drawable/heart_full"/>-->
+    
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

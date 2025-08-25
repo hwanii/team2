@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 기본 배경색 -->
+    <item>
+        <color android:color="@color/bottom_nav_pastel" />
+    </item>
+
+    <!-- 상단 1px 라인 -->
+    <item android:gravity="top">
+        <shape android:shape="rectangle">
+            <size android:height="1dp" />
+            <solid android:color="#DDDDDD" /> <!-- 선 색상. 원하는 색으로 변경! -->
+        </shape>
+    </item>
+</layer-list>
