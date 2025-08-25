@@ -122,7 +122,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     searchAdapter.updateData(filtered)
-    Toast.makeText(this, "${filtered.size}개 결과", Toast.LENGTH_SHORT).show()
     Log.d("SearchActivity", "필터 결과: ${filtered.map { it.TITLE }}")
   }
   
